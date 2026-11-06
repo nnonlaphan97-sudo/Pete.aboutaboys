@@ -104,26 +104,29 @@ html, body {
   width: 17px;
   height: 17px;
   display: block;
+  flex-shrink: 0;
   fill: none;
   stroke: #000;
-  stroke-width: 2;
+  stroke-width: 2.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 /* แบตเตอรี่ทรงมน */
 
+
 .battery {
   position: relative;
-  width: 35px;
-  height: 17px;
-  border: 1.6px solid #000;
-  border-radius: 7px;
-  overflow: hidden;
+  width: 29px;
+  height: 15px;
+  border: 1.5px solid #000;
+  border-radius: 6px;
+  overflow: visible;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  flex-shrink: 0;
 }
 
 .battery::after {
@@ -140,18 +143,20 @@ html, body {
 
 .battery-level {
   position: absolute;
-  inset: 0 auto 0 0;
+  top: 0;
+  left: 0;
   width: 50%;
   height: 100%;
   background: #000;
-  border-radius: 0;
+  border-radius: 4px 0 0 4px;
   z-index: 0;
 }
+
 
 .battery-percent {
   position: relative;
   z-index: 1;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 800;
   line-height: 1;
   color: #fff;
@@ -165,7 +170,7 @@ html, body {
   width: 100%;
   text-align: center;
   flex-shrink: 0;
-  transform: translateY(95px);
+  transform: translateY(125px);
   text-shadow: 0 2px 14px rgba(0,0,0,0.2);
 }
 
@@ -205,7 +210,7 @@ html, body {
 /* ไอคอนล็อก */
 #lockScreen > .lock-status-icon {
   position: absolute;
-  top: 30px;
+  top: 37px;
   left: 50%;
   transform: translateX(-50%);
   width: 24px;
