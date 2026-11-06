@@ -563,6 +563,64 @@ html, body {
 -webkit-tap-highlight-color: transparent;
 }
 
+.home-weather {
+  position: absolute;
+  top: 75px;
+  left: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.weather-icon {
+  width: 82px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.weather-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.weather-temp {
+  font-size: 53px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.weather-description {
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+
+.weather-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 3px;
+}
+
 </style>
 </head>
 
@@ -770,8 +828,30 @@ html, body {
 <!-- หน้าโฮม -->
 <section class="screen home-screen" id="homeScreen">
 
-  <div class="home-clock" id="homeClock">12:00</div>
-  <div class="home-date" id="homeDate"></div>
+  
+<div class="home-weather">
+  <div class="weather-icon" id="weatherIcon">
+    <svg viewBox="0 0 64 64" width="82" height="82">
+      <circle cx="24" cy="23" r="12" fill="#FFD45C"/>
+      <path d="M18 48h31a11 11 0 0 0 0-22 16 16 0 0 0-29-3A13 13 0 0 0 18 48Z" fill="#F1F5FA"/>
+    </svg>
+  </div>
+
+  <div class="weather-info">
+    <div class="weather-temp" id="weatherTemp">--°</div>
+    <div class="weather-description" id="weatherDescription">
+      กำลังโหลดสภาพอากาศ
+    </div>
+    <div class="weather-location">
+      <svg viewBox="0 0 24 24" width="13" height="13"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+        <circle cx="12" cy="10" r="2.5"/>
+      </svg>
+      <span>ราชวัตร</span>
+    </div>
+  </div>
+</div>
 
   <div class="home-apps">
     <div class="home-app">
@@ -864,8 +944,7 @@ function showPhoneScreen(screenId) {
     document.getElementById("pinError").textContent = "";
   }
 
-  if (screenId === "homeScreen") {
-    updateHomeTime();
+ if (screenId === "homeScreen") updateHomeWeather();
   }
 }
 
@@ -908,25 +987,95 @@ function deletePin() {
   updatePinDots();
 }
 
-function updateHomeTime() {
-  const now = new Date();
 
-  document.getElementById("homeClock").textContent =
-    now.toLocaleTimeString("th-TH", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    });
+/* พยากรณ์อากาศราชวัตร กรุงเทพฯ */
+const WEATHER_LAT = 13.79;
+const WEATHER_LON = 100.52;
 
-  document.getElementById("homeDate").textContent =
-    now.toLocaleDateString("th-TH", {
-      weekday: "long",
-      day: "numeric",
-      month: "long"
-    });
+function getWeatherDescription(code) {
+  if (code === 0) return "ท้องฟ้าแจ่มใส";
+  if (code <= 2) return "มีเมฆบางส่วน";
+  if (code === 3) return "เมฆมาก";
+  if (code <= 48) return "มีหมอก";
+  if (code <= 67) return "มีฝนตก";
+  if (code <= 82) return "มีฝนตกเป็นช่วง ๆ";
+  if (code >= 95) return "มีฝนฟ้าคะนอง";
+  return "สภาพอากาศแปรปรวน";
 }
 
-setInterval(updateHomeTime, 1000);
+function getWeatherIcon(code) {
+  if (code <= 1) {
+    return `<svg viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="15" fill="#FFD45C"/>
+      <g stroke="#FFD45C" stroke-width="4"
+         stroke-linecap="round">
+        <path d="M32 5v8M32 51v8M5 32h8M51 32h8
+        M13 13l6 6M45 45l6 6M13 51l6-6M45 19l6-6"/>
+      </g>
+    </svg>`;
+  }
+
+  if (code >= 51) {
+    return `<svg viewBox="0 0 64 64">
+      <path d="M15 42h34a12 12 0 0 0-2-24
+      17 17 0 0 0-31 3A11 11 0 0 0 15 42Z"
+      fill="#E9F0F8"/>
+      <g stroke="#78C5FF" stroke-width="3"
+         stroke-linecap="round">
+        <path d="M21 47l-3 7M34 47l-3 7M47 47l-3 7"/>
+      </g>
+    </svg>`;
+  }
+
+  return `<svg viewBox="0 0 64 64">
+    <circle cx="24" cy="23" r="12" fill="#FFD45C"/>
+    <path d="M18 48h31a11 11 0 0 0 0-22
+    16 16 0 0 0-29-3A13 13 0 0 0 18 48Z"
+    fill="#F1F5FA"/>
+  </svg>`;
+}
+
+async function updateHomeWeather() {
+  const temp = document.getElementById("weatherTemp");
+  const desc = document.getElementById("weatherDescription");
+  const icon = document.getElementById("weatherIcon");
+
+  try {
+    const url =
+      `https://api.open-meteo.com/v1/forecast` +
+      `?latitude=${WEATHER_LAT}` +
+      `&longitude=${WEATHER_LON}` +
+      `&current=temperature_2m,weather_code` +
+      `&timezone=Asia%2FBangkok`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Weather API error");
+
+    const data = await response.json();
+    const weather = data.current;
+
+    temp.textContent =
+      Math.round(weather.temperature_2m) + "°";
+
+    desc.textContent =
+      getWeatherDescription(weather.weather_code);
+
+    icon.innerHTML =
+      getWeatherIcon(weather.weather_code);
+
+  } catch (error) {
+    if (temp.textContent === "--°") {
+      desc.textContent = "ไม่สามารถโหลดสภาพอากาศ";
+    }
+    console.error(error);
+  }
+}
+
+updateHomeWeather();
+
+/* อัปเดตทุก 15 นาที */
+setInterval(updateHomeWeather, 15 * 60 * 1000);
+
 
 function lockPhone() {
   showPhoneScreen("lockScreen");
