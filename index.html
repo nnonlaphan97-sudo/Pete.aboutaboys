@@ -126,6 +126,18 @@ html, body {
   padding: 0;
 }
 
+.battery::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 7px;
+  background: #000;
+  border-radius: 0 3px 3px 0;
+}
+
 .battery-level {
   position: absolute;
   inset: 0 auto 0 0;
@@ -153,7 +165,7 @@ html, body {
   width: 100%;
   text-align: center;
   flex-shrink: 0;
-  transform: translateY(65px);
+  transform: translateY(95px);
   text-shadow: 0 2px 14px rgba(0,0,0,0.2);
 }
 
