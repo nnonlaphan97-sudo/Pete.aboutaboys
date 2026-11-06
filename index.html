@@ -55,10 +55,11 @@ html, body {
 }
 
 /* วอลเปเปอร์ */
+
 .wallpaper {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: 0;
   background-color: #252b49;
   background-image: url("https://i.ibb.co/3mFG65xJ/r07qxo-R-Download.jpg");
   background-position: center;
@@ -69,27 +70,14 @@ html, body {
 .screen {
   position: absolute;
   inset: 0;
+  z-index: 1;
   overflow: hidden;
 }
 
-
-/* แถบสถานะ */
 .status-bar {
-  position: absolute;
   z-index: 20;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 38px;
-  padding: 12px 17px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  color: #000;
-  font-size: 13px;
-  font-weight: 700;
-  pointer-events: none;
 }
+
 
 .status-right {
   display: flex;
@@ -155,27 +143,33 @@ html, body {
 }
 
 /* วันที่และเวลา */
+
 .lock-heading {
+  position: relative;
+  width: 100%;
   text-align: center;
   flex-shrink: 0;
-  text-shadow: 0 2px 14px #0002;
-  transform: translateY(40px);
+  transform: translateY(65px);
+  text-shadow: 0 2px 14px rgba(0,0,0,0.2);
 }
 
 .lock-date {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .lock-clock {
-  margin-top: 3px;
-  font-size: clamp(90px, 27vw, 145px);
+  margin-top: 5px;
+  font-size: clamp(65px, 20vw, 105px);
   line-height: 1;
   font-weight: 600;
-  letter-spacing: -6px;
+  letter-spacing: -4px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+
 
 /* กล้องหน้า */
 .camera-hole {
@@ -341,8 +335,13 @@ function updateClock() {
   });
   
   document.getElementById('lockClock').textContent = time;
-  document.getElementById('lockDate').textContent =
-    date.replace(/^(วัน\S+?)\s+(\d+)/, '$1ที่ $2');
+  
+document.getElementById('lockDate').textContent =
+    now.toLocaleDateString('th-TH', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+    });
 }
 
 updateClock();
