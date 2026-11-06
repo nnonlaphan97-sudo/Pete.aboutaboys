@@ -390,14 +390,15 @@ html, body {
 .pin-screen {
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 95px 20px 55px;
+  justify-content: flex-start;
+  padding: 85px 20px 30px;
   background: rgba(15, 15, 25, 0.55);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
   color: white;
   z-index: 5;
 }
+
 
 .pin-heading {
   text-align: center;
@@ -438,8 +439,9 @@ html, body {
 .pin-keypad {
   display: grid;
   grid-template-columns: repeat(3, 70px);
-  gap: 15px 24px;
+  gap: 12px 24px;
   justify-content: center;
+  margin-top: 35px;
 }
 
 .pin-keypad button {
@@ -535,6 +537,23 @@ html, body {
   display: flex;
   justify-content: center;
   padding: 12px;
+  cursor: pointer;
+}
+
+.pin-footer {
+  width: 100%;
+  max-width: 260px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.pin-footer button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 15px;
+  padding: 8px;
   cursor: pointer;
 }
 
@@ -692,43 +711,54 @@ html, body {
 <!-- หน้ากรอกรหัส PIN -->
 <section class="screen pin-screen" id="pinScreen">
 
-  <div class="pin-heading">
-    <div class="pin-lock-icon">
-      <svg viewBox="0 0 24 24" width="28" height="28">
-        <path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12v11H6z"
-          fill="none" stroke="white" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
 
-    <div class="pin-title">Enter Passcode</div>
-
-    <div class="pin-dots" id="pinDots">
-      <span></span><span></span><span></span><span></span>
-    </div>
-
-    <div class="pin-error" id="pinError"></div>
+<div class="pin-heading">
+  <div class="pin-lock-icon">
+    <svg viewBox="0 0 24 24" width="28" height="28">
+      <path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12v11H6z"
+        fill="none" stroke="white" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
   </div>
 
-  <div class="pin-keypad">
-    <button type="button" onclick="enterPin('1')">1</button>
-    <button type="button" onclick="enterPin('2')">2<span>ABC</span></button>
-    <button type="button" onclick="enterPin('3')">3<span>DEF</span></button>
+  <div class="pin-title">ป้อนรหัสผ่าน</div>
 
-    <button type="button" onclick="enterPin('4')">4<span>GHI</span></button>
-    <button type="button" onclick="enterPin('5')">5<span>JKL</span></button>
-    <button type="button" onclick="enterPin('6')">6<span>MNO</span></button>
-
-    <button type="button" onclick="enterPin('7')">7<span>PQRS</span></button>
-    <button type="button" onclick="enterPin('8')">8<span>TUV</span></button>
-    <button type="button" onclick="enterPin('9')">9<span>WXYZ</span></button>
-
-    <button type="button" class="pin-text-btn"
-      onclick="showPhoneScreen('lockScreen')">Cancel</button>
-    <button type="button" onclick="enterPin('0')">0</button>
-    <button type="button" class="pin-text-btn"
-      onclick="deletePin()">Delete</button>
+  <div class="pin-dots" id="pinDots">
+    <span></span><span></span><span></span><span></span>
   </div>
+
+  <div class="pin-error" id="pinError"></div>
+</div>
+
+<div class="pin-keypad">
+
+  <button type="button" onclick="enterPin('1')">1</button>
+  <button type="button" onclick="enterPin('2')">2<span>ABC</span></button>
+  <button type="button" onclick="enterPin('3')">3<span>DEF</span></button>
+
+  <button type="button" onclick="enterPin('4')">4<span>GHI</span></button>
+  <button type="button" onclick="enterPin('5')">5<span>JKL</span></button>
+  <button type="button" onclick="enterPin('6')">6<span>MNO</span></button>
+
+  <button type="button" onclick="enterPin('7')">7<span>PQRS</span></button>
+  <button type="button" onclick="enterPin('8')">8<span>TUV</span></button>
+  <button type="button" onclick="enterPin('9')">9<span>WXYZ</span></button>
+
+  <!-- เลข 0 อยู่ตรงกลางแถวของตัวเอง -->
+  <div></div>
+  <button type="button" onclick="enterPin('0')">0</button>
+  <div></div>
+
+</div>
+
+<!-- ปุ่มยกเลิกและลบ แยกจากแป้นตัวเลข -->
+<div class="pin-footer">
+  <button type="button"
+    onclick="showPhoneScreen('lockScreen')">ยกเลิก</button>
+
+  <button type="button"
+    onclick="deletePin()">ลบ</button>
+</div>
 </section>
 
 <!-- หน้าโฮม -->
@@ -855,7 +885,7 @@ function enterPin(number) {
       }, 250);
     } else {
       document.getElementById("pinError").textContent =
-        "Incorrect Passcode";
+        "รหัสผ่านไม่ถูกต้อง";
 
       setTimeout(() => {
         typedPin = "";
