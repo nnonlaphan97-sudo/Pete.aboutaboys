@@ -254,24 +254,28 @@ html, body {
 }
 
 /* แถบเพลง Samsung Style */
+
 .lock-music {
-  position: absolute;
-  bottom: 85px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 235px;
-  height: 64px;
-  border-radius: 35px;
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  width: auto;
+  height: 48px;
+  flex: 1;
+  min-width: 0;
+  border-radius: 26px;
   background: #17131e;
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  gap: 10px;
+  padding: 5px 9px;
+  gap: 7px;
   color: white;
   overflow: hidden;
   z-index: 5;
   box-shadow: 0 4px 12px rgba(0,0,0,.25);
 }
+
 
 .lock-music::after {
   content: "";
@@ -288,8 +292,8 @@ html, body {
 }
 
 .music-art {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -337,17 +341,19 @@ html, body {
 .lock-actions {
   position: absolute;
   bottom: 43px;
-  left: 25px;
-  right: 25px;
+  left: 18px;
+  right: 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
   z-index: 4;
 }
 
+
 .lock-action {
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   border: none;
   border-radius: 50%;
   background: rgba(255,255,255,.25);
@@ -446,47 +452,11 @@ html, body {
       </div>
       
       
-<!-- แถบเพลง -->
-<div class="lock-music">
 
-  <img
-    class="music-art"
-    src="https://placehold.co/100x100/8055aa/ffffff.png?text=Music"
-    alt="Album Cover"
-  >
-
-  <div class="music-content">
-    <div class="music-song">
-      ชื่อเพลง - ศิลปิน
-    </div>
-
-    <div class="music-controls">
-
-      <button type="button" aria-label="เพลงก่อนหน้า">
-        <svg viewBox="0 0 24 24">
-          <path d="M5 5h2v14H5zM19 5 8 12l11 7z"/>
-        </svg>
-      </button>
-
-      <button type="button" id="musicPlay" aria-label="เล่นหรือหยุดเพลง">
-        <svg viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-      </button>
-
-      <button type="button" aria-label="เพลงถัดไป">
-        <svg viewBox="0 0 24 24">
-          <path d="M17 5h2v14h-2zM5 5l11 7-11 7z"/>
-        </svg>
-      </button>
-
-    </div>
-  </div>
-</div>
-
-<!-- ปุ่มโทรศัพท์และกล้อง -->
+<!-- ปุ่มโทรศัพท์ แถบเพลง และกล้อง -->
 <div class="lock-actions">
 
+  <!-- ปุ่มโทรศัพท์ด้านซ้าย -->
   <button class="lock-action" type="button" aria-label="โทรศัพท์">
     <svg viewBox="0 0 24 24">
       <path d="M22 16.9v3a2 2 0 0 1-2.2 2
@@ -502,6 +472,45 @@ html, body {
     </svg>
   </button>
 
+  <!-- แถบเพลงตรงกลาง -->
+  <div class="lock-music">
+    
+    <img
+      class="music-art"
+      src="https://placehold.co/100x100/8055aa/ffffff.png?text=Music"
+      alt="Album Cover"
+    >
+
+    <div class="music-content">
+      <div class="music-song">
+        ชื่อเพลง - ศิลปิน
+      </div>
+
+      <div class="music-controls">
+
+        <button type="button" aria-label="เพลงก่อนหน้า">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 5h2v14H5zM19 5 8 12l11 7z"/>
+          </svg>
+        </button>
+
+        <button type="button" id="musicPlay" aria-label="เล่นหรือหยุดเพลง">
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </button>
+
+        <button type="button" aria-label="เพลงถัดไป">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 5h2v14h-2zM5 5l11 7-11 7z"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ปุ่มกล้องด้านขวา -->
   <button class="lock-action" type="button" aria-label="กล้อง">
     <svg viewBox="0 0 24 24">
       <path d="M14 4h-4L8 7H4
@@ -513,6 +522,7 @@ html, body {
     </svg>
   </button>
 </div>
+
 
       <!-- ขีดด้านล่าง -->
       <div class="unlock-area">
