@@ -9,7 +9,7 @@
 <title>Pete Phone</title>
 
 <style>
-* {
+{
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
@@ -74,9 +74,24 @@ html, body {
   overflow: hidden;
 }
 
+
 .status-bar {
-  z-index: 20;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 38px;
+  padding: 12px 17px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: #000;
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
 }
+
 
 
 .status-right {
@@ -120,17 +135,6 @@ html, body {
   border-radius: 0;
   z-index: 0;
 }
-
-.battery-percent {
-  position: relative;
-  z-index: 1;
-  font-size: 9px;
-  font-weight: 800;
-  line-height: 1;
-  color: #fff;
-  mix-blend-mode: difference;
-}
-
 
 .battery-percent {
   position: relative;
