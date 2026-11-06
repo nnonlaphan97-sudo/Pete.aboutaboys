@@ -920,18 +920,19 @@ html, body {
 .line-bottom-nav {
   position: absolute;
   bottom: 38px;
-  left: 22px;
-  right: 22px;
-  height: 58px;
+  left: 32px;
+  right: 32px;
+  height: 48px;
   background: rgba(245,245,245,.96);
   border: 1px solid #e6e6e6;
-  border-radius: 32px;
+  border-radius: 28px;
   display: flex;
   justify-content: space-around;
   align-items: stretch;
-  padding: 4px;
+  padding: 3px;
   z-index: 10;
 }
+
 
 .line-bottom-nav button {
   flex: 1;
@@ -939,16 +940,17 @@ html, body {
   border: none;
   background: transparent;
   color: #777;
-  border-radius: 28px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 2px;
-  font-size: 9px;
+  gap: 1px;
+  font-size: 8px;
   cursor: pointer;
   touch-action: manipulation;
 }
+
 
 .line-bottom-nav button.active {
   background: #111;
@@ -956,8 +958,8 @@ html, body {
 }
 
 .line-bottom-nav svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .line-gesture {
@@ -1423,11 +1425,28 @@ html, body {
       <span>หน้าหลัก</span>
     </button>
 
-    <button type="button" data-line-tab="chats"
-            onclick="switchLinePage('chats')">
-      <svg viewBox="0 0 24 24"><path d="M4 5h16v12H9l-5 4z"/></svg>
-      <span>แชท</span>
-    </button>
+    
+<button type="button" data-line-tab="chats"
+        onclick="switchLinePage('chats')">
+  <svg viewBox="0 0 24 24"
+       xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3.5
+             C6.8 3.5 3 7 3 11.5
+             C3 16 6.8 19.5 12 19.5
+             C13.2 19.5 14.4 19.3 15.5 18.9
+             L20.5 20.5 19 16.5
+             C20.3 15.1 21 13.4 21 11.5
+             C21 7 17.2 3.5 12 3.5Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linejoin="round"/>
+    <circle cx="8" cy="11.5" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="11.5" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="16" cy="11.5" r="1" fill="currentColor" stroke="none"/>
+  </svg>
+  <span>แชท</span>
+</button>
 
     <button type="button" data-line-tab="today"
             onclick="switchLinePage('today')">
