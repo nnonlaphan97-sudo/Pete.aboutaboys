@@ -998,7 +998,14 @@ html, body {
   background: #161616;
   width: 105px;
 }
-
+img.line-avatar,
+img.line-profile-avatar {
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+}
 
 </style>
 </head>
@@ -1327,18 +1334,7 @@ html, body {
       <svg viewBox="0 0 24 24"><path d="M4 9V5h4M16 5h4v4M20 15v4h-4M8 19H4v-4"/></svg>
     </div>
 
-    <div class="line-chat-list" id="lineChatList">
-      <div class="line-chat-item">
-        <div class="line-avatar">ก</div>
-        <div class="line-chat-body">
-          <div class="line-chat-name">เก้า</div>
-          <div class="line-chat-preview">ทำอะไรอยู่</div>
-        </div>
-        <div class="line-chat-meta">
-          <span>19:20</span>
-          <span class="line-unread">2</span>
-        </div>
-      </div>
+   <div class="line-chat-list" id="lineChatList">
 
       <div class="line-chat-item">
         <div class="line-avatar line-avatar-blue">
@@ -1397,9 +1393,11 @@ html, body {
     <div class="line-profile">
       <div>
         <h2>Pete</h2>
-        <p>สถานะของพีท</p>
+        <p>อยากจะลืม</p>
       </div>
-      <div class="line-profile-avatar">P</div>
+    <img class="line-profile-avatar"
+     src="https://i.ibb.co/pvBWjjTb/r07qxo-R-Download.jpg"
+     alt="Pete">
     </div>
 
     <div class="line-search">
