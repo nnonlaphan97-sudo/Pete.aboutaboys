@@ -1186,7 +1186,105 @@ img.line-profile-avatar {
   font-size: 15px;
   margin: 18px 0 12px;
 }
-  
+
+/* ห้องแชทเก้า */
+.kao-chat-page {
+  position: absolute;
+  inset: 52px 0 0;
+  z-index: 12;
+  background: #b8c8df;
+  padding: 0 !important;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.kao-chat-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 15px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.kao-chat-header button {
+  border: none;
+  background: transparent;
+  font-size: 34px;
+  color: #222;
+  cursor: pointer;
+}
+
+.kao-chat-header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.kao-chat-header strong {
+  font-size: 17px;
+  color: #171717;
+}
+
+.kao-chat-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.kao-chat-empty {
+  align-self: center;
+  font-size: 12px;
+  color: #59677b;
+}
+
+.kao-message {
+  align-self: flex-end;
+  max-width: 78%;
+  padding: 10px 13px;
+  border-radius: 16px 16px 4px 16px;
+  background: #a9ef81;
+  color: #171717;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.kao-chat-compose {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px 48px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.kao-chat-compose input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: #f2f2f2;
+  border-radius: 22px;
+  padding: 12px 15px;
+  font-size: 14px;
+}
+
+.kao-chat-compose button {
+  border: none;
+  border-radius: 20px;
+  background: #06c755;
+  color: #fff;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 </style>
 </head>
 
@@ -1516,6 +1614,25 @@ img.line-profile-avatar {
     </div>
 
    <div class="line-chat-list" id="lineChatList">
+     
+<!-- แชทเก้า -->
+<div class="line-chat-item" onclick="openKaoChat()">
+  <img class="line-avatar"
+       src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+       alt="เก้า">
+
+  <div class="line-chat-body">
+    <div class="line-chat-name">เก้า</div>
+    <div class="line-chat-preview" id="kaoChatPreview">
+      เริ่มการสนทนา
+    </div>
+  </div>
+
+  <div class="line-chat-meta">
+    <span id="kaoChatTime"></span>
+  </div>
+</div>
+
 
       <div class="line-chat-item">
         <div class="line-avatar line-avatar-blue">
@@ -1701,7 +1818,7 @@ img.line-profile-avatar {
     <div class="line-directory-panel"
          data-directory-panel="favorites">
       <h3>รายการโปรด 1</h3>
-      <div class="line-friend-row">
+      <div class="line-friend-row" onclick="openKaoChat()">
         <img class="line-avatar"
              src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg">
         <div><strong>เก้า</strong></div>
@@ -1713,7 +1830,7 @@ img.line-profile-avatar {
          data-directory-panel="friends">
       <h3>เพื่อน 4</h3>
 
-      <div class="line-friend-row">
+      <div class="line-friend-row" onclick="openKaoChat()">
         <img class="line-avatar"
              src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg">
         <div><strong>เก้า</strong></div>
@@ -1762,6 +1879,36 @@ img.line-profile-avatar {
     </div>
 
   </div>
+</div>
+
+<!-- ห้องแชทเก้า -->
+<div class="line-page kao-chat-page" id="kaoChatPage">
+
+  <div class="kao-chat-header">
+    <button type="button" onclick="closeKaoChat()"
+            aria-label="ย้อนกลับ">‹</button>
+
+    <img src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+         alt="เก้า">
+
+    <strong>เก้า</strong>
+  </div>
+
+  <div class="kao-chat-messages" id="kaoChatMessages">
+    <div class="kao-chat-empty">
+      เริ่มการสนทนากับเก้า
+    </div>
+  </div>
+
+  <form class="kao-chat-compose"
+        onsubmit="sendKaoMessage(event)">
+    <input id="kaoMessageInput"
+           type="text"
+           placeholder="พิมพ์ข้อความ..."
+           autocomplete="off">
+    <button type="submit">ส่ง</button>
+  </form>
+
 </div>
 
   <!-- แถบนำทางด้านล่าง -->
@@ -2061,6 +2208,8 @@ function closeLine() {
 
 /* เปลี่ยนหน้าภายใน LINE */
 function switchLinePage(page) {
+  const kaoChat = document.getElementById("kaoChatPage");
+if (kaoChat) kaoChat.style.display = "none";
   const pages = {
     chats: "lineChatsPage",
     home: "lineHomePage",
@@ -2141,6 +2290,50 @@ function filterLineDirectory(input) {
 
     row.style.display = name.includes(keyword) ? "flex" : "none";
   });
+}
+
+/* ห้องแชทเก้า */
+function openKaoChat() {
+  switchLinePage("chats");
+
+  const chat = document.getElementById("kaoChatPage");
+  chat.style.display = "flex";
+}
+
+function closeKaoChat() {
+  document.getElementById("kaoChatPage").style.display = "none";
+  switchLinePage("chats");
+}
+
+function sendKaoMessage(event) {
+  event.preventDefault();
+
+  const input = document.getElementById("kaoMessageInput");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  const container = document.getElementById("kaoChatMessages");
+  const empty = container.querySelector(".kao-chat-empty");
+
+  if (empty) empty.remove();
+
+  const bubble = document.createElement("div");
+  bubble.className = "kao-message";
+  bubble.textContent = message;
+  container.appendChild(bubble);
+
+  document.getElementById("kaoChatPreview").textContent = message;
+
+  document.getElementById("kaoChatTime").textContent =
+    new Date().toLocaleTimeString("th-TH", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+
+  input.value = "";
+  container.scrollTop = container.scrollHeight;
 }
 
 
