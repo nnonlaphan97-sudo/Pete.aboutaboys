@@ -74,6 +74,8 @@ html, body {
 }
 
 
+
+/* Samsung One UI Status Bar */
 .status-bar {
   position: absolute;
   top: 0;
@@ -81,85 +83,89 @@ html, body {
   right: 0;
   z-index: 100;
   height: 38px;
-  padding: 12px 17px 0;
+  padding: 11px 17px 0;
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  color: #000;
+  justify-content: space-between;
+  color: #fff;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   pointer-events: none;
 }
 
+/* ชื่อ pete */
+.status-name {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 17px;
+}
 
-
+/* กลุ่มไอคอนด้านขวา */
 .status-right {
   display: flex;
   align-items: center;
-  gap: 9px;
-}
-
-.status-icon {
-  width: 17px;
+  gap: 5px;
   height: 17px;
-  display: block;
-  flex-shrink: 0;
-  fill: none;
-  stroke: #000;
-  stroke-width: 2.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  color: #fff;
 }
 
-/* แบตเตอรี่ทรงมน */
+/* ไอคอนปิดเสียง */
+.status-mute {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
 
+/* Wi-Fi */
+.status-wifi {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
 
+/* แบตเตอรี่ทรงแคปซูล */
 .battery {
   position: relative;
-  width: 29px;
-  height: 15px;
-  border: 1.5px solid #000;
+  width: 25px;
+  height: 13px;
+  border: 1.3px solid #fff;
   border-radius: 6px;
-  overflow: visible;
-  padding: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-left: 1px;
 }
 
+/* ไม่แสดงขั้วแบตเตอรี่ด้านนอก */
 .battery::after {
-  content: "";
-  position: absolute;
-  right: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 7px;
-  background: #000;
-  border-radius: 0 3px 3px 0;
+  display: none;
 }
 
+/* ระดับแบตเตอรี่ */
 .battery-level {
   position: absolute;
   top: 0;
   left: 0;
   width: 50%;
   height: 100%;
-  background: #000;
+  background: rgba(255,255,255,.35);
   border-radius: 4px 0 0 4px;
   z-index: 0;
 }
 
-
+/* เปอร์เซ็นต์อยู่ในแบตเตอรี่ */
 .battery-percent {
   position: relative;
   z-index: 1;
   font-size: 8px;
   font-weight: 800;
   line-height: 1;
+  letter-spacing: -.4px;
   color: #fff;
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
 }
 
 /* วันที่และเวลา */
@@ -1177,6 +1183,8 @@ img.line-profile-avatar {
     <div class="wallpaper"></div>
 
 <!-- แถบสถานะ -->
+
+<!-- แถบสถานะ Samsung One UI -->
 <div class="status-bar">
 
   <span class="status-name">pete</span>
@@ -1184,32 +1192,33 @@ img.line-profile-avatar {
   <div class="status-right">
 
     <!-- ปิดเสียง -->
-    <svg class="status-icon"
-         viewBox="0 0 24 24">
-      <path d="M11 5 6 9H3v6h3l5 4V5Z"/>
-      <path d="M16 9l5 6M21 9l-5 6"/>
+    <svg class="status-mute" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round">
+      <path d="M11 5 6.5 9H3v6h3.5l4.5 4V5Z"/>
+      <path d="m16 9 5 6M21 9l-5 6"/>
     </svg>
 
     <!-- Wi-Fi -->
-    <svg class="status-icon"
-         viewBox="0 0 24 24">
-      <path d="M2 8.5a16 16 0 0 1 20 0"/>
-      <path d="M5.5 12a11 11 0 0 1 13 0"/>
-      <path d="M9 15.5a5 5 0 0 1 6 0"/>
-      <circle cx="12" cy="19" r="1" fill="#000" stroke="none"/>
+    <svg class="status-wifi" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor"
+         stroke-width="2.6" stroke-linecap="round">
+      <path d="M2.5 8.5a15 15 0 0 1 19 0"/>
+      <path d="M6 12a10 10 0 0 1 12 0"/>
+      <path d="M9.5 15.5a4.2 4.2 0 0 1 5 0"/>
+      <circle cx="12" cy="19" r="1.2"
+              fill="currentColor" stroke="none"/>
     </svg>
 
-    <!-- แบตเตอรี่ -->
+    <!-- แบตเตอรี่ Samsung แบบแคปซูล -->
     <div class="battery" id="battery">
-      <div class="battery-level"
-           id="batteryLevel"></div>
-      <span class="battery-percent"
-            id="batteryPercent">50</span>
+      <div class="battery-level" id="batteryLevel"></div>
+      <span class="battery-percent" id="batteryPercent">50</span>
     </div>
 
   </div>
 </div>
-
 
     <!-- หน้าจอล็อก -->
     <section class="screen" id="lockScreen">
