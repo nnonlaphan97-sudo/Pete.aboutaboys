@@ -1796,7 +1796,24 @@ img.line-profile-avatar {
     </div>
 
    <div class="line-chat-list" id="lineChatList">
-     
+     <!-- แชทพี่โจ้ -->
+<div class="line-chat-item" onclick="openJoeChat()">
+  <img class="line-avatar"
+       src="https://i.ibb.co/rRyGbq0L/IMG-4112.jpg"
+       alt="P’Joe">
+
+  <div class="line-chat-body">
+    <div class="line-chat-name">P’Joe</div>
+    <div class="line-chat-preview" id="joeChatPreview">
+      ถ้ามั่นใจก็เอาตามนั้น
+    </div>
+  </div>
+
+  <div class="line-chat-meta">
+    <span id="joeChatTime">10:04</span>
+  </div>
+</div>
+    
 <!-- แชทเก้า -->
 <div class="line-chat-item" onclick="openKaoChat()">
   <img class="line-avatar"
@@ -2011,7 +2028,7 @@ img.line-profile-avatar {
     <div class="line-directory-panel"
          data-directory-panel="friends">
       <h3>เพื่อน 5</h3>
-      <div class="line-friend-row">
+      <div class="line-friend-row" onclick="openJoeChat()">
   <img class="line-avatar"
        src="https://i.ibb.co/rRyGbq0L/IMG-4112.jpg"
        alt="P’Joe">
@@ -2186,6 +2203,41 @@ img.line-profile-avatar {
     </svg>
   </button>
 </form>
+</div>
+<!-- ห้องแชท P’Joe -->
+<div class="line-page kao-chat-page" id="joeChatPage">
+
+  <div class="kao-chat-header">
+    <button type="button" class="kao-back"
+            onclick="closeJoeChat()">‹</button>
+
+    <img src="https://i.ibb.co/rRyGbq0L/IMG-4112.jpg"
+         alt="P’Joe">
+
+    <strong class="kao-chat-title">P’Joe</strong>
+  </div>
+
+  <div class="kao-chat-messages" id="joeChatMessages"></div>
+
+  <form class="kao-chat-compose" onsubmit="sendJoeMessage(event)">
+    <button type="button" class="kao-tool-btn" aria-label="เพิ่มเติม">+</button>
+
+    <div class="kao-input-wrap">
+      <input id="joeMessageInput"
+             type="text"
+             placeholder="Aa"
+             autocomplete="off">
+    </div>
+
+    <button type="submit" class="kao-send-btn" aria-label="ส่งข้อความ">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="m4 12 16-8-5 16-3-7-8-1z"/>
+        <path d="m12 13 8-9"/>
+      </svg>
+    </button>
+  </form>
 </div>
 
   <!-- แถบนำทางด้านล่าง -->
@@ -2492,6 +2544,8 @@ function switchLinePage(page) {
   const kaoChat = document.getElementById("kaoChatPage");
 
   if (kaoChat) kaoChat.style.display = "none";
+  const joeChat = document.getElementById("joeChatPage");
+if (joeChat) joeChat.style.display = "none";
   if (nav) nav.style.display = "flex";
   const gesture = document.querySelector(".line-gesture");
 if (gesture) gesture.style.display = "flex";
@@ -2849,9 +2903,36 @@ const PETE_KAO_HISTORY = {
     ["20:29","พ","ให้กูถ่ายมึงไปตลอดชาติเลย"]
   ]
 };
+/* ===== ประวัติแชท P’Joe ===== */
+
+const JOE_AVATAR_URL =
+  "https://i.ibb.co/rRyGbq0L/IMG-4112.jpg";
+
+const PETE_JOE_HISTORY = {
+  "12/10": [
+    ["17:01", "พจ", "ไอ้คุณน้องพีทครับมึงตัดสินใจได้รึยังครับ"],
+    ["17:02", "พ", "ดูอยู่ครับ"],
+    ["17:03", "พจ", "มันจะตัดสินยากอะไรวะพีท"],
+    ["17:10", "พ", "ดูอยู่ครับ เดี๋ยวผมบอก"],
+    ["19:19", "พจ", "ได้คำตอบยัง"],
+    ["19:20", "พ", "เดี๋ยวพรุ่งนี้ผมเข้าไปหา"]
+  ],
+
+  "21/11": [
+    ["09:30", "พ", "ผมคิดออกแล้วจะขายอะไร"],
+    ["09:45", "พจ", "ว่ามาเลยพีท"],
+    ["09:50", "พ", "ผมจะทำตุ๊กตาอัดเสียงได้"],
+    ["09:51", "พ", "ส่งผ่านความรู้สึก"],
+    ["09:52", "พ", "เวลาไม่กล้าพูดต่อหน้าหรือเขินก็อัดเสียงไปบอกเขา"],
+    ["10:00", "พจ", "ทำได้แน่นะพีท"],
+    ["10:02", "พ", "ผมเรียนวิศวะนะพี่"],
+    ["10:03", "พ", "หาวงจรง่ายๆมาทำได้อยู่แล้ว"],
+    ["10:04", "พจ", "ถ้ามั่นใจก็เอาตามนั้น"]
+  ]
+};
+
 
 /* ===== แสดงประวัติข้อความ ===== */
-
 const KAO_AVATAR_URL =
   "https://i.ibb.co/N2vPgK03/IMG-4076.jpg";
 
@@ -2873,11 +2954,14 @@ function kaoDateLabel(date) {
   return `${day} ${months[month - 1]}`;
 }
 
-function addKaoDate(text) {
-  const container = document.getElementById("kaoChatMessages");
+function addKaoDate(text, containerId = "kaoChatMessages") {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
   const date = document.createElement("div");
   date.className = "kao-chat-date";
   date.textContent = text;
+
   container.appendChild(date);
 }
 
@@ -2900,33 +2984,42 @@ function kaoMediaIcon(type) {
   </svg>`;
 }
 
-function addKaoBubble(sender, message, time, type = "text") {
-  const container = document.getElementById("kaoChatMessages");
+function addKaoBubble(
+  sender,
+  message,
+  time,
+  type = "text",
+  containerId = "kaoChatMessages",
+  avatarUrl = KAO_AVATAR_URL
+) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
   const sent = sender === "พ";
 
   const row = document.createElement("div");
   row.className = `kao-message-row ${sent ? "sent" : "received"}`;
 
- if (!sent) {
-  const previous = container.lastElementChild;
+  if (!sent) {
+    const previous = container.lastElementChild;
 
-  const showAvatar =
-    !previous ||
-    !previous.classList.contains("received");
+    const showAvatar =
+      !previous ||
+      !previous.classList.contains("received");
 
-  if (showAvatar) {
-    const avatar = document.createElement("img");
-    avatar.className = "kao-message-avatar";
-    avatar.src = KAO_AVATAR_URL;
-    avatar.alt = "เก้า";
-    row.appendChild(avatar);
-  } else {
-    const spacer = document.createElement("div");
-    spacer.style.width = "32px";
-    spacer.style.flexShrink = "0";
-    row.appendChild(spacer);
+    if (showAvatar) {
+      const avatar = document.createElement("img");
+      avatar.className = "kao-message-avatar";
+      avatar.src = avatarUrl;
+      avatar.alt = containerId === "joeChatMessages" ? "P’Joe" : "เก้า";
+      row.appendChild(avatar);
+    } else {
+      const spacer = document.createElement("div");
+      spacer.style.width = "32px";
+      spacer.style.flexShrink = "0";
+      row.appendChild(spacer);
+    }
   }
-}
 
   const bubble = document.createElement("div");
   bubble.className = "kao-message-bubble";
@@ -2953,6 +3046,7 @@ function addKaoBubble(sender, message, time, type = "text") {
     const clock = document.createElement("span");
     clock.textContent = time;
     meta.appendChild(clock);
+
     row.append(meta, bubble);
   } else {
     meta.textContent = time;
@@ -2982,6 +3076,85 @@ function renderPeteKaoHistory() {
 
   scrollKaoChat();
 }
+/* ===== ห้องแชท P’Joe ===== */
+
+function renderPeteJoeHistory() {
+  const container = document.getElementById("joeChatMessages");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  Object.entries(PETE_JOE_HISTORY).forEach(([date, messages]) => {
+    addKaoDate(kaoDateLabel(date), "joeChatMessages");
+
+    messages.forEach(([time, sender, message]) => {
+      addKaoBubble(
+        sender,
+        message,
+        time,
+        "text",
+        "joeChatMessages",
+        JOE_AVATAR_URL
+      );
+    });
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+
+function openJoeChat() {
+  switchLinePage("chats");
+
+  const joeChat = document.getElementById("joeChatPage");
+  const nav = document.querySelector(".line-bottom-nav");
+  const gesture = document.querySelector(".line-gesture");
+
+  if (nav) nav.style.display = "none";
+  if (gesture) gesture.style.display = "none";
+
+  if (joeChat) {
+    joeChat.style.display = "flex";
+    const messages = document.getElementById("joeChatMessages");
+    messages.scrollTop = messages.scrollHeight;
+  }
+}
+
+function closeJoeChat() {
+  const joeChat = document.getElementById("joeChatPage");
+  if (joeChat) joeChat.style.display = "none";
+
+  switchLinePage("chats");
+}
+
+function sendJoeMessage(event) {
+  event.preventDefault();
+
+  const input = document.getElementById("joeMessageInput");
+  const message = input.value.trim();
+  if (!message) return;
+
+  const time = kaoTimeNow();
+
+  addKaoBubble(
+    "พ",
+    message,
+    time,
+    "text",
+    "joeChatMessages",
+    JOE_AVATAR_URL
+  );
+
+  document.getElementById("joeChatPreview").textContent = message;
+  document.getElementById("joeChatTime").textContent = time;
+
+  input.value = "";
+
+  const container = document.getElementById("joeChatMessages");
+  container.scrollTop = container.scrollHeight;
+}
+
+// สร้างประวัติแชทพี่โจ้
+renderPeteJoeHistory();
 renderPeteKaoHistory();
 
 /* =========================================
