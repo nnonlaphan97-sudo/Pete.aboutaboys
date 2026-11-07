@@ -1187,35 +1187,6 @@ img.line-profile-avatar {
   margin: 18px 0 12px;
 }
 
-/* ห้องแชทเก้า */
-.kao-chat-page {
-  position: absolute;
-  inset: 52px 0 0;
-  z-index: 12;
-  background: #b8c8df;
-  padding: 0 !important;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.kao-chat-header {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 0 15px;
-  background: #fff;
-  flex-shrink: 0;
-}
-
-.kao-chat-header button {
-  border: none;
-  background: transparent;
-  font-size: 34px;
-  color: #222;
-  cursor: pointer;
-}
-
 .kao-chat-header img {
   width: 36px;
   height: 36px;
@@ -1226,16 +1197,6 @@ img.line-profile-avatar {
 .kao-chat-header strong {
   font-size: 17px;
   color: #171717;
-}
-
-.kao-chat-messages {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding: 18px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .kao-chat-empty {
@@ -1253,36 +1214,6 @@ img.line-profile-avatar {
   color: #171717;
   font-size: 14px;
   overflow-wrap: anywhere;
-}
-
-.kao-chat-compose {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 12px 14px 48px;
-  background: #fff;
-  flex-shrink: 0;
-}
-
-.kao-chat-compose input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: #f2f2f2;
-  border-radius: 22px;
-  padding: 12px 15px;
-  font-size: 14px;
-}
-
-.kao-chat-compose button {
-  border: none;
-  border-radius: 20px;
-  background: #06c755;
-  color: #fff;
-  padding: 10px 16px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .kao-message-row {
@@ -1342,18 +1273,21 @@ img.line-profile-avatar {
 }
 
 /* ห้องแชทเก้าเต็มพื้นที่ LINE */
+
 .kao-chat-page {
   position: absolute;
-  top: 48px;
+  top: 52px;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 20;
+  display: none;
   background: #d3d9e6;
   padding: 0 !important;
   flex-direction: column;
   overflow: hidden;
 }
+
 
 /* หัวแชท */
 .kao-chat-header {
@@ -2548,24 +2482,27 @@ function closeLine() {
 }
 
 /* เปลี่ยนหน้าภายใน LINE */
+
 function switchLinePage(page) {
-  const nav = document.querySelector(".line-bottom-nav");
-if (nav) nav.style.display = "";
-  const kaoChat = document.getElementById("kaoChatPage");
-if (kaoChat) kaoChat.style.display = "none";
   const pages = {
     chats: "lineChatsPage",
     home: "lineHomePage",
     friends: "lineFriendsPage"
   };
 
+  const chat = document.getElementById("kaoChatPage");
+  const nav = document.querySelector(".line-bottom-nav");
+
+  if (chat) chat.style.display = "none";
+  if (nav) nav.style.display = "flex";
+
+  if (page === "groups") page = "friends";
+  if (!pages[page]) page = "chats";
+
   Object.values(pages).forEach(id => {
     const element = document.getElementById(id);
     if (element) element.style.display = "none";
   });
-
-  if (page === "groups") page = "friends";
-  if (!pages[page]) page = "chats";
 
   const target = document.getElementById(pages[page]);
   if (target) target.style.display = "block";
@@ -2641,22 +2578,15 @@ function openKaoChat() {
   switchLinePage("chats");
 
   const chat = document.getElementById("kaoChatPage");
-  if (chat) chat.style.display = "flex";
-
   const nav = document.querySelector(".line-bottom-nav");
+
   if (nav) nav.style.display = "none";
+  if (chat) chat.style.display = "flex";
 }
 
 function closeKaoChat() {
-  const chat = document.getElementById("kaoChatPage");
-  if (chat) chat.style.display = "none";
-
-  const nav = document.querySelector(".line-bottom-nav");
-  if (nav) nav.style.display = "";
-
   switchLinePage("chats");
 }
-
 
 function sendKaoMessage(event) {
   event.preventDefault();
