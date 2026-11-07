@@ -87,7 +87,7 @@ html, body {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  color: #fff;
+  color: #42424A;
   font-size: 13px;
   font-weight: 600;
   pointer-events: none;
@@ -95,7 +95,7 @@ html, body {
 
 /* ชื่อ pete */
 .status-name {
-  color: #fff;
+  color: #42424A;
   font-size: 13px;
   font-weight: 600;
   line-height: 17px;
@@ -107,7 +107,7 @@ html, body {
   align-items: center;
   gap: 5px;
   height: 17px;
-  color: #fff;
+  color: #42424A;
 }
 
 /* ไอคอนปิดเสียง */
@@ -127,47 +127,58 @@ html, body {
 /* แบตเตอรี่ทรงแคปซูล */
 
 /* แบตเตอรี่ Samsung One UI */
+
+/* แบตเตอรี่ Samsung One UI */
 .battery {
   position: relative;
-  width: 32px;
-  height: 15px;
+  width: 31px;
+  height: 14px;
   border: none;
-  border-radius: 20px;
-  background: rgba(255,255,255,.65);
-  overflow: hidden;
+  border-radius: 8px;
+ background: rgba(66, 66, 74, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-right: 3px;
 }
 
-/* ไม่มีขั้วแบตเตอรี่ */
+/* ขั้วแบตเตอรี่ด้านขวา */
 .battery::after {
-  display: none;
+  content: "";
+  position: absolute;
+  right: -2.5px;
+  top: 4px;
+  width: 2.5px;
+  height: 6px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(255,255,255,.75);
 }
 
-/* ส่วนสีเข้มแสดงระดับแบตเตอรี่ */
+/* ส่วนแสดงระดับแบตเตอรี่ */
 .battery-level {
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 45%;
+  left: 0;
+  top: 0;
   height: 100%;
-  background: #252525;
-  border-radius: 20px 0 0 20px;
-  z-index: 0;
+  width: 50%;
+  background: #34343a;
+  border-radius: 8px 0 0 8px;
+  overflow: hidden;
 }
 
-/* ตัวเลขเปอร์เซ็นต์ */
+/* เปอร์เซ็นต์ตรงกลาง */
 .battery-percent {
   position: relative;
   z-index: 1;
   color: #fff;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 9px;
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: -.5px;
-  mix-blend-mode: difference;
+  letter-spacing: -.4px;
+  text-shadow: 0 0 2px #555;
 }
+
 
 
 /* วันที่และเวลา */
@@ -1218,7 +1229,8 @@ img.line-profile-avatar {
   <div class="battery-level" id="batteryLevel"></div>
   <span class="battery-percent" id="batteryPercent">45</span>
 </div>
-
+</div> <!-- ปิด status-right -->
+</div> <!-- ปิด status-bar -->
     <!-- หน้าจอล็อก -->
     <section class="screen" id="lockScreen">
 
