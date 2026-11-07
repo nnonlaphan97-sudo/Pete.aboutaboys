@@ -1448,6 +1448,13 @@ img.line-profile-avatar {
   font-size: 11px;
   margin: 12px 0 6px;
 }
+  .kao-media-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
   
 </style>
 </head>
@@ -2087,39 +2094,12 @@ img.line-profile-avatar {
       </svg>
     </button>
   </div>
-
 </div>
   
   <div class="kao-chat-messages" id="kaoChatMessages"></div>
-
-  <!-- ข้อความจากเก้า -->
-  <div class="kao-message-row received">
-    <img class="kao-message-avatar"
-         src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
-         alt="เก้า">
-
-    <div class="kao-message-bubble">
-    </div>
-    <span class="kao-message-time">10:03</span>
-  </div>
-
-  <!-- ข้อความจากพีท -->
-  <div class="kao-message-row sent">
-    <div class="kao-message-meta">
-      <span>อ่านแล้ว</span>
-      <span>10:04</span>
-    </div>
-
-    <div class="kao-message-bubble">
-    </div>
-  </div>
-</div>
-
-
  
-<form class="kao-chat-compose"
+   <form class="kao-chat-compose"
       onsubmit="sendKaoMessage(event)">
-
   <!-- เพิ่มเติม -->
   <button type="button" class="kao-tool-btn"
           aria-label="เพิ่มเติม">
@@ -2197,7 +2177,6 @@ img.line-profile-avatar {
       <span>หน้าหลัก</span>
     </button>
 
-    
 <button type="button" data-line-tab="chats"
         onclick="switchLinePage('chats')">
   <svg viewBox="0 0 24 24"
@@ -2593,7 +2572,7 @@ function openKaoChat() {
   if (gesture) gesture.style.display = "none";
   if (chat) chat.style.display = "flex";
 
-  kaoScrollBottom();
+  scrollKaoChat();
 }
 
 function closeKaoChat() {
@@ -2909,13 +2888,26 @@ function addKaoBubble(sender, message, time, type = "text") {
   const row = document.createElement("div");
   row.className = `kao-message-row ${sent ? "sent" : "received"}`;
 
-  if (!sent) {
+ if (!sent) {
+  const previous = container.lastElementChild;
+
+  const showAvatar =
+    !previous ||
+    !previous.classList.contains("received");
+
+  if (showAvatar) {
     const avatar = document.createElement("img");
     avatar.className = "kao-message-avatar";
     avatar.src = KAO_AVATAR_URL;
     avatar.alt = "เก้า";
     row.appendChild(avatar);
+  } else {
+    const spacer = document.createElement("div");
+    spacer.style.width = "32px";
+    spacer.style.flexShrink = "0";
+    row.appendChild(spacer);
   }
+}
 
   const bubble = document.createElement("div");
   bubble.className = "kao-message-bubble";
