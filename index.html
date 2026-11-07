@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -1006,7 +1005,24 @@ img.line-profile-avatar {
   display: block;
   flex-shrink: 0;
 }
+.line-count {
+  margin-left: auto;
+  color: #999;
+  font-size: 14px;
+}
 
+.line-friends-header button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  padding: 0;
+}
+
+.line-friends-header button svg {
+  display: block;
+}
+  
 </style>
 </head>
 
@@ -1422,11 +1438,16 @@ img.line-profile-avatar {
       <span class="line-arrow">›</span>
     </div>
 
-    <div class="line-friend-row">
-      <div class="line-friend-avatar">G</div>
-      <div><strong>กลุ่ม</strong><small>กลุ่มแชททั้งหมด</small></div>
-      <span class="line-arrow">›</span>
-    </div>
+   
+<div class="line-friend-row" onclick="switchLinePage('groups')">
+  <div class="line-friend-avatar">G</div>
+  <div>
+    <strong>กลุ่ม</strong>
+    <small>2 กลุ่ม</small>
+  </div>
+  <span class="line-arrow">›</span>
+</div>
+
 
     <div class="line-section-heading">
       <strong>บริการ</strong>
@@ -1439,22 +1460,102 @@ img.line-profile-avatar {
   </div>
 
   <!-- หน้าเพื่อน -->
-  <div class="line-page" id="lineFriendsPage">
-    <div class="line-friends-header">
-      <button type="button" onclick="switchLinePage('chats')">
-        ‹
-      </button>
-      <strong>เพื่อน</strong>
-    </div>
-    <div class="line-search">
-      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
-      <input type="search" placeholder="ค้นหาเพื่อน">
-    </div>
+ 
+<!-- รายชื่อเพื่อน -->
+<div class="line-page" id="lineFriendsPage">
+
+  <div class="line-friends-header">
+    <button type="button" onclick="switchLinePage('home')">
+      <svg viewBox="0 0 24 24" width="24" height="24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+    </button>
+    <strong>เพื่อน</strong>
+    <span class="line-count">4</span>
+  </div>
+
+  <div class="line-search">
+    <svg viewBox="0 0 24 24">
+      <circle cx="10.5" cy="10.5" r="6.5"/>
+      <path d="m16 16 5 5"/>
+    </svg>
+    <input type="search" placeholder="ค้นหาเพื่อน"
+           oninput="filterLineDirectory(this, 'lineFriendsList')">
+  </div>
+
+  <div id="lineFriendsList">
+
     <div class="line-friend-row">
-      <div class="line-friend-avatar">ก</div>
+      <img class="line-avatar"
+           src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+           alt="เก้า">
       <div><strong>เก้า</strong></div>
     </div>
+
+    <div class="line-friend-row">
+      <img class="line-avatar"
+           src="https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg"
+           alt="แสนดี">
+      <div><strong>แสนดี</strong></div>
+    </div>
+
+    <div class="line-friend-row">
+      <img class="line-avatar"
+           src="https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg"
+           alt="ธาดา">
+      <div><strong>ธาดา</strong></div>
+    </div>
+
+    <div class="line-friend-row">
+      <img class="line-avatar"
+           src="https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg"
+           alt="จูน">
+      <div><strong>จูน</strong></div>
+    </div>
+
   </div>
+</div>
+
+<!-- รายชื่อกลุ่ม -->
+<div class="line-page" id="lineGroupsPage">
+
+  <div class="line-friends-header">
+    <button type="button" onclick="switchLinePage('home')">
+      <svg viewBox="0 0 24 24" width="24" height="24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+    </button>
+    <strong>กลุ่ม</strong>
+    <span class="line-count">2</span>
+  </div>
+
+  <div class="line-search">
+    <svg viewBox="0 0 24 24">
+      <circle cx="10.5" cy="10.5" r="6.5"/>
+      <path d="m16 16 5 5"/>
+    </svg>
+    <input type="search" placeholder="ค้นหากลุ่ม"
+           oninput="filterLineDirectory(this, 'lineGroupsList')">
+  </div>
+
+  <div id="lineGroupsList">
+
+    <div class="line-friend-row">
+      <img class="line-avatar"
+           src="https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg"
+           alt="แก๊งเราโคตรเท่">
+      <div><strong>แก๊งเราโคตรเท่</strong></div>
+    </div>
+
+    <div class="line-friend-row">
+      <div class="line-avatar line-avatar-blue">A</div>
+      <div><strong>abou a boyz</strong></div>
+    </div>
+  </div>
+</div>
+
 
   <!-- แถบนำทางด้านล่าง -->
   <nav class="line-bottom-nav">
@@ -1752,34 +1853,38 @@ function closeLine() {
 
 /* เปลี่ยนหน้าภายใน LINE */
 function switchLinePage(page) {
+  
+function switchLinePage(page) {
   const pages = {
     chats: "lineChatsPage",
     home: "lineHomePage",
-    friends: "lineFriendsPage"
+    friends: "lineFriendsPage",
+    groups: "lineGroupsPage"
   };
 
   Object.values(pages).forEach(id => {
-    document.getElementById(id).style.display = "none";
+    const element = document.getElementById(id);
+    if (element) element.style.display = "none";
   });
 
-  const target = pages[page];
+  if (!pages[page]) page = "chats";
 
-  if (target) {
-    document.getElementById(target).style.display = "block";
-  } else {
-    // TODAY และ Wallet ยังไม่ได้สร้างหน้าเนื้อหา
-    document.getElementById("lineChatsPage").style.display = "block";
-    page = "chats";
-  }
+  const target = document.getElementById(pages[page]);
+  if (target) target.style.display = "block";
 
   document.querySelectorAll("[data-line-tab]").forEach(button => {
+    const activeTab =
+      page === "friends" || page === "groups"
+        ? "home"
+        : page;
+
     button.classList.toggle(
       "active",
-      button.dataset.lineTab === page ||
-      (page === "friends" && button.dataset.lineTab === "home")
+      button.dataset.lineTab === activeTab
     );
   });
 }
+
 
 /* ค้นหาแชท */
 function filterLineChats() {
@@ -1794,6 +1899,19 @@ function filterLineChats() {
         : "none";
   });
 }
+  
+function filterLineDirectory(input, listId) {
+  const keyword = input.value.trim().toLowerCase();
+  const list = document.getElementById(listId);
+
+  if (!list) return;
+
+  list.querySelectorAll(".line-friend-row").forEach(row => {
+    const name = row.querySelector("strong")?.textContent.toLowerCase() || "";
+    row.style.display = name.includes(keyword) ? "flex" : "none";
+  });
+}
+
 </script>
 </body>
 </html>
