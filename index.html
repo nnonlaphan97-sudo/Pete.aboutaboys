@@ -1022,6 +1022,148 @@ img.line-profile-avatar {
 .line-friends-header button svg {
   display: block;
 }
+
+/* ทางลัดเพื่อนและกลุ่มในหน้าหลัก */
+.line-directory-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  cursor: pointer;
+}
+
+.line-shortcut-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.line-shortcut-text strong {
+  display: block;
+  font-size: 15px;
+}
+
+.line-shortcut-text small {
+  display: block;
+  color: #888;
+  font-size: 12px;
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* รูปโปรไฟล์ 4 ช่อง */
+.line-mosaic {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2px;
+  overflow: hidden;
+  border-radius: 13px;
+  flex-shrink: 0;
+  background: #eee;
+}
+
+.line-mosaic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-width: 0;
+  min-height: 0;
+}
+
+.line-mosaic-single {
+  display: block;
+  border-radius: 50%;
+}
+
+.line-mosaic-single img {
+  width: 100%;
+  height: 100%;
+}
+
+.line-mosaic-two {
+  grid-template-rows: 1fr;
+}
+
+.line-mosaic-letter {
+  display: grid;
+  place-items: center;
+  background: #dfe5f2;
+  color: #637ba1;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* หัวหน้ารายชื่อ */
+.line-directory-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  margin-bottom: 18px;
+  font-size: 20px;
+}
+
+.line-directory-header button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* แท็บรายชื่อ */
+.line-directory-tabs {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-bottom: 1px solid #ececec;
+  margin: 0 -17px 14px;
+  padding: 0 17px;
+  scrollbar-width: none;
+}
+
+.line-directory-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.line-directory-tabs button {
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  padding: 12px 0;
+  color: #aaa;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.line-directory-tabs button.selected {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.line-directory-panel {
+  display: none;
+}
+
+.line-directory-panel h3 {
+  font-size: 15px;
+  margin: 18px 0 12px;
+}
   
 </style>
 </head>
@@ -1421,29 +1563,53 @@ img.line-profile-avatar {
       <input type="search" placeholder="ค้นหา">
     </div>
 
-    <div class="line-section-heading">
-      <strong>รายชื่อเพื่อน</strong>
-      <span>ดูทั้งหมด</span>
-    </div>
+  
+<div class="line-section-heading">
+  <strong>รายชื่อเพื่อน</strong>
+  <span onclick="openLineDirectory('friends')"
+        style="cursor:pointer">ดูทั้งหมด ›</span>
+</div>
 
-    <div class="line-friend-row" onclick="switchLinePage('friends')">
-      <div class="line-friend-avatar">★</div>
-      <div><strong>รายการโปรด</strong><small>เพื่อนสนิท</small></div>
-      <span class="line-arrow">›</span>
-    </div>
+<!-- รายการโปรด -->
+<div class="line-directory-shortcut"
+     onclick="openLineDirectory('favorites')">
+  <div class="line-mosaic line-mosaic-single">
+    <img src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg" alt="เก้า">
+  </div>
+  <div class="line-shortcut-text">
+    <strong>รายการโปรด</strong>
+    <small>เก้า</small>
+  </div>
+  <span class="line-arrow">›</span>
+</div>
 
-    <div class="line-friend-row" onclick="switchLinePage('friends')">
-      <div class="line-friend-avatar">P</div>
-      <div><strong>เพื่อน</strong><small>รายชื่อเพื่อนทั้งหมด</small></div>
-      <span class="line-arrow">›</span>
-    </div>
+<!-- เพื่อน -->
+<div class="line-directory-shortcut"
+     onclick="openLineDirectory('friends')">
+  <div class="line-mosaic">
+    <img src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg" alt="เก้า">
+    <img src="https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg" alt="แสนดี">
+    <img src="https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg" alt="จูน">
+    <img src="https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg" alt="ธาดา">
+  </div>
+  <div class="line-shortcut-text">
+    <strong>เพื่อน</strong>
+    <small>เก้า, แสนดี, จูน</small>
+  </div>
+  <span class="line-arrow">›</span>
+</div>
 
-   
-<div class="line-friend-row" onclick="switchLinePage('groups')">
-  <div class="line-friend-avatar">G</div>
-  <div>
+<!-- กลุ่ม -->
+<div class="line-directory-shortcut"
+     onclick="openLineDirectory('groups')">
+  <div class="line-mosaic line-mosaic-two">
+    <img src="https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg"
+         alt="แก๊งเราโคตรเท่">
+    <div class="line-mosaic-letter">A</div>
+  </div>
+  <div class="line-shortcut-text">
     <strong>กลุ่ม</strong>
-    <small>2 กลุ่ม</small>
+    <small>แก๊งเราโคตรเท่, about a boyz</small>
   </div>
   <span class="line-arrow">›</span>
 </div>
@@ -1462,17 +1628,20 @@ img.line-profile-avatar {
   <!-- หน้าเพื่อน -->
  
 <!-- รายชื่อเพื่อน -->
+
+<!-- หน้ารายชื่อเพื่อน -->
 <div class="line-page" id="lineFriendsPage">
 
-  <div class="line-friends-header">
-    <button type="button" onclick="switchLinePage('home')">
+  <div class="line-directory-header">
+    <button type="button"
+            onclick="switchLinePage('home')">
       <svg viewBox="0 0 24 24" width="24" height="24"
-           fill="none" stroke="currentColor" stroke-width="2">
+           fill="none" stroke="currentColor"
+           stroke-width="2">
         <path d="m15 18-6-6 6-6"/>
       </svg>
     </button>
-    <strong>เพื่อน</strong>
-    <span class="line-count">4</span>
+    <strong>รายชื่อเพื่อน</strong>
   </div>
 
   <div class="line-search">
@@ -1480,82 +1649,97 @@ img.line-profile-avatar {
       <circle cx="10.5" cy="10.5" r="6.5"/>
       <path d="m16 16 5 5"/>
     </svg>
-    <input type="search" placeholder="ค้นหาเพื่อน"
-           oninput="filterLineDirectory(this, 'lineFriendsList')">
+    <input type="search" placeholder="ค้นหา"
+           oninput="filterLineDirectory(this)">
   </div>
 
-  <div id="lineFriendsList">
-
-    <div class="line-friend-row">
-      <img class="line-avatar"
-           src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
-           alt="เก้า">
-      <div><strong>เก้า</strong></div>
-    </div>
-
-    <div class="line-friend-row">
-      <img class="line-avatar"
-           src="https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg"
-           alt="แสนดี">
-      <div><strong>แสนดี</strong></div>
-    </div>
-
-    <div class="line-friend-row">
-      <img class="line-avatar"
-           src="https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg"
-           alt="ธาดา">
-      <div><strong>ธาดา</strong></div>
-    </div>
-
-    <div class="line-friend-row">
-      <img class="line-avatar"
-           src="https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg"
-           alt="จูน">
-      <div><strong>จูน</strong></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- รายชื่อกลุ่ม -->
-<div class="line-page" id="lineGroupsPage">
-
-  <div class="line-friends-header">
-    <button type="button" onclick="switchLinePage('home')">
-      <svg viewBox="0 0 24 24" width="24" height="24"
-           fill="none" stroke="currentColor" stroke-width="2">
-        <path d="m15 18-6-6 6-6"/>
-      </svg>
+  <div class="line-directory-tabs">
+    <button type="button" data-directory-tab="favorites"
+            onclick="switchLineDirectoryTab('favorites')">
+      รายการโปรด
     </button>
-    <strong>กลุ่ม</strong>
-    <span class="line-count">2</span>
+    <button type="button" data-directory-tab="friends"
+            onclick="switchLineDirectoryTab('friends')">
+      เพื่อน
+    </button>
+    <button type="button" data-directory-tab="groups"
+            onclick="switchLineDirectoryTab('groups')">
+      กลุ่ม
+    </button>
+    <button type="button" data-directory-tab="official"
+            onclick="switchLineDirectoryTab('official')">
+      บัญชีทางการ
+    </button>
   </div>
 
-  <div class="line-search">
-    <svg viewBox="0 0 24 24">
-      <circle cx="10.5" cy="10.5" r="6.5"/>
-      <path d="m16 16 5 5"/>
-    </svg>
-    <input type="search" placeholder="ค้นหากลุ่ม"
-           oninput="filterLineDirectory(this, 'lineGroupsList')">
-  </div>
+  <div id="lineDirectoryContent">
 
-  <div id="lineGroupsList">
-
-    <div class="line-friend-row">
-      <img class="line-avatar"
-           src="https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg"
-           alt="แก๊งเราโคตรเท่">
-      <div><strong>แก๊งเราโคตรเท่</strong></div>
+    <!-- รายการโปรด -->
+    <div class="line-directory-panel"
+         data-directory-panel="favorites">
+      <h3>รายการโปรด 1</h3>
+      <div class="line-friend-row">
+        <img class="line-avatar"
+             src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg">
+        <div><strong>เก้า</strong></div>
+      </div>
     </div>
 
-    <div class="line-friend-row">
-      <div class="line-avatar line-avatar-blue">A</div>
-      <div><strong>abou a boyz</strong></div>
+    <!-- เพื่อน เรียง ก-ฮ -->
+    <div class="line-directory-panel"
+         data-directory-panel="friends">
+      <h3>เพื่อน 4</h3>
+
+      <div class="line-friend-row">
+        <img class="line-avatar"
+             src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg">
+        <div><strong>เก้า</strong></div>
+      </div>
+
+      <div class="line-friend-row">
+        <img class="line-avatar"
+             src="https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg">
+        <div><strong>จูน</strong></div>
+      </div>
+
+      <div class="line-friend-row">
+        <img class="line-avatar"
+             src="https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg">
+        <div><strong>ธาดา</strong></div>
+      </div>
+
+      <div class="line-friend-row">
+        <img class="line-avatar"
+             src="https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg">
+        <div><strong>แสนดี</strong></div>
+      </div>
     </div>
+
+    <!-- กลุ่ม -->
+    <div class="line-directory-panel"
+         data-directory-panel="groups">
+      <h3>กลุ่ม 2</h3>
+
+      <div class="line-friend-row">
+        <img class="line-avatar"
+             src="https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg">
+        <div><strong>แก๊งเราโคตรเท่</strong></div>
+      </div>
+
+      <div class="line-friend-row">
+        <div class="line-avatar line-avatar-blue">A</div>
+        <div><strong>about a boyz</strong></div>
+      </div>
+    </div>
+
+    <!-- บัญชีทางการ -->
+    <div class="line-directory-panel"
+         data-directory-panel="official">
+      <h3>บัญชีทางการ 0</h3>
+    </div>
+
   </div>
 </div>
-
 
   <!-- แถบนำทางด้านล่าง -->
   <nav class="line-bottom-nav">
@@ -1844,6 +2028,7 @@ unlockArea.addEventListener("touchend", function(e) {
 function openLine() {
   showPhoneScreen("lineScreen");
   switchLinePage("chats");
+  switchLineDirectoryTab("favorites");
 }
 
 /* กลับหน้าโฮมโทรศัพท์ */
@@ -1853,11 +2038,12 @@ function closeLine() {
 
 /* เปลี่ยนหน้าภายใน LINE */
 function switchLinePage(page) {
+  
+function switchLinePage(page) {
   const pages = {
     chats: "lineChatsPage",
     home: "lineHomePage",
-    friends: "lineFriendsPage",
-    groups: "lineGroupsPage"
+    friends: "lineFriendsPage"
   };
 
   Object.values(pages).forEach(id => {
@@ -1865,24 +2051,20 @@ function switchLinePage(page) {
     if (element) element.style.display = "none";
   });
 
+  if (page === "groups") page = "friends";
   if (!pages[page]) page = "chats";
 
   const target = document.getElementById(pages[page]);
   if (target) target.style.display = "block";
 
   document.querySelectorAll("[data-line-tab]").forEach(button => {
-    const activeTab =
-      page === "friends" || page === "groups"
-        ? "home"
-        : page;
-
+    const activeTab = page === "friends" ? "home" : page;
     button.classList.toggle(
       "active",
       button.dataset.lineTab === activeTab
     );
   });
 }
-
 
 /* ค้นหาแชท */
 function filterLineChats() {
@@ -1898,17 +2080,48 @@ function filterLineChats() {
   });
 }
   
-function filterLineDirectory(input, listId) {
-  const keyword = input.value.trim().toLowerCase();
-  const list = document.getElementById(listId);
 
-  if (!list) return;
+function openLineDirectory(tab = "favorites") {
+  switchLinePage("friends");
+  switchLineDirectoryTab(tab);
+}
 
-  list.querySelectorAll(".line-friend-row").forEach(row => {
-    const name = row.querySelector("strong")?.textContent.toLowerCase() || "";
+function switchLineDirectoryTab(tab) {
+  document.querySelectorAll("[data-directory-tab]").forEach(button => {
+    button.classList.toggle(
+      "selected",
+      button.dataset.directoryTab === tab
+    );
+  });
+
+  document.querySelectorAll("[data-directory-panel]").forEach(panel => {
+    panel.style.display =
+      panel.dataset.directoryPanel === tab ? "block" : "none";
+  });
+
+  const search = document.querySelector(
+    "#lineFriendsPage input[type='search']"
+  );
+
+  if (search) {
+    search.value = "";
+    filterLineDirectory(search);
+  }
+}
+
+function filterLineDirectory(input) {
+  const keyword = input.value.trim().toLocaleLowerCase("th");
+
+  document.querySelectorAll(
+    ".line-directory-panel .line-friend-row"
+  ).forEach(row => {
+    const name = row.querySelector("strong")
+      ?.textContent.toLocaleLowerCase("th") || "";
+
     row.style.display = name.includes(keyword) ? "flex" : "none";
   });
 }
+
 
 </script>
 </body>
