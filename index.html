@@ -3072,21 +3072,19 @@ function showKaoLockNotification(message) {
     animation: kaoNotificationIn .35s ease-out;
   `;
 
-  // ไอคอน LINE
-  const icon = document.createElement("div");
-  icon.style.cssText = `
-    width: 38px;
-    height: 38px;
-    border-radius: 13px;
-    background: #06c755;
-    color: white;
-    display: grid;
-    place-items: center;
-    font-size: 12px;
-    font-weight: 800;
-    flex-shrink: 0;
-  `;
-  icon.textContent = "LINE";
+  // รูปโปรไฟล์เก้าในแจ้งเตือนหน้าล็อก
+const icon = document.createElement("img");
+
+icon.src = "https://i.ibb.co/N2vPgK03/IMG-4076.jpg";
+icon.alt = "เก้า";
+
+icon.style.cssText = `
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+`;
 
   // เนื้อหาแจ้งเตือน
   const content = document.createElement("div");
