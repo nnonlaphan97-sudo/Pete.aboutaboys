@@ -1455,6 +1455,17 @@ img.line-profile-avatar {
   gap: 8px;
   text-align: center;
 }
+  @keyframes kaoNotificationIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   
 </style>
 </head>
@@ -3001,99 +3012,126 @@ function kaoStoryMessage(message) {
 }
 
 // แสดงแจ้งเตือน LINE บนหน้าล็อก
+// แสดงแจ้งเตือน LINE แบบสะสมทีละบับเบิ้ล
 function showKaoLockNotification(message) {
   const lock = document.getElementById("lockScreen");
   if (!lock) return;
 
-  // ป้องกันแจ้งเตือนซ้ำ
- document.getElementById("kaoLockNotification")?.remove();
+  let list = document.getElementById("kaoLockNotificationList");
+
+  // สร้างพื้นที่รวมแจ้งเตือนเพียงครั้งเดียว
+  if (!list) {
+    list = document.createElement("div");
+    list.id = "kaoLockNotificationList";
+
+    list.style.cssText = `
+      position: absolute;
+      top: 48%;
+      left: 16px;
+      right: 16px;
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-height: 38%;
+      overflow-y: auto;
+      scrollbar-width: none;
+      transform: translateY(-10%);
+      pointer-events: auto;
+    `;
+
+    lock.appendChild(list);
+  }
+
+  const time = kaoStoryTime();
 
   const notification = document.createElement("div");
-  notification.id = "kaoLockNotification";
+  notification.className = "kao-lock-notification";
 
   notification.style.cssText = `
-    position: absolute;
-    top: 205px;
-    left: 16px;
-    right: 16px;
-    z-index: 15;
-    padding: 13px 15px;
-    background: rgba(245,245,245,.93);
-    color: #222;
-    border-radius: 19px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.12);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px 15px;
+    background: rgba(242, 244, 255, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    color: #20212b;
+    border-radius: 28px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
     font-family: inherit;
+    animation: kaoNotificationIn .35s ease-out;
   `;
 
-  notification.innerHTML = `
-    <div style="
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:8px;
-      font-size:12px;
-    ">
-      <span style="
-        display:flex;
-        align-items:center;
-        gap:7px;
-        font-weight:600;
-      ">
-        <span style="
-          width:22px;
-          height:22px;
-          background:#06c755;
-          border-radius:6px;
-          color:white;
-          display:grid;
-          place-items:center;
-          font-size:12px;
-          font-weight:bold;
-        ">L</span>
-        LINE
-      </span>
-      <span id="kaoNotificationTime"></span>
-    </div>
+  // ไอคอน LINE
+  const icon = document.createElement("div");
+  icon.style.cssText = `
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    background: #06c755;
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+  `;
+  icon.textContent = "LINE";
 
-    <div style="
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-    ">
-      <img
-        src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
-        style="
-          width:37px;
-          height:37px;
-          border-radius:50%;
-          object-fit:cover;
-        "
-        alt="เก้า"
-      >
-
-      <div style="min-width:0;">
-        <div style="
-          font-size:14px;
-          font-weight:600;
-          margin-bottom:4px;
-        ">เก้า</div>
-
-        <div style="
-          font-size:12px;
-          line-height:1.6;
-        ">
-          ${message}
-        </div>
-      </div>
-    </div>
+  // เนื้อหาแจ้งเตือน
+  const content = document.createElement("div");
+  content.style.cssText = `
+    flex: 1;
+    min-width: 0;
   `;
 
-  lock.appendChild(notification);
+  const heading = document.createElement("div");
+  heading.style.cssText = `
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 3px;
+  `;
 
-  document.getElementById("kaoNotificationTime")
-    .textContent = kaoStoryTime();
+  const name = document.createElement("strong");
+  name.textContent = "เก้า";
+  name.style.cssText = `
+    font-size: 13px;
+    font-weight: 700;
+  `;
+
+  const timeLabel = document.createElement("span");
+  timeLabel.textContent = time;
+  timeLabel.style.cssText = `
+    font-size: 11px;
+    color: #777;
+  `;
+
+  heading.appendChild(name);
+  heading.appendChild(timeLabel);
+
+  const body = document.createElement("div");
+  body.textContent = message;
+  body.style.cssText = `
+    font-size: 12px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  `;
+
+  content.appendChild(heading);
+  content.appendChild(body);
+
+  notification.appendChild(icon);
+  notification.appendChild(content);
+
+  // เพิ่มข้อความใหม่ไว้ด้านล่างของข้อความก่อนหน้า
+  list.appendChild(notification);
+
+  // เลื่อนรายการลงเพื่อให้เห็นข้อความล่าสุด
+  list.scrollTop = list.scrollHeight;
 }
-
 // เริ่มข้อความวันนี้ตั้งแต่ยังอยู่หน้าล็อก
 function initializeKaoStory() {
   if (kaoStoryStarted) return;
