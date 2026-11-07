@@ -125,48 +125,50 @@ html, body {
 }
 
 /* แบตเตอรี่ทรงแคปซูล */
+
+/* แบตเตอรี่ Samsung One UI */
 .battery {
   position: relative;
-  width: 25px;
-  height: 13px;
-  border: 1.3px solid #fff;
-  border-radius: 6px;
+  width: 32px;
+  height: 15px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255,255,255,.65);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-left: 1px;
 }
 
-/* ไม่แสดงขั้วแบตเตอรี่ด้านนอก */
+/* ไม่มีขั้วแบตเตอรี่ */
 .battery::after {
   display: none;
 }
 
-/* ระดับแบตเตอรี่ */
+/* ส่วนสีเข้มแสดงระดับแบตเตอรี่ */
 .battery-level {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
+  inset: 0 auto 0 0;
+  width: 45%;
   height: 100%;
-  background: rgba(255,255,255,.35);
-  border-radius: 4px 0 0 4px;
+  background: #252525;
+  border-radius: 20px 0 0 20px;
   z-index: 0;
 }
 
-/* เปอร์เซ็นต์อยู่ในแบตเตอรี่ */
+/* ตัวเลขเปอร์เซ็นต์ */
 .battery-percent {
   position: relative;
   z-index: 1;
-  font-size: 8px;
+  color: #fff;
+  font-size: 10px;
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -.4px;
-  color: #fff;
-  mix-blend-mode: normal;
+  letter-spacing: -.5px;
+  mix-blend-mode: difference;
 }
+
 
 /* วันที่และเวลา */
 
@@ -1212,12 +1214,9 @@ img.line-profile-avatar {
     </svg>
 
     <!-- แบตเตอรี่ Samsung แบบแคปซูล -->
-    <div class="battery" id="battery">
-      <div class="battery-level" id="batteryLevel"></div>
-      <span class="battery-percent" id="batteryPercent">50</span>
-    </div>
-
-  </div>
+<div class="battery" id="battery">
+  <div class="battery-level" id="batteryLevel"></div>
+  <span class="battery-percent" id="batteryPercent">45</span>
 </div>
 
     <!-- หน้าจอล็อก -->
