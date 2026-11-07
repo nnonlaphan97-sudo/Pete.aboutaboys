@@ -1441,7 +1441,15 @@ img.line-profile-avatar {
   width: 19px;
   height: 19px;
 }
-
+.kao-chat-date {
+  align-self: center;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(80, 91, 112, .25);
+  color: #fff;
+  font-size: 11px;
+  margin: 12px 0 6px;
+}
   
 </style>
 </head>
@@ -2084,7 +2092,7 @@ img.line-profile-avatar {
 
 </div>
   
-  <div class="kao-chat-messages" id="kaoChatMessages">
+  <div class="kao-chat-messages" id="kaoChatMessages"></div>
 
   <!-- ข้อความจากเก้า -->
   <div class="kao-message-row received">
@@ -2324,10 +2332,14 @@ function enterPin(number) {
     pinBusy = true;
 
     if (typedPin === PHONE_PIN) {
-      setTimeout(() => {
-        showPhoneScreen("homeScreen");
-      }, 250);
-    } else {
+  setTimeout(() => {
+    showPhoneScreen("homeScreen");
+
+    // ปลดล็อกสำเร็จแล้ว เก้าโทรเข้า
+    startKaoIncomingCall();
+
+  }, 250);
+} else {
       document.getElementById("pinError").textContent =
         "รหัสผ่านไม่ถูกต้อง";
 
@@ -2582,7 +2594,10 @@ function openKaoChat() {
 
   if (nav) nav.style.display = "none";
   if (chat) chat.style.display = "flex";
+
+  kaoScrollBottom();
 }
+
 
 function closeKaoChat() {
   switchLinePage("chats");
@@ -2618,6 +2633,730 @@ function sendKaoMessage(event) {
   input.value = "";
   container.scrollTop = container.scrollHeight;
 }
+
+/* ===== ประวัติแชทพีท-เก้า ===== */
+/* รูปแบบ: เวลา | คนส่ง | ข้อความ */
+/* วันที่ใช้ปี 2026 */
+
+const PETE_KAO_HISTORY = {
+  "12/10": [
+    ["16:14","พ","ถ้าขึ้นจากน้ำแล้วไม่เห็นหน้าเจอจัดหนักแน่"],
+    ["19:03","พ","ส่งรูปภาพ","image"],
+    ["19:04","พ","ขอบคุณนะไอ้สัส"],
+    ["20:00","ก","กูบอกแล้วว่าอย่าเล่นน้ำเยอะ"],
+    ["20:01","ก","เป็นไงล่ะ เป็นไข้เลย"],
+    ["20:05","พ","ตอบช้า"],
+    ["20:05","พ","มึงแอบมีกิ๊กใช่ไหม"],
+    ["20:06","ก","ให้กูไปขี้ไปเยี่ยวบ้างเนอะ"],
+    ["20:07","พ","คอลกัน"],
+    ["20:11","พ","คอลลิ่ง"]
+  ],
+  "15/10": [
+    ["15:22","พ","มึงเลิกสอนยัง"],
+    ["15:23","พ","เดี๋ยวกูไปรอหน้าร้านพี่ซันนะ"],
+    ["15:30","ก","ไม่ต้องมารับ"],
+    ["15:35","ก","กูไปเองได้"],
+    ["15:40","พ","มึงห้ามกูไม่ได้หรอก"]
+  ],
+  "17/10": [
+    ["20:30","พ","กูคิดถึงมึงอ่ะ"],
+    ["20:31","พ","อยากเห็นหน้า"],
+    ["20:33","ก","อยากเห็นก็เปิดกล้องดิ"],
+    ["20:35","พ","ไม่อ่ะ"],
+    ["20:36","พ","เปิดหน้าต่างดีกว่า"],
+    ["22:17","พ","รู้สึกดีจังวะ"],
+    ["22:18","พ","แฟนกูน่ารักจัง"],
+    ["22:22","ก","กูรู้แล้ว"],
+    ["22:23","พ","แต่กูมีค่าแค่ 20 เองเหรอวะ"],
+    ["22:24","ก","40 บาทต่างหาก"],
+    ["22:25","พ","กูแม่งโชคดีว่ะ"],
+    ["22:26","พ","มีมึงเป็นแฟน"]
+  ],
+  "19/10": [
+    ["15:30","พ","สอนเสร็จยัง"],
+    ["15:31","ก","ยัง"],
+    ["15:32","พ","ทำไมช้าจังวะ"],
+    ["15:33","ก","เมื่อเช้าตื่นสายไง ก็ต้องสอนชดเชยเปล่าวะ"],
+    ["15:34","ก","รอแป๊บ"],
+    ["15:34","ก","อีก 15 นาทีก็สอนเสร็จแล้ว"],
+    ["15:35","พ","ไม่รอแล้วเว้ย"]
+  ],
+  "21/10": [
+    ["13:00","ก","มึงเปิดประตูหน่อย"],
+    ["13:01","ก","ไม่ต้องกูเข้าไปละนะ"],
+    ["20:31","พ","ถึงบ้านยัง"],
+    ["20:32","ก","มึงเพิ่งมาส่งกู"],
+    ["20:33","ก","กูควรถามมึง"],
+    ["20:34","พ","กลัวมีใครมาฉุดมึงก่อนเข้าประตูบ้าน"],
+    ["20:35","ก","เวอร์ชิบหาย"]
+  ],
+  "24/10": [
+    ["15:49","พ","มึงอยู่ไหนเนี่ย"],
+    ["15:50","พ","ทำอะไร"],
+    ["15:51","ก","กูสอนอยู่"],
+    ["15:52","พ","มึงกูเบื่อ"],
+    ["15:53","พ","เจอร้านพี่ซันนะ"],
+    ["18:00","พ","อย่าลืมเอาแก้วไปใช้นะมึง"],
+    ["18:01","ก","รู้แล้วจ้าพ่อคนขี้หวง"],
+    ["18:02","พ","กูหาเลนส์ตัวใหม่ก่อน"]
+  ],
+  "25/10": [
+    ["17:00","พ","ส่งรูป","image"],
+    ["17:04","ก","ไหนมึงบอกมึงชอบถ่ายวิวไง"],
+    ["17:05","พ","ก็ในวิวของกูมีมึงเสมอ"],
+    ["17:07","พ","อย่าลืมหาอะไรมาแลกด้วยนะ"],
+    ["17:08","ก","กูเปลืองตัวอีกละ"],
+    ["17:08","พ","ให้ตายมึงคิดทะลึ่งอะไร"],
+    ["17:09","พ","หรือถ้าอยากเปลืองตัวกูก็ไม่ติด"],
+    ["17:10","ก","เอะอะๆ จะให้กูขึ้น"]
+  ],
+  "30/10": [
+    ["15:30","พ","มึงทำอะไรอยู่"],
+    ["15:31","พ","อยู่บ้านปะ"],
+    ["16:30","ก","ไม่อยู่"],
+    ["16:01","พ","ไปไหน"],
+    ["16:02","พ","พน.ไปเป็นเพื่อนกูหน่อย"],
+    ["16:03","ก","ไปไหนวะ"],
+    ["16:04","พ","สตูถ่ายทำ"],
+    ["16:05","พ","เค้าบอกให้ทำอาหาร"],
+    ["16:09","ก","มึงเนี่ยนะทำอาหาร"],
+    ["16:10","พ","อย่ามาดูถูกกูไอ้เก้า"],
+    ["16:11","ก","ถือว่าไม่ได้ดูผิด"]
+  ],
+  "01/11": [
+    ["14:50","พ","มึงรีบไปไหน"],
+    ["14:51","ก","สอนพิเศษ"],
+    ["14:56","พ","สอนอะไรนักหนาวะ"]
+  ],
+  "15/11": [
+    ["16:50","พ","คิดถึงว่ะ"],
+    ["16:51","พ","ทำอะไรอยู่วะ"],
+    ["16:52","ก","สอนพิเศษอยู่"],
+    ["16:53","พ","สอนอะไรหนักหนา"],
+    ["16:56","ก","น้องกูต้องย้ายหอ"],
+    ["19:10","พ","มึงเลิกสอนยัง"],
+    ["19:11","ก","ใกล้แล้ว"],
+    ["19:12","พ","เจอกัน"],
+    ["19:13","พ","กูรออยู่หน้าบ้านมึง"],
+    ["19:14","ก","มีไรวะ ดูตึงเชียว"],
+    ["19:15","พ","มาถึงเดี๋ยวก็รู้"]
+  ],
+  "16/11": [
+    ["12:31","ก","อย่าไปต่อยน้องนะมึง"],
+    ["12:32","พ","ไม่ต่อยหรอก"],
+    ["12:33","พ","เชื่อใจกูบ้างดิวะ"],
+    ["12:40","ก","แฟนกูเก่งมาก"],
+    ["12:41","พ","ต้องมีรางวัลละปะ"],
+    ["12:43","ก","เมื่อคืนยังไม่พอเหรอ"],
+    ["12:44","พ","เครื่องปริ้นบ้านมึงหมึกหมดแล้วเหมือนกัน"],
+    ["12:45","พ","ต้องเติมหมึกหน่อย"]
+  ],
+  "17/11": [
+    ["15:24","พ","อาจารย์เสนอให้กูพูดเปิดในงาน young gear ว่ะมึง"],
+    ["15:25","พ","กูจะทำได้ปะวะ"],
+    ["15:30","ก","ถ้ามึงฝึกพูดก็ทำได้"],
+    ["15:31","พ","เลิกสอนยัง"],
+    ["15:32","พ","วันนี้มีกินข้าวกับพ่อกูนะอย่าลืม"],
+    ["15:33","ก","กำลังไป"],
+    ["15:39","พ","วันนี้กูจะทำสปาเกตตี้ยำปลากระป๋อง"],
+    ["15:40","ก","ไม่อร่อยแล้วขยันทำ"]
+  ],
+  "18/11": [
+    ["14:30","พ","วันนี้ไปนอนบ้านมึงนะ"],
+    ["14:31","ก","อืม"],
+    ["14:32","พ","เป็นไรเหนื่อยเหรอ"],
+    ["14:33","ก","นิดหน่อย"],
+    ["14:33","พ","เดี๋ยวพี่ช่วยนวดให้หายเหนื่อยเอง"],
+    ["14:34","ก","มึงไม่ต้องมานอนและ"],
+    ["14:35","พ","นวดจริงๆ มึงคิดทะลึ่งอะไร"],
+    ["14:40","ก","ให้มันจริงเถอะ"],
+    ["14:41","พ","ยิ้มได้แล้ว"],
+    ["14:42","ก","😬"],
+    ["14:45","พ","ไม่ยิ้มกูยิ้มนะ"],
+    ["14:50","พ","น่ารักมากไอ้อ้วนเอ้ย"]
+  ],
+  "20/11": [
+    ["21:20","พ","มึงน่ารักจังวะเก้า"],
+    ["21:23","ก","มึงยังไม่กลับไปอีกเหรอ"],
+    ["21:24","พ","กลับแล้ว"],
+    ["21:25","พ","แต่เห็นหมีแล้วได้แต่คิด"],
+    ["21:26","พ","ทำไมแฟนกูน่ารักจังวะ"],
+    ["21:27","ก","หยุดเพ้อแล้วไปซ้อมพูด"],
+    ["21:28","พ","ได้ค้าบแฟน"]
+  ],
+  "21/11": [
+    ["02:03","พ","เชี่ยแม่งงตื่นเต้นสัสว่ะ"],
+    ["04:00","ก","มึงได้นอนบ้างมั้ยเนี่ยพีท"],
+    ["04:10","พ","นอนชั่วโมงเดียว"],
+    ["04:20","พ","กูไปอาบน้ำละ"],
+    ["04:21","ก","ไหวมั้ยเนี่ยมึง"],
+    ["04:22","พ","วันนี้มึงต้องอยู่กับกูตลอดการพูดนะ"],
+    ["04:28","ก","เออมึงรีบมารับกูเถอะ"],
+    ["04:50","พ","กำลังออก"],
+    ["08:30","ก","แฟนกูแม่งเก่งจังวะ"],
+    ["08:30","ก","ไม่เสียชื่อพี่พีทอะเบ้าอะบอยย"],
+    ["08:45","พ","แน่จริงมาชมต่อหน้าดิ"],
+    ["12:02","พ","อยู่ไหนพี่สวัส"],
+    ["12:03","ก","กำลังไปแจกข้าว"],
+    ["12:06","พ","แจกเสร็จแล้วรีบมาหากู"],
+    ["12:06","ก","มึงมีไรอีก"],
+    ["12:08","พ","กูคิดถึง"],
+    ["22:08","พ","มึงไปไหนไม่มานั่งนอนกับกู"],
+    ["22:09","ก","ลงโทษที่มึงทำกับกูในห้องน้ำ"],
+    ["22:10","ก","บอกให้พักๆ กูเหนื่อย"],
+    ["22:11","พ","เหนื่อยอะไรกูทำทั้งนั้น"],
+    ["22:13","พ","มาปลอบใจหน่อย"],
+    ["22:14","พ","ไอ้จูนแม่งด่ากูว่าลุง"],
+    ["22:20","ก","สำออย"],
+    ["22:20","ก","นอนไป เก็บแรงไว้วันพรุ่งนี้"],
+    ["22:22","พ","แรงทำไรเหรอ"],
+    ["22:23","ก","ไอ้พีท"],
+    ["22:24","พ","ทำฐานไง มึงคิดไร"],
+    ["22:25","ก","มึงนอนคนเดียวไปเลย"],
+    ["22:26","พ","เก้าาาาาาาา"]
+  ],
+  "22/11": [
+    ["11:50","ก","มึงแกล้งไรน้องนนท์"],
+    ["11:51","พ","แกล้งไรกูทำตามกติกา"],
+    ["11:52","ก","น้องไม่กินเผ็ดมึงไม่รู้เหรอ"],
+    ["11:53","พ","ไม่กินก็บอกดิ"],
+    ["11:54","พ","มีปากไว้ทำไม"],
+    ["11:56","ก","ใจเย็น มาแดกข้าว"],
+    ["11:58","พ","เออ"],
+    ["19:20","ก","พีทมาที่ห้องเก็บ208 หน่อย"],
+    ["19:21","ก","กูมีเรื่องจะคุยด้วย"]
+  ],
+  "26/11": [
+    ["10:20","พ","วันนี้มาเจอกูโรงแรมนี้นะ"],
+    ["10:20","พ","ใส่เสื้อที่กูส่งไปให้ด้วย"],
+    ["10:20","ก","ไปทำไรวะ"],
+    ["10:21","พ","ความลับ"],
+    ["10:27","ก","กูว่างหลังบ่ายสาม"],
+    ["10:28","พ","ทำไร"],
+    ["10:30","ก","กูก็มีธุระบ้างปะวะ"],
+    ["10:31","พ","ให้กูไปรับมั้ย"],
+    ["10:32","ก","ไม่ต้องเดี๋ยวกูไปเอง"],
+    ["10:35","พ","มึงมีกิ๊กปะเนี่ย"],
+    ["10:40","ก","กูรักมึงมากขนาดนี้"],
+    ["10:41","ก","จะไปมีกิ๊กที่ไหน"],
+    ["10:42","พ","อย่าให้กูรู้แล้วกัน"],
+    ["15:45","ก","กำลังไป"],
+    ["15:46","พ","มีรถมั้ยเดี๋ยวไปรับ"],
+    ["22:36","พ","ส่งไฟล์","file"],
+    ["22:37","ก","พูดอะไรฟังไม่ออก"],
+    ["22:37","พ","ไอ้เก้ารักมึงนะ"]
+  ],
+  "05/12": [
+    ["20:13","พ","ส่งรูปภาพ","image"],
+    ["20:13","พ","ถ่ายรูปห่วยสัส"],
+    ["20:27","ก","ถ้าคนสอนดีแม่งก็ไม่ห่วยหรอก"],
+    ["20:28","พ","ไม่เป็นไรกูถ่ายเก่ง"],
+    ["20:29","พ","ให้กูถ่ายมึงไปตลอดชาติเลย"]
+  ]
+};
+
+/* ===== แสดงประวัติข้อความ ===== */
+
+const KAO_AVATAR_URL =
+  "https://i.ibb.co/N2vPgK03/IMG-4076.jpg";
+
+function kaoTimeNow() {
+  return new Date().toLocaleTimeString("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+}
+
+function kaoDateLabel(date) {
+  const [day, month] = date.split("/").map(Number);
+  const months = [
+    "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.",
+    "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.",
+    "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."
+  ];
+  return `${day} ${months[month - 1]}`;
+}
+
+function addKaoDate(text) {
+  const container = document.getElementById("kaoChatMessages");
+  const date = document.createElement("div");
+  date.className = "kao-chat-date";
+  date.textContent = text;
+  container.appendChild(date);
+}
+
+function kaoMediaIcon(type) {
+  if (type === "image") {
+    return `<svg viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="3" width="20" height="18" rx="3"/>
+      <circle cx="16.5" cy="8.5" r="2"/>
+      <path d="m3 18 6-7 5 5 3-3 4 5"/>
+    </svg>`;
+  }
+
+  return `<svg viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 2h7l5 5v15H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/>
+    <path d="M14 2v6h5M9 13h6M9 17h6"/>
+  </svg>`;
+}
+
+function addKaoBubble(sender, message, time, type = "text") {
+  const container = document.getElementById("kaoChatMessages");
+  const sent = sender === "พ";
+
+  const row = document.createElement("div");
+  row.className = `kao-message-row ${sent ? "sent" : "received"}`;
+
+  if (!sent) {
+    const avatar = document.createElement("img");
+    avatar.className = "kao-message-avatar";
+    avatar.src = KAO_AVATAR_URL;
+    avatar.alt = "เก้า";
+    row.appendChild(avatar);
+  }
+
+  const bubble = document.createElement("div");
+  bubble.className = "kao-message-bubble";
+
+  if (type === "image" || type === "file") {
+    bubble.classList.add("kao-media-message");
+    bubble.innerHTML = kaoMediaIcon(type);
+
+    const label = document.createElement("span");
+    label.textContent = message;
+    bubble.appendChild(label);
+  } else {
+    bubble.textContent = message;
+  }
+
+  const meta = document.createElement("div");
+  meta.className = sent ? "kao-message-meta" : "kao-message-time";
+
+  if (sent) {
+    const read = document.createElement("span");
+    read.textContent = "อ่านแล้ว";
+    meta.appendChild(read);
+
+    const clock = document.createElement("span");
+    clock.textContent = time;
+    meta.appendChild(clock);
+    row.append(meta, bubble);
+  } else {
+    meta.textContent = time;
+    row.append(bubble, meta);
+  }
+
+  container.appendChild(row);
+  return row;
+}
+
+function scrollKaoChat() {
+  const container = document.getElementById("kaoChatMessages");
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderPeteKaoHistory() {
+  const container = document.getElementById("kaoChatMessages");
+  container.replaceChildren();
+
+  Object.entries(PETE_KAO_HISTORY).forEach(([date, messages]) => {
+    addKaoDate(kaoDateLabel(date));
+
+    messages.forEach(([time, sender, message, type]) => {
+      addKaoBubble(sender, message, time, type || "text");
+    });
+  });
+
+  scrollKaoChat();
+}
+renderPeteKaoHistory();
+
+/* =========================================
+   PETE & KAO — เหตุการณ์วันนี้
+   ========================================= */
+
+let kaoStoryCallNumber = 0;
+let kaoStoryCallOpen = false;
+let kaoStoryAnswered = false;
+let kaoStoryFinished = false;
+let kaoStoryStarted = false;
+let kaoStoryTimer = null;
+
+// ใช้เวลา ณ ตอนที่ข้อความเกิดขึ้น
+function kaoStoryTime() {
+  return new Date().toLocaleTimeString("th-TH", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+}
+
+// เพิ่มข้อความเก้าลงประวัติ LINE
+function kaoStoryMessage(message) {
+  const time = kaoStoryTime();
+
+  // ใช้ฟังก์ชันจากจุดที่ 3
+  addKaoBubble("ก", message, time);
+  scrollKaoChat();
+
+  const preview = document.getElementById("kaoChatPreview");
+  const chatTime = document.getElementById("kaoChatTime");
+
+  if (preview) preview.textContent = message;
+  if (chatTime) chatTime.textContent = time;
+}
+
+// แสดงแจ้งเตือน LINE บนหน้าล็อก
+function showKaoLockNotification() {
+  const lock = document.getElementById("lockScreen");
+  if (!lock) return;
+
+  // ป้องกันแจ้งเตือนซ้ำ
+  if (document.getElementById("kaoLockNotification")) return;
+
+  const notification = document.createElement("div");
+  notification.id = "kaoLockNotification";
+
+  notification.style.cssText = `
+    position: absolute;
+    top: 205px;
+    left: 16px;
+    right: 16px;
+    z-index: 15;
+    padding: 13px 15px;
+    background: rgba(245,245,245,.93);
+    color: #222;
+    border-radius: 19px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.12);
+    font-family: inherit;
+  `;
+
+  notification.innerHTML = `
+    <div style="
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:8px;
+      font-size:12px;
+    ">
+      <span style="
+        display:flex;
+        align-items:center;
+        gap:7px;
+        font-weight:600;
+      ">
+        <span style="
+          width:22px;
+          height:22px;
+          background:#06c755;
+          border-radius:6px;
+          color:white;
+          display:grid;
+          place-items:center;
+          font-size:12px;
+          font-weight:bold;
+        ">L</span>
+        LINE
+      </span>
+      <span id="kaoNotificationTime"></span>
+    </div>
+
+    <div style="
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    ">
+      <img
+        src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+        style="
+          width:37px;
+          height:37px;
+          border-radius:50%;
+          object-fit:cover;
+        "
+        alt="เก้า"
+      >
+
+      <div style="min-width:0;">
+        <div style="
+          font-size:14px;
+          font-weight:600;
+          margin-bottom:4px;
+        ">เก้า</div>
+
+        <div style="
+          font-size:12px;
+          line-height:1.6;
+        ">
+          พีทมึงฟังกูอธิบายหน่อยได้ไหมวะ
+        </div>
+      </div>
+    </div>
+  `;
+
+  lock.appendChild(notification);
+
+  document.getElementById("kaoNotificationTime")
+    .textContent = kaoStoryTime();
+}
+
+// เริ่มข้อความวันนี้ตั้งแต่ยังอยู่หน้าล็อก
+function initializeKaoStory() {
+  if (kaoStoryStarted) return;
+  kaoStoryStarted = true;
+
+  addKaoDate("วันนี้");
+
+  kaoStoryMessage("พีทมึงฟังกูอธิบายหน่อยได้ไหมวะ");
+  kaoStoryMessage("กูไม่ได้ตั้งใจโกหกมึงจริงๆนะเว้ย");
+  kaoStoryMessage("ออกมาคุยกับกูก่อนได้ไหมวะ");
+
+  showKaoLockNotification();
+}
+
+// ไอคอนโทรศัพท์ SVG
+const KAO_STORY_PHONE_ICON = `
+  <svg viewBox="0 0 24 24"
+    width="29" height="29"
+    fill="none"
+    stroke="white"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round">
+    <path d="
+      M22 16.9v3a2 2 0 0 1-2.2 2
+      19.8 19.8 0 0 1-8.6-3.1
+      19.5 19.5 0 0 1-6-6
+      A19.8 19.8 0 0 1 2.1 4.2
+      2 2 0 0 1 4.1 2h3
+      a2 2 0 0 1 2 1.7l.5 3
+      a2 2 0 0 1-.6 1.7L7.1 10
+      a16 16 0 0 0 6.9 6.9
+      l1.6-1.9a2 2 0 0 1 1.7-.6
+      l3 .5a2 2 0 0 1 1.7 2z
+    "/>
+  </svg>
+`;
+
+// แสดงสายโทรเข้าหลังปลดล็อก
+function startKaoIncomingCall() {
+  if (kaoStoryFinished || kaoStoryCallOpen) return;
+
+  // เริ่มครั้งแรกเท่านั้นหลังปลดล็อก
+  if (kaoStoryCallNumber >= 2) return;
+
+  const phone = document.getElementById("phone");
+  if (!phone) return;
+
+  kaoStoryCallNumber++;
+  kaoStoryCallOpen = true;
+
+  const overlay = document.createElement("div");
+  overlay.id = "kaoStoryCall";
+
+  overlay.style.cssText = `
+    position:absolute;
+    inset:0;
+    z-index:500;
+    background:linear-gradient(#33445c,#101827);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    padding:110px 20px 75px;
+    box-sizing:border-box;
+    text-align:center;
+  `;
+
+  overlay.innerHTML = `
+    <div>
+      <img
+        src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+        alt="เก้า"
+        style="
+          width:105px;
+          height:105px;
+          border-radius:50%;
+          object-fit:cover;
+        "
+      >
+
+      <div style="
+        font-size:29px;
+        margin-top:20px;
+      ">เก้า</div>
+
+      <div id="kaoStoryCallStatus" style="
+        font-size:14px;
+        margin-top:10px;
+        color:#cbd5e1;
+      ">LINE โทรเข้า...</div>
+    </div>
+
+    <div style="
+      display:flex;
+      justify-content:center;
+      gap:65px;
+    ">
+      <button
+        type="button"
+        id="kaoStoryDecline"
+        aria-label="ไม่รับสาย"
+        style="
+          width:68px;
+          height:68px;
+          border:0;
+          border-radius:50%;
+          background:#f04452;
+          display:grid;
+          place-items:center;
+          transform:none;
+        "
+      >
+        <span style="
+          transform:rotate(135deg);
+          display:grid;
+          place-items:center;
+        ">${KAO_STORY_PHONE_ICON}</span>
+      </button>
+
+      <button
+        type="button"
+        id="kaoStoryAnswer"
+        aria-label="รับสาย"
+        style="
+          width:68px;
+          height:68px;
+          border:0;
+          border-radius:50%;
+          background:#06c755;
+          display:grid;
+          place-items:center;
+        "
+      >
+        ${KAO_STORY_PHONE_ICON}
+      </button>
+    </div>
+  `;
+
+  phone.appendChild(overlay);
+
+  document.getElementById("kaoStoryDecline")
+    .addEventListener("click", declineKaoStoryCall);
+
+  document.getElementById("kaoStoryAnswer")
+    .addEventListener("click", answerKaoStoryCall);
+
+  if (navigator.vibrate) {
+    navigator.vibrate([300, 200, 300]);
+  }
+}
+
+// ปิดหน้าสายโทร
+function closeKaoStoryCall() {
+  clearTimeout(kaoStoryTimer);
+
+  const overlay = document.getElementById("kaoStoryCall");
+  if (overlay) overlay.remove();
+
+  kaoStoryCallOpen = false;
+
+  if (navigator.vibrate) {
+    navigator.vibrate(0);
+  }
+}
+
+// กดไม่รับสาย
+function declineKaoStoryCall() {
+  closeKaoStoryCall();
+
+  if (kaoStoryCallNumber === 1) {
+    // บันทึกสายที่ไม่ได้รับ
+    kaoStoryMessage("ไม่ได้รับสาย");
+
+    // เก้าส่งข้อความตามมา
+    kaoStoryMessage("รับสายกูหน่อย");
+
+    // เก้าโทรเข้ามาอีกครั้ง
+    kaoStoryTimer = setTimeout(() => {
+      startKaoIncomingCall();
+    }, 2500);
+
+  } else {
+    kaoStoryMessage("ไม่ได้รับสาย");
+    kaoStoryFinished = true;
+  }
+}
+
+// พูดเสียงเก้าด้วยระบบเสียงภาษาไทย
+function speakKaoApology() {
+  if (!("speechSynthesis" in window)) return;
+
+  window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance("กูขอโทษ");
+  speech.lang = "th-TH";
+  speech.rate = 0.85;
+  speech.pitch = 1;
+
+  const voices = window.speechSynthesis.getVoices();
+  const thaiVoice = voices.find(voice =>
+    voice.lang.toLowerCase().startsWith("th")
+  );
+
+  if (thaiVoice) speech.voice = thaiVoice;
+
+  window.speechSynthesis.speak(speech);
+}
+
+// กดรับสาย
+
+function answerKaoStoryCall() {
+  kaoStoryAnswered = true;
+
+  const status = document.getElementById("kaoStoryCallStatus");
+  const answerButton = document.getElementById("kaoStoryAnswer");
+  const declineButton = document.getElementById("kaoStoryDecline");
+
+  if (status) status.textContent = "กำลังสนทนา";
+  if (answerButton) answerButton.style.display = "none";
+
+  if (declineButton) {
+    const newButton = declineButton.cloneNode(true);
+    newButton.setAttribute("aria-label", "วางสาย");
+
+    declineButton.replaceWith(newButton);
+    newButton.addEventListener("click", endKaoStoryCall);
+  }
+
+  speakKaoApology();
+}
+
+
+// กดวางสาย
+function endKaoStoryCall() {
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  closeKaoStoryCall();
+
+  if (kaoStoryAnswered) {
+    kaoStoryFinished = true;
+
+    // ข้อความนี้ขึ้นหลังวางสายเท่านั้น
+    kaoStoryMessage("ให้อภัยกูได้ไหม");
+  }
+}
+
+// เตรียมข้อความและแจ้งเตือนตั้งแต่เปิดเว็บไซต์
+initializeKaoStory();
 
 
 </script>
