@@ -1239,13 +1239,11 @@ img.line-profile-avatar {
   flex-shrink: 0;
 }
 
-
 .kao-message-bubble {
-  position: relative;
   max-width: 75%;
-  padding: 12px 17px;
+  padding: 8px 13px;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.4;
   color: #111;
   overflow-wrap: anywhere;
 }
@@ -1253,13 +1251,13 @@ img.line-profile-avatar {
 /* บับเบิ้ลฝั่งซ้าย */
 .received .kao-message-bubble {
   background: #fff;
-  border-radius: 23px;
+  border-radius: 19px;
 }
 
 /* บับเบิ้ลฝั่งขวา */
 .sent .kao-message-bubble {
   background: #60e873;
-  border-radius: 23px;
+  border-radius: 19px;
 }
 
 .kao-message-time,
@@ -2101,7 +2099,6 @@ img.line-profile-avatar {
          alt="เก้า">
 
     <div class="kao-message-bubble">
-      ไอ้พีทฟังกูก่อนดิวะ
     </div>
     <span class="kao-message-time">10:03</span>
   </div>
@@ -2114,10 +2111,8 @@ img.line-profile-avatar {
     </div>
 
     <div class="kao-message-bubble">
-      กูไม่ชอบคนโกหก
     </div>
   </div>
-
 </div>
 
 
@@ -2500,7 +2495,8 @@ function switchLinePage(page) {
 
   if (kaoChat) kaoChat.style.display = "none";
   if (nav) nav.style.display = "flex";
-
+  const gesture = document.querySelector(".line-gesture");
+if (gesture) gesture.style.display = "flex";
   const pages = {
     chats: "lineChatsPage",
     home: "lineHomePage",
@@ -2591,13 +2587,14 @@ function openKaoChat() {
 
   const chat = document.getElementById("kaoChatPage");
   const nav = document.querySelector(".line-bottom-nav");
+  const gesture = document.querySelector(".line-gesture");
 
   if (nav) nav.style.display = "none";
+  if (gesture) gesture.style.display = "none";
   if (chat) chat.style.display = "flex";
 
   kaoScrollBottom();
 }
-
 
 function closeKaoChat() {
   switchLinePage("chats");
@@ -3012,12 +3009,12 @@ function kaoStoryMessage(message) {
 }
 
 // แสดงแจ้งเตือน LINE บนหน้าล็อก
-function showKaoLockNotification() {
+function showKaoLockNotification(message) {
   const lock = document.getElementById("lockScreen");
   if (!lock) return;
 
   // ป้องกันแจ้งเตือนซ้ำ
-  if (document.getElementById("kaoLockNotification")) return;
+ document.getElementById("kaoLockNotification")?.remove();
 
   const notification = document.createElement("div");
   notification.id = "kaoLockNotification";
@@ -3093,7 +3090,7 @@ function showKaoLockNotification() {
           font-size:12px;
           line-height:1.6;
         ">
-          พีทมึงฟังกูอธิบายหน่อยได้ไหมวะ
+          ${message}
         </div>
       </div>
     </div>
@@ -3112,11 +3109,17 @@ function initializeKaoStory() {
 
   addKaoDate("วันนี้");
 
-  kaoStoryMessage("พีทมึงฟังกูอธิบายหน่อยได้ไหมวะ");
-  kaoStoryMessage("กูไม่ได้ตั้งใจโกหกมึงจริงๆนะเว้ย");
-  kaoStoryMessage("ออกมาคุยกับกูก่อนได้ไหมวะ");
-
-  showKaoLockNotification();
+  const messages = [
+    "พีทมึงฟังกูอธิบายหน่อยได้ไหมวะ",
+    "กูไม่ได้ตั้งใจโกหกมึงจริงๆนะเว้ย",
+    "ออกมาคุยกับกูก่อนได้ไหมวะ"
+  ];
+  messages.forEach((message, index) => {
+    setTimeout(() => {
+      kaoStoryMessage(message);
+      showKaoLockNotification(message);
+    }, index * 1800);
+  });
 }
 
 // ไอคอนโทรศัพท์ SVG
