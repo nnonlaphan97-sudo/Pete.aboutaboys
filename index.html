@@ -1239,7 +1239,9 @@ img.line-profile-avatar {
   flex-shrink: 0;
 }
 
+
 .kao-message-bubble {
+  position: relative;
   max-width: 75%;
   padding: 12px 17px;
   font-size: 15px;
@@ -1248,15 +1250,42 @@ img.line-profile-avatar {
   overflow-wrap: anywhere;
 }
 
+/* บับเบิ้ลฝั่งซ้าย */
 .received .kao-message-bubble {
   background: #fff;
-  border-radius: 24px 24px 24px 7px;
+  border-radius: 23px;
 }
 
+/* บับเบิ้ลฝั่งขวา */
 .sent .kao-message-bubble {
   background: #60e873;
-  border-radius: 24px 24px 7px 24px;
+  border-radius: 23px;
 }
+
+/* หางฝั่งซ้าย */
+.received .kao-message-bubble::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -9px;
+  width: 15px;
+  height: 16px;
+  background: #fff;
+  clip-path: path("M15 0 C11 3 7 5 0 2 C3 8 8 13 15 16 Z");
+}
+
+/* หางฝั่งขวา */
+.sent .kao-message-bubble::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -9px;
+  width: 15px;
+  height: 16px;
+  background: #60e873;
+  clip-path: path("M0 0 C4 3 8 5 15 2 C12 8 7 13 0 16 Z");
+}
+
 
 .kao-message-time,
 .kao-message-meta {
