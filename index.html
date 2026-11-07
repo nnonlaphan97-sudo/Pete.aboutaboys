@@ -1285,6 +1285,63 @@ img.line-profile-avatar {
   cursor: pointer;
 }
 
+.kao-message-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  width: 100%;
+}
+
+.kao-message-row.received {
+  justify-content: flex-start;
+}
+
+.kao-message-row.sent {
+  justify-content: flex-end;
+}
+
+.kao-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.kao-message-bubble {
+  max-width: 75%;
+  padding: 12px 17px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #111;
+  overflow-wrap: anywhere;
+}
+
+.received .kao-message-bubble {
+  background: #fff;
+  border-radius: 24px 24px 24px 7px;
+}
+
+.sent .kao-message-bubble {
+  background: #60e873;
+  border-radius: 24px 24px 7px 24px;
+}
+
+.kao-message-time,
+.kao-message-meta {
+  color: #555;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.kao-message-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+  
 </style>
 </head>
 
@@ -1895,10 +1952,35 @@ img.line-profile-avatar {
   </div>
 
   <div class="kao-chat-messages" id="kaoChatMessages">
-    <div class="kao-chat-empty">
-      เริ่มการสนทนากับเก้า
+   
+<div class="kao-chat-messages" id="kaoChatMessages">
+
+  <!-- ข้อความจากเก้า -->
+  <div class="kao-message-row received">
+    <img class="kao-message-avatar"
+         src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+         alt="เก้า">
+
+    <div class="kao-message-bubble">
+      ไอ้พีทฟังกูก่อนดิวะ
+    </div>
+    <span class="kao-message-time">10:03</span>
+  </div>
+
+  <!-- ข้อความจากพีท -->
+  <div class="kao-message-row sent">
+    <div class="kao-message-meta">
+      <span>อ่านแล้ว</span>
+      <span>10:04</span>
+    </div>
+
+    <div class="kao-message-bubble">
+      กูไม่ชอบคนโกหก
     </div>
   </div>
+
+</div>
+
 
   <form class="kao-chat-compose"
         onsubmit="sendKaoMessage(event)">
