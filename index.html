@@ -3729,87 +3729,68 @@ img.line-profile-avatar {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
   flex-wrap: nowrap !important;
 
-  width: 230px !important;
-  max-width: 230px !important;
+  flex: 0 0 175px !important;
+  width: 175px !important;
   min-width: 0 !important;
-  height: 64px !important;
-  min-height: 64px !important;
+  max-width: 175px !important;
 
-  gap: 12px !important;
-  padding: 10px 13px !important;
-  margin: 0 !important;
+  height: 46px !important;
+  min-height: 46px !important;
+
+  gap: 7px !important;
+  padding: 7px 11px !important;
 
   background: #60e873 !important;
-  border-radius: 22px 22px 5px 22px !important;
+  border-radius: 25px !important;
   color: #172b19 !important;
+  overflow: hidden !important;
+}
+
+.kao-message-row .kao-voice-bubble::before,
+.kao-message-row .kao-voice-bubble::after {
+  content: none !important;
+  display: none !important;
 }
 
 .kao-voice-bubble .kao-voice-play {
-  appearance: none;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-
-  flex: 0 0 32px !important;
-  width: 32px !important;
-  height: 40px !important;
-
-  border: 0 !important;
+  flex: 0 0 24px !important;
+  width: 24px !important;
+  height: 30px !important;
   padding: 0 !important;
-  background: transparent !important;
-  color: #172b19 !important;
-  cursor: pointer;
 }
 
-.kao-voice-play svg {
-  display: block;
-  width: 25px;
-  height: 25px;
+.kao-voice-bubble .kao-voice-play svg {
+  width: 21px;
+  height: 21px;
 }
 
 .kao-voice-bubble .kao-voice-wave {
   display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-
   flex: 1 1 auto !important;
   min-width: 0 !important;
-  height: 40px !important;
-  gap: 3px !important;
+  height: 30px !important;
+  gap: 2px !important;
 }
 
-.kao-voice-wave span {
-  display: block !important;
+.kao-voice-bubble .kao-voice-wave span {
   flex: 0 0 3px !important;
   width: 3px !important;
-  border-radius: 4px !important;
-  background: #245c2c !important;
-}
-
-.kao-voice-wave span.played {
-  background: #ffffff !important;
+  max-height: 27px !important;
 }
 
 .kao-voice-bubble .kao-voice-duration {
-  display: block !important;
   flex: 0 0 auto !important;
-  width: auto !important;
-  margin: 0 !important;
-  font-size: 17px !important;
-  font-weight: 500 !important;
-  line-height: 1 !important;
+  font-size: 14px !important;
   white-space: nowrap !important;
-  color: #172b19 !important;
-  font-variant-numeric: tabular-nums;
 }
 
 .kao-voice-bubble audio {
   display: none !important;
 }
+
 </style>
 </head>
 
