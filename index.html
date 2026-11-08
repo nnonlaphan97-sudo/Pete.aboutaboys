@@ -2479,24 +2479,24 @@ function enterPin(number) {
     pinBusy = true;
 
     if (typedPin === PHONE_PIN) {
-  setTimeout(() => {
-    showPhoneScreen("homeScreen");
+      setTimeout(() => {
+        showPhoneScreen("homeScreen");
 
-    if (openKaoAfterUnlock) {
-      openKaoAfterUnlock = false;
+        if (openKaoAfterUnlock) {
+          openKaoAfterUnlock = false;
+          openLine();
+          openKaoChat();
+        }
 
-      openLine();
-      openKaoChat();
-    }
+        // เก้าโทรเข้าหลังปลดล็อก 2 วินาที
+        kaoStoryTimer = setTimeout(() => {
+          startKaoIncomingCall();
+        }, 2000);
 
-    // เก้าโทรเข้าหลังปลดล็อก 2 วินาที
-    kaoStoryTimer = setTimeout(() => {
-      startKaoIncomingCall();
-    }, 2000);
+        pinBusy = false;
+      }, 250);
 
-  }, 250);
-}
-} else {
+    } else {
       document.getElementById("pinError").textContent =
         "รหัสผ่านไม่ถูกต้อง";
 
