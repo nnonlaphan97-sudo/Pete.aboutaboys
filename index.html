@@ -6409,6 +6409,22 @@ let kaoStoryAnswered = false;
 let kaoStoryFinished = false;
 let kaoStoryStarted = false;
 let kaoStoryTimer = null;
+let kaoCallStartTime = null;
+let kaoCallInterval = null;
+
+function kaoFormatCallDuration(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+
+  return String(minutes).padStart(2, "0") +
+    ":" +
+    String(remaining).padStart(2, "0");
+}
+
+function kaoStopCallTimer() {
+  clearInterval(kaoCallInterval);
+  kaoCallInterval = null;
+}
 
 // ใช้เวลา ณ ตอนที่ข้อความเกิดขึ้น
 function kaoStoryTime() {
@@ -6860,51 +6876,88 @@ function speakKaoApology() {
 }
 
 // กดรับสาย
-
 function answerKaoStoryCall() {
+  if (kaoStoryAnswered) return;
+
   kaoStoryAnswered = true;
+  kaoCallStartTime = Date.now();
 
   const status = document.getElementById("kaoStoryCallStatus");
   const answerButton = document.getElementById("kaoStoryAnswer");
   const declineButton = document.getElementById("kaoStoryDecline");
 
-  if (status) status.textContent = "กำลังสนทนา";
-  if (answerButton) answerButton.style.display = "none";
+  if (status) {
+    status.textContent = "กำลังสนทนา 00:00";
+  }
+
+  kaoStopCallTimer();
+
+  kaoCallInterval = setInterval(() => {
+    const elapsed = Math.floor(
+      (Date.now() - kaoCallStartTime) / 1000
+    );
+
+    const timer = document.getElementById("kaoStoryCallStatus");
+
+    if (timer) {
+      timer.textContent =
+        "กำลังสนทนา " + kaoFormatCallDuration(elapsed);
+    }
+  }, 250);
+
+  if (answerButton) {
+    answerButton.style.display = "none";
+  }
 
   if (declineButton) {
-    const newButton = declineButton.cloneNode(true);
-    newButton.setAttribute("aria-label", "วางสาย");
+    const hangupButton = declineButton.cloneNode(true);
 
-    declineButton.replaceWith(newButton);
-    newButton.addEventListener("click", endKaoStoryCall);
+    hangupButton.setAttribute("aria-label", "วางสาย");
+
+    declineButton.replaceWith(hangupButton);
+
+    hangupButton.addEventListener(
+      "click",
+      endKaoStoryCall
+    );
   }
 
   speakKaoApology();
 }
-
-
 // กดวางสาย
 function endKaoStoryCall() {
+  if (!kaoStoryCallOpen || !kaoStoryAnswered || kaoStoryFinished) {
+    return;
+  }
+
+  const elapsed = kaoCallStartTime === null
+    ? 0
+    : Math.floor((Date.now() - kaoCallStartTime) / 1000);
+
+  const duration = kaoFormatCallDuration(elapsed);
+
+  kaoStopCallTimer();
+  kaoCallStartTime = null;
+
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
 
   closeKaoStoryCall();
 
-  if (kaoStoryAnswered && !kaoStoryFinished) {
-    kaoStoryFinished = true;
+  kaoStoryFinished = true;
 
-    // เก้าส่งข้อความหลังพีทวางสาย
-    kaoStoryMessage("ให้อภัยกูได้ไหม");
+  // บันทึกระยะเวลาการโทรในแชทเก้า
+  kaoStoryMessage("การโทรด้วยเสียง " + duration);
 
-    // แสดงแบนเนอร์แจ้งเตือนเก้า
-    showKaoStoryBanner("ให้อภัยกูได้ไหม");
+  // เก้าส่งข้อความตามเนื้อเรื่องเดิม
+  kaoStoryMessage("ให้อภัยกูได้ไหม");
 
-    // อีก 5 วินาที แสนดีส่งข้อความ
-    setTimeout(() => {
-      startSaendeeNewMessages();
-    }, 5000);
-  }
+  showKaoStoryBanner("ให้อภัยกูได้ไหม");
+
+  setTimeout(() => {
+    startSaendeeNewMessages();
+  }, 5000);
 }
 
 // เตรียมข้อความและแจ้งเตือนตั้งแต่เปิดเว็บไซต์
