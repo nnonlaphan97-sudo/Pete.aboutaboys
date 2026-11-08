@@ -8865,8 +8865,42 @@ const galleryPhotos = [
   secret: false
 }));
 
-// รูปในอัลบั้มลับ ให้เพิ่มด้วย secret: true
-const gallerySecretPhotos = [];
+// รูปภาพในอัลบั้มลับ x
+const gallerySecretPhotos = [
+  "https://i.ibb.co/DPjmSxXF/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/MxhHKtr0/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/RpKmm6VK/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/BHT8tFbN/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/ynVhsqQc/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/cK2XqTCc/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/ccd1RH1g/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/Pv9Q4y2r/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/xK1x1Z33/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/nN8Cb8nq/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/Rkz9y9ct/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/vCGfhJPn/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/hJ5ktjTQ/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/Lz0LnDQv/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/vvTQVFLP/IMG-4180.jpg",
+  "https://i.ibb.co/2QxPQxX/IMG-4179.jpg",
+  "https://i.ibb.co/9m7cJMnJ/IMG-4057.jpg",
+  "https://i.ibb.co/20JtpzXD/IMG-4177.jpg",
+  "https://i.ibb.co/2Y6FCV6B/IMG-4176.jpg",
+  "https://i.ibb.co/rGxC1ccv/IMG-4056.jpg",
+  "https://i.ibb.co/GfW0WRq0/IMG-4173.jpg",
+  "https://i.ibb.co/CKmdCX1C/IMG-4172.jpg",
+  "https://i.ibb.co/FkzDDTKH/IMG-4171.jpg",
+  "https://i.ibb.co/9HfQNjNr/IMG-4169.jpg",
+  "https://i.ibb.co/cS6gzkx4/IMG-4166.jpg",
+  "https://i.ibb.co/1fw6ntsg/IMG-4165.jpg",
+  "https://i.ibb.co/C5mP1PfR/IMG-4164.jpg"
+].map((src, index) => ({
+  id: 1000 + index,
+  src,
+  album: "secret",
+  favorite: false,
+  secret: true
+}));
 
 let galleryCurrentAlbum = "albums";
 let galleryUnlocked = false;
