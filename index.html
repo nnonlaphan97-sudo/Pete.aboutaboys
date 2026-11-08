@@ -1758,6 +1758,11 @@ img.line-profile-avatar {
   height: 7px;
   background: currentColor;
   border-radius: 50%;
+}.fb-live-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
   
 </style>
@@ -2069,28 +2074,40 @@ img.line-profile-avatar {
   <div id="fbMain"
        style="display:flex;flex-direction:column;flex:1;min-height:0;position:relative">
 
-    <div class="fb-header">
-      <strong class="fb-wordmark">facebook</strong>
+ <div class="fb-header">
+  <strong class="fb-wordmark">facebook</strong>
 
-      <div style="display:flex;gap:8px">
-        <button class="fb-round-btn"
-                onclick="openPeteFacebookLive()">▶</button>
+  <div style="display:flex;gap:8px">
+    <button class="fb-round-btn"
+            onclick="openPeteFacebookLive()"
+            aria-label="เปิดไลฟ์">
+      <span data-fb-icon="video"></span>
+    </button>
 
-        <button class="fb-round-btn"
-                onclick="closeFacebook()">×</button>
-      </div>
-    </div>
+    <button class="fb-round-btn"
+            onclick="closeFacebook()"
+            aria-label="ปิด Facebook">
+      <span data-fb-icon="close"></span>
+    </button>
+  </div>
+</div>
 
-    <div class="fb-tabs">
-      <button id="fbFeedTab" class="active"
-              onclick="facebookTab('feed')">⌂</button>
+<div class="fb-tabs">
+  <button id="fbFeedTab" class="active"
+          onclick="facebookTab('feed')">
+    <span data-fb-icon="home"></span>
+  </button>
 
-      <button id="fbProfileTab"
-              onclick="facebookTab('profile')">♙</button>
+  <button id="fbProfileTab"
+          onclick="facebookTab('profile')">
+    <span data-fb-icon="profile"></span>
+  </button>
 
-      <button id="fbVideoTab"
-              onclick="facebookTab('video')">▣</button>
-    </div>
+  <button id="fbVideoTab"
+          onclick="facebookTab('video')">
+    <span data-fb-icon="video"></span>
+  </button>
+</div>
 
     <!-- FEED -->
     <div id="fbFeedView" class="fb-scroll">
@@ -2155,7 +2172,7 @@ img.line-profile-avatar {
            onclick="openPeteFacebookLive()"
            style="cursor:pointer">
 
-        <b>🔴 Pete Live</b>
+        <b class="fb-live-indicator">Pete Live</b>
         <p>ดูไลฟ์ของพีท</p>
         <div class="fb-muted">แตะเพื่อเปิดไลฟ์</div>
       </div>
@@ -2174,8 +2191,11 @@ img.line-profile-avatar {
        style="display:none;flex-direction:column;flex:1;min-height:0">
 
     <div class="fb-header" style="padding-top:43px">
-      <button class="fb-round-btn"
-              onclick="facebookBackFromLive()">‹</button>
+   <button class="fb-round-btn"
+        onclick="facebookBackFromLive()"
+        aria-label="ย้อนกลับ">
+  <span data-fb-icon="back"></span>
+</button>
 
       <div class="fb-author" style="flex:1;margin-left:10px">
         <img class="fb-avatar"
@@ -2189,11 +2209,19 @@ img.line-profile-avatar {
       </div>
 
       <button class="fb-round-btn"
-              onclick="closeFacebook()">×</button>
-    </div>
+        onclick="closeFacebook()"
+        aria-label="ปิด Facebook">
+  <span data-fb-icon="close"></span>
+</button>
 
     <div class="fb-live-video">
-      <span class="fb-live-badge">● LIVE</span>
+      <span class="fb-live-badge">
+  <svg viewBox="0 0 12 12" width="9" height="9"
+       aria-hidden="true">
+    <circle cx="6" cy="6" r="5" fill="currentColor"/>
+  </svg>
+  LIVE
+</span>
 
       <strong style="font-size:25px">Pete Live</strong>
 
