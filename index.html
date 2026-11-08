@@ -2652,6 +2652,97 @@ img.line-profile-avatar {
   color: #0095f6;
   font-weight: 700;
 }
+.ig-dm-story-row,
+.ig-dm-post-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-width: 78%;
+  margin: 12px 0;
+}
+
+.ig-dm-story-row.received,
+.ig-dm-post-row.received {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.ig-dm-story-row.sent,
+.ig-dm-post-row.sent {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.ig-dm-story-label {
+  color: #8e8e8e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ig-dm-story-preview {
+  width: 155px;
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #eee;
+}
+
+.ig-dm-story-photo,
+.ig-dm-story-photo img {
+  width: 100%;
+  height: 100%;
+}
+
+.ig-dm-story-photo img {
+  object-fit: cover;
+  display: block;
+}
+
+.ig-dm-story-overlay {
+  position: absolute;
+  bottom: 22px;
+  left: 10px;
+  right: 10px;
+  padding: 8px 5px;
+  border-radius: 8px;
+  background: rgba(0,0,0,.5);
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ig-dm-story-row small {
+  color: #999;
+  font-size: 10px;
+}
+
+.ig-dm-story-row .ig-dm-bubble,
+.ig-dm-post-row .ig-dm-bubble {
+  max-width: 100%;
+}
+
+.ig-dm-post-card {
+  width: 175px;
+  overflow: hidden;
+  border-radius: 13px;
+  background: #f1f1f1;
+}
+
+.ig-dm-post-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.ig-dm-post-caption {
+  padding: 9px;
+  font-size: 12px;
+  color: #555;
+}
+
 </style>
 </head>
 
@@ -7704,16 +7795,41 @@ document.querySelectorAll(".app-gesture").forEach(area => {
 });
 const igDMFriends = [
   {
-    id: "kao",
-    username: "kao.phanuwat",
-    name: "เก้า",
-    avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
-    messages: [
-      { text: "กล่าวถึงคุณในสตอรี่ของเขา", type: "story", time: "15:24" },
-      { text: "มึงเห็นสตอรี่ยัง 55555", type: "received", time: "15:25" },
-      { text: "อย่าลืมดูด้วยนะ", type: "received", time: "15:25" }
-    ]
-  },
+  id: "kao",
+  username: "kao.phanuwat",
+  name: "เก้า",
+  avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
+
+  messages: [
+    { type: "story", sender: "received", text: "กล่าวถึงคุณในสตอรี่ของเขา", time: "จันทร์ 19:20" },
+    { type: "sent", text: "2 ปี แล้วอยู่กับกูไปนานๆนะ" },
+
+    { type: "story-reply", sender: "sent", text: "ไอ้เด็กนั่นนั่งใกล้มึงไปปะวะ", time: "จันทร์ 20:15" },
+    { type: "received", text: "ห่างกันเป็นวาใช้ไรมอง" },
+    { type: "sent", text: "ความหึง" },
+
+    { type: "story-reply", sender: "received", text: "โชว์จังไอ้สัส", time: "อังคาร 12:30" },
+    { type: "sent", text: "หึงอ่อ" },
+    { type: "received", text: "เออหึง" },
+
+    { type: "post", sender: "sent", text: "ไลค์ให้กูด้วย", time: "อังคาร 18:40" },
+    { type: "received", text: "ไม่ไลค์" },
+    { type: "sent", text: "ไอ้เก้า" },
+
+    { type: "story", sender: "received", text: "กล่าวถึงคุณในสตอรี่ของเขา", time: "พุธ 10:12" },
+    { type: "story", sender: "sent", text: "คุณกล่าวถึง @kao.phanuwat ในสตอรี่ของคุณ", time: "พุธ 12:44" },
+    { type: "story", sender: "received", text: "กล่าวถึงคุณในสตอรี่ของเขา", time: "พุธ 15:08" },
+    { type: "story", sender: "sent", text: "คุณกล่าวถึง @kao.phanuwat ในสตอรี่ของคุณ", time: "พุธ 17:22" },
+    { type: "story", sender: "received", text: "กล่าวถึงคุณในสตอรี่ของเขา", time: "พุธ 20:19" },
+
+    { type: "story-reply", sender: "received", text: "เพราะมึงทำให้กูพูดได้", time: "พฤหัส 09:30" },
+    { type: "story-reply", sender: "sent", text: "แฟนกูแม่งน่ารักจังวะ", time: "พฤหัส 14:10" },
+    { type: "story-reply", sender: "sent", text: "กูมีความสุขวะ", time: "พฤหัส 21:06" },
+
+    { type: "received", text: "พีทตอบกูหน่อย", time: "15:42" },
+    { type: "received", text: "พีทให้กูอธิบายได้มั้ย", time: "15:45" }
+  ]
+},
   {
     id: "june",
     username: "june.jirawat",
@@ -7779,7 +7895,7 @@ const igDMFans = instagramShuffle(igDMFanNames).slice(0, 12).map((username, inde
   id: "fan-" + index,
   username,
   name: username,
-  avatar: `https://i.pravatar.cc/100?img=${index + 32}`,
+  avatar: `https://api.dicebear.com/9.x/notionists/svg?seed=${encodeURIComponent(username)}&backgroundColor=fce7f3,e0e7ff,ffedd5,d1fae5`,
   messages: [
     {
       text: igDMFanMessages[Math.floor(Math.random() * igDMFanMessages.length)],
@@ -7853,20 +7969,68 @@ function instagramRenderDMChat() {
 
   const container = document.getElementById("igDMChatMessages");
 
+  const escapeHTML = value => String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
   container.innerHTML = igDMCurrentChat.messages.map(message => {
-    if (message.type === "story") {
+
+    const isSent = message.type === "sent" || message.sender === "sent";
+    const side = isSent ? "sent" : "received";
+
+    if (message.type === "story" || message.type === "story-reply") {
+      const isReply = message.type === "story-reply";
+
       return `
-        <div class="ig-dm-story-message">
-          <span>กล่าวถึงคุณในสตอรี่</span>
-          <strong>${igDMCurrentChat.username}</strong>
-          <span>${message.time}</span>
+        <div class="ig-dm-story-row ${side}">
+          <div class="ig-dm-story-label">
+            ${isSent
+              ? "คุณกล่าวถึงในสตอรี่"
+              : "กล่าวถึงคุณในสตอรี่ของเขา"}
+          </div>
+
+          <div class="ig-dm-story-preview">
+            <div class="ig-dm-story-photo">
+              <img src="${escapeHTML(isSent
+                ? "https://i.ibb.co/pvBWjjTb/r07qxo-R-Download.jpg"
+                : igDMCurrentChat.avatar)}" alt="">
+            </div>
+            <div class="ig-dm-story-overlay">
+              ${isSent ? "@kao.phanuwat" : "@pete.phubodin"}
+            </div>
+          </div>
+
+          ${isReply ? `
+            <div class="ig-dm-bubble ${side}">
+              ${escapeHTML(message.text)}
+            </div>
+          ` : ""}
+
+          <small>${escapeHTML(message.time || "")}</small>
+        </div>
+      `;
+    }
+
+    if (message.type === "post") {
+      return `
+        <div class="ig-dm-post-row ${side}">
+          <div class="ig-dm-post-card">
+            <img src="${escapeHTML(igKaoProfile.images[0])}" alt="">
+            <div class="ig-dm-post-caption">โพสต์ Instagram</div>
+          </div>
+          <div class="ig-dm-bubble ${side}">
+            ${escapeHTML(message.text)}
+          </div>
         </div>
       `;
     }
 
     return `
-      <div class="ig-dm-bubble ${message.type === "sent" ? "sent" : "received"}">
-        ${message.text}
+      <div class="ig-dm-bubble ${side}">
+        ${escapeHTML(message.text)}
       </div>
     `;
   }).join("");
