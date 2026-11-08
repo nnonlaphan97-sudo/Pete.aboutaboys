@@ -3708,6 +3708,47 @@ img.line-profile-avatar {
 #kaoChatMessages .kao-media-message img {
   object-fit: cover;
 }
+.kao-message-row .kao-message-bubble.kao-voice-bubble {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+
+  width: 245px !important;
+  max-width: 75% !important;
+  min-height: 64px !important;
+  padding: 12px 14px !important;
+
+  background: #60e873 !important;
+  border-radius: 22px 22px 5px 22px !important;
+}
+
+.kao-voice-bubble .kao-voice-play {
+  flex: 0 0 30px;
+  width: 30px;
+  padding: 0;
+}
+
+.kao-voice-bubble .kao-voice-wave {
+  display: flex !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.kao-voice-bubble .kao-voice-duration {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 18px;
+}
+
+.kao-voice-bubble audio {
+  display: none !important;
+}
 
 </style>
 </head>
