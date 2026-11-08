@@ -2982,20 +2982,31 @@ img.line-profile-avatar {
 
 .gallery-nav {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  border-top: 1px solid #eee;
-  padding: 17px 0 30px;
+  justify-content: space-around;
+  flex-shrink: 0;
   background: #fafafa;
+  border-top: none;
+  padding: 12px 8px 30px;
 }
 
 .gallery-nav button {
-  font-size: 13px;
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #777;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 8px 0;
+  cursor: pointer;
 }
 
 .gallery-nav button.active {
-  color: #e69a24;
+  color: #3289c5;
   font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 9px;
+  text-decoration-thickness: 2px;
 }
 
 .gallery-lock {
@@ -3380,13 +3391,17 @@ img.line-profile-avatar {
 
   <div class="gallery-body" id="galleryBody"></div>
 
-  <div class="gallery-nav" id="galleryNav">
-    <button onclick="galleryOpenAlbum('recent')">ล่าสุด</button>
-    <button onclick="galleryOpenAlbum('favorites')">รายการโปรด</button>
-    <button onclick="galleryOpenAlbum('camera')">กล้อง</button>
-    <button onclick="galleryOpenAlbum('secret')">x แฟ้ม x</button>
-  </div>
-
+<div class="gallery-nav" id="galleryNav">
+  <button onclick="gallerySwitchTab('photos')" data-gallery-tab="photos">
+    รูปภาพ
+  </button>
+  <button onclick="gallerySwitchTab('albums')" data-gallery-tab="albums">
+    อัลบั้ม
+  </button>
+  <button onclick="gallerySwitchTab('stories')" data-gallery-tab="stories">
+    เรื่องราว
+  </button>
+</div>
   <div class="gallery-photo" id="galleryPhoto">
     <div class="gallery-photo-header">
       <button onclick="galleryClosePhoto()" style="font-size:28px">‹</button>
@@ -8784,18 +8799,49 @@ function galleryGetPhotos(album) {
 
   return [];
 }
+function gallerySetActiveTab(tab) {
+  document.querySelectorAll("#galleryNav button").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.galleryTab === tab
+    );
+  });
+}
 
+function gallerySwitchTab(tab) {
+  galleryUnlocked = false;
+
+  if (tab === "albums") {
+    galleryRenderAlbums();
+    return;
+  }
+
+  if (tab === "photos") {
+    galleryOpenAlbum("recent");
+    return;
+  }
+
+  galleryCurrentAlbum = "stories";
+  document.getElementById("galleryTitle").textContent = "เรื่องราว";
+  document.getElementById("galleryBody").innerHTML = `
+    <div style="text-align:center;color:#999;padding:80px 0">
+      ยังไม่มีเรื่องราว
+    </div>
+  `;
+  gallerySetActiveTab("stories");
+}
 function galleryRenderAlbums() {
   galleryCurrentAlbum = "albums";
 
   document.getElementById("galleryTitle").textContent = "แกลเลอรี";
   document.getElementById("galleryNav").style.display = "flex";
-
+  gallerySetActiveTab("albums");
+  
   const albums = [
     { id: "recent", name: "ล่าสุด", icon: "🖼️" },
     { id: "favorites", name: "รายการโปรด", icon: "❤️" },
     { id: "camera", name: "กล้อง", icon: "📷" },
-    { id: "secret", name: "x แฟ้ม x", icon: "🔒" }
+    { id: "secret", name: "x", icon: "🔒" }
   ];
 
   document.getElementById("galleryBody").innerHTML = `
@@ -8863,13 +8909,7 @@ function galleryOpenAlbum(album) {
         </div>
       `;
 
-  document.querySelectorAll("#galleryNav button")
-    .forEach((button, index) => {
-      button.classList.toggle(
-        "active",
-        ["recent", "favorites", "camera", "secret"][index] === album
-      );
-    });
+  gallerySetActiveTab(album === "recent" ? "photos" : "albums");
 }
 
 function galleryShowLock() {
