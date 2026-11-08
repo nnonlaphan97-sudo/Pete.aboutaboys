@@ -2003,6 +2003,7 @@ img.line-profile-avatar {
 }
 
 .ig-content {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -2461,8 +2462,10 @@ img.line-profile-avatar {
   object-fit: cover;
 }
 .ig-dm-page {
-  position: relative;
-  flex: 1;
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
   min-height: 0;
   flex-direction: column;
   background: #fff;
@@ -2606,6 +2609,10 @@ img.line-profile-avatar {
   padding: 16px;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+}
+
+.ig-dm-chat-messages > .ig-dm-message-row {
+  margin-bottom: 10px;
 }
 
 .ig-dm-chat-messages > .ig-dm-date {
@@ -8349,12 +8356,19 @@ function instagramOpenDMChat(id) {
   instagramRenderDMChat();
 
   const goToLatest = () => {
-    container.scrollTop =
-      container.scrollHeight - container.clientHeight;
+    const lastMessage = container.querySelector(
+      ".ig-dm-message-row:last-child"
+    );
+
+    if (lastMessage) {
+      lastMessage.scrollIntoView({
+        behavior: "instant",
+        block: "end"
+      });
+    }
   };
 
   requestAnimationFrame(() => {
-    goToLatest();
     requestAnimationFrame(goToLatest);
   });
 }
