@@ -4193,6 +4193,9 @@ const showAvatar = !sent && gangLastSender !== sender;
 const row = document.createElement("div");
 row.className = `kao-message-row ${sent ? "sent" : "received"}`;
 row.style.alignItems = "center";
+if (showAvatar) {
+  row.style.marginTop = "16px";
+}
 
 if (!sent) {
   if (showAvatar) {
@@ -4201,6 +4204,8 @@ if (!sent) {
     avatar.src = member.avatar;
     avatar.alt = member.name;
     avatar.style.alignSelf = "center";
+    avatar.style.marginTop = "0";
+    avatar.style.marginBottom = "0";
     row.appendChild(avatar);
   } else {
     // เว้นพื้นที่เท่ารูป เพื่อให้บับเบิ้ลตรงกัน
@@ -4221,16 +4226,22 @@ gangLastSender = sender;
     min-width:0;
   `;
 
- if (showAvatar) {
+if (showAvatar) {
   const name = document.createElement("div");
-    name.textContent = member.name;
-    name.style.cssText = `
-      font-size:11px;
-      color:#536075;
-      margin:0 0 4px 8px;
-    `;
-    content.appendChild(name);
-  }
+  name.textContent = member.name;
+
+  name.style.cssText = `
+    position:absolute;
+    bottom:calc(100% + 4px);
+    left:8px;
+    font-size:11px;
+    color:#536075;
+    white-space:nowrap;
+  `;
+
+  content.style.position = "relative";
+  content.appendChild(name);
+}
 
   const bubble = document.createElement("div");
   bubble.className = "kao-message-bubble";
