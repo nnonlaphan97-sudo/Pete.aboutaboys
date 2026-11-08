@@ -1828,6 +1828,23 @@ img.line-profile-avatar {
     <span id="kaoChatTime"></span>
   </div>
 </div>
+<!-- แชทแสนดี -->
+<div class="line-chat-item" onclick="openSaendeeChat()">
+  <img class="line-avatar"
+     src="https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg"
+     alt="แสนดี">
+
+  <div class="line-chat-body">
+    <div class="line-chat-name">แสนดี</div>
+    <div class="line-chat-preview" id="saendeeChatPreview">
+      กูขอนะ
+    </div>
+  </div>
+  <div class="line-chat-meta">
+    <span id="saendeeChatTime">20:54</span>
+  </div>
+</div>
+
 <!-- แชทพี่โจ้ -->
 <div class="line-chat-item" onclick="openJoeChat()">
   <img class="line-avatar"
@@ -2252,6 +2269,38 @@ img.line-profile-avatar {
     </button>
   </form>
 </div>
+<!-- ห้องแชทแสนดี -->
+<div class="line-page kao-chat-page" id="saendeeChatPage">
+
+  <div class="kao-chat-header">
+    <button type="button" class="kao-back"
+            onclick="closeSaendeeChat()">‹</button>
+
+    <strong class="kao-chat-title">แสนดี</strong>
+  </div>
+
+  <div class="kao-chat-messages" id="saendeeChatMessages"></div>
+
+  <form class="kao-chat-compose" onsubmit="sendSaendeeMessage(event)">
+    <button type="button" class="kao-tool-btn">+</button>
+
+    <div class="kao-input-wrap">
+      <input id="saendeeMessageInput"
+             type="text"
+             placeholder="Aa"
+             autocomplete="off">
+    </div>
+
+    <button type="submit" class="kao-send-btn" aria-label="ส่งข้อความ">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="m4 12 16-8-5 16-3-7-8-1z"/>
+        <path d="m12 13 8-9"/>
+      </svg>
+    </button>
+  </form>
+</div>
 
   <!-- แถบนำทางด้านล่าง -->
   <nav class="line-bottom-nav">
@@ -2555,13 +2604,17 @@ function closeLine() {
 function switchLinePage(page) {
   const nav = document.querySelector(".line-bottom-nav");
   const kaoChat = document.getElementById("kaoChatPage");
+  const joeChat = document.getElementById("joeChatPage");
+  const saendeeChat = document.getElementById("saendeeChatPage");
 
   if (kaoChat) kaoChat.style.display = "none";
-  const joeChat = document.getElementById("joeChatPage");
-if (joeChat) joeChat.style.display = "none";
+  if (joeChat) joeChat.style.display = "none";
+  if (saendeeChat) saendeeChat.style.display = "none";
+
   if (nav) nav.style.display = "flex";
+
   const gesture = document.querySelector(".line-gesture");
-if (gesture) gesture.style.display = "flex";
+  if (gesture) gesture.style.display = "flex";
   const pages = {
     chats: "lineChatsPage",
     home: "lineHomePage",
@@ -2916,11 +2969,85 @@ const PETE_KAO_HISTORY = {
     ["20:29","พ","ให้กูถ่ายมึงไปตลอดชาติเลย"]
   ]
 };
-/* ===== ประวัติแชท P’Joe ===== */
+const PETE_SAENDEE_HISTORY = {
+  "21/10": [
+    ["12:37", "พ", "แม่งทำไมไอ้เก้าต้องพูดแบบนั้นกับกูวะ"],
+    ["12:38", "พ", "ทั้งที่มันควรเข้าใจกูด้วยซ้ำ"],
+    ["12:40", "สด", "ไอ้เก้าพูดไรกับมึง"],
+    ["12:41", "พ", "มันบอกกูเอาแต่ใจ"],
+    ["12:42", "พ", "บอกว่ากูชาตนี้ไม่รู้จักโต"],
+    ["12:45", "สด", "มันพูดถูกทุกอย่างเพื่อน"],
+    ["12:46", "สด", "มึงต้องฟังและรับความจริง"],
+    ["12:47", "พ", "กูโกรธอ่ะ"],
+    ["12:48", "พ", "ทำไมต้องเข้าข้างไอ้เด็กนั้น"],
+    ["12:49", "สด", "พีทมึงมีสติหน่อย"]
+  ],
 
+  "27/10": [
+    ["19:50", "สด", "มึงนี่ทำไรปะเจิดปะเจ้อ"],
+    ["19:51", "พ", "อะไรหนักหนาวะ"],
+    ["19:52", "พ", "เปิดๆ ให้มันจบๆ ไปสัส"],
+    ["19:56", "สด", "ก็ไอ้เก้ามันไม่พร้อม"],
+    ["19:57", "สด", "มึงก็ให้เวลามันหน่อย"],
+    ["20:00", "พ", "จัดการแม่งก่อน"],
+    ["20:01", "สด", "เบาๆ กับมันหน่อยเถอะมึง"]
+  ],
+
+  "15/11": [
+    ["18:14", "พ", "กูแม่งอึดอัดชิบหายเลยว่ะ"],
+    ["18:15", "พ", "ต้องหลบๆซ่อนๆแบบนี้"],
+    ["18:16", "พ", "กูถามจริงถ้าเพื่อนรู้กูคบกับเก้าแล้วไงวะ"],
+    ["18:16", "พ", "จะเลิกคบกูมั้ย"],
+    ["18:17", "สด", "จะบ้าเหรอ"],
+    ["18:18", "พ", "เก้าแม่งขี้นอยไป"],
+    ["18:30", "สด", "ส่งวอย", "voice"],
+    ["18:31", "พ", "มึงหายไปตั้งเพื่อมาสวดกู"],
+    ["18:32", "พ", "ให้เลยนะไอ้สัส"],
+    ["18:33", "สด", "เข้าใจมั้นล่ะมึง"],
+    ["18:34", "พ", "เออเข้าใจ"]
+  ],
+
+  "18/11": [
+    ["20:31", "พ", "ไอ้แมงหวี่แม่งอะไรกับไอ้เก้านักหนาวะ"],
+    ["20:32", "สด", "ใครวะ"],
+    ["20:33", "พ", "แม่งเป็นห่าไรไม่เลิกยุ่งกับไอ้เก้า"],
+    ["20:34", "พ", "ไม่ปรึกษาพ่อมันวะ"],
+    ["20:35", "พ", "ระบายเฉยๆ ไม่มีไร"],
+    ["20:36", "พ", "กูด่ามันไปละ"],
+    ["20:37", "สด", "ขอบคุณแจ้งให้ทราบไอ้สัส"]
+  ],
+
+  "22/11": [
+    ["18:31", "สด", "ทำไมมึงกับไอ้เก้าตึงจังวะ"],
+    ["18:32", "พ", "กูพอแล้วแสนดี"],
+    ["18:33", "พ", "ถ้าแม่งจะแคร์ไอ้เชี่ยนนท์ขนาดนั้น"],
+    ["18:34", "พ", "แล้วด่ากูงี่เง่าแบบนี้"],
+    ["18:35", "พ", "ปล่อยแม่งดูแลไอ้เหี้ยนนท์ให้เต็มที่"],
+    ["18:35", "พ", "กูพอแล้ว"],
+    ["18:40", "สด", "ถ้าจะพอช่วยเลิกส่งสายตาให้น้องมัน"],
+    ["18:41", "สด", "กูกลัวมึงพุ่งไปต่อยน้องมัน"],
+    ["18:42", "พ", "แม่งเป็นเหี้ยอะไรจับตัวไอ้เก้าอยู่นั่น"],
+    ["18:43", "พ", "เห็นแก่ไอ้เก้านะ"],
+    ["18:43", "พ", "ไม่งั้นกูต่อยแม่งคว่ำไปละ"],
+    ["18:45", "สด", "ต่อยไอ้จูนให้กูก่อนได้มั้ย"],
+    ["18:45", "สด", "แซวเหี้ยอะไรนักหนา"],
+    ["18:50", "พ", "555555555"],
+    ["19:00", "พ", "มึงเห็นไอ้เก้าปะ"],
+    ["19:01", "สด", "มึงลองไปดูห้องสวัส"],
+    ["20:21", "สด", "หายคู่เลยไอ้เหี้ย"],
+    ["20:22", "สด", "มึงเจอมันยัง"],
+    ["20:40", "พ", "เจอแล้ว"],
+    ["20:50", "พ", "แม่งจัดเซอร์ไพร์สครบรอบ 3 ปีให้กู"],
+    ["20:51", "พ", "น่ารักชิบหาย"],
+    ["20:52", "สด", "เชรดน่ารักว่ะไอ้เก้า"],
+    ["20:53", "สด", "กูขอนะ"],
+    ["20:54", "พ", "ผู้หญิงกูก็ต่อยนะแสนดี"]
+  ]
+};
+
+/* ===== ประวัติแชท P’Joe ===== */
 const JOE_AVATAR_URL =
   "https://i.ibb.co/rRyGbq0L/IMG-4112.jpg";
-
 const PETE_JOE_HISTORY = {
   "12/10": [
     ["17:01", "พจ", "ไอ้คุณน้องพีทครับมึงตัดสินใจได้รึยังครับ"],
@@ -3336,12 +3463,19 @@ function initializeKaoStory() {
     "กูไม่ได้ตั้งใจโกหกมึงจริงๆนะเว้ย",
     "ออกมาคุยกับกูก่อนได้ไหมวะ"
   ];
-  messages.forEach((message, index) => {
-    setTimeout(() => {
-      kaoStoryMessage(message);
-      showKaoLockNotification(message);
-    }, index * 1800);
-  });
+messages.forEach((message, index) => {
+  setTimeout(() => {
+    kaoStoryMessage(message);
+    showKaoLockNotification(message);
+
+    // หลังข้อความสุดท้ายของเก้า 5 วินาที
+    if (index === messages.length - 1) {
+      setTimeout(() => {
+        startSaendeeNewMessages();
+      }, 5000);
+    }
+  }, index * 1800);
+});
 }
 
 // ไอคอนโทรศัพท์ SVG
@@ -3582,7 +3716,235 @@ function endKaoStoryCall() {
 
 // เตรียมข้อความและแจ้งเตือนตั้งแต่เปิดเว็บไซต์
 initializeKaoStory();
+/* ===== ระบบแชทแสนดี ===== */
 
+let saendeeNewMessagesStarted = false;
+
+function addSaendeeBubble(sender, message, time, type = "text") {
+  const container = document.getElementById("saendeeChatMessages");
+  if (!container) return;
+
+  const sent = sender === "พ";
+  const row = document.createElement("div");
+  row.className = `kao-message-row ${sent ? "sent" : "received"}`;
+
+  if (!sent) {
+    const previous = container.lastElementChild;
+    const showAvatar =
+      !previous || !previous.classList.contains("received");
+
+    if (showAvatar) {
+     const avatar = document.createElement("img");
+avatar.className = "kao-message-avatar";
+avatar.src = "https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg";
+avatar.alt = "แสนดี";
+row.appendChild(avatar);
+    } else {
+      const spacer = document.createElement("div");
+      spacer.style.cssText = "width:32px;flex-shrink:0";
+      row.appendChild(spacer);
+    }
+  }
+
+  const bubble = document.createElement("div");
+  bubble.className = "kao-message-bubble";
+
+  if (type === "voice") {
+    bubble.textContent = "▶  ข้อความเสียง";
+  } else if (type === "link") {
+    bubble.textContent = "🔗  ส่งลิ้ง";
+  } else {
+    bubble.textContent = message;
+  }
+
+  const meta = document.createElement("div");
+  meta.className = sent ? "kao-message-meta" : "kao-message-time";
+
+  if (sent) {
+    const read = document.createElement("span");
+    read.textContent = "อ่านแล้ว";
+
+    const clock = document.createElement("span");
+    clock.textContent = time;
+
+    meta.append(read, clock);
+    row.append(meta, bubble);
+  } else {
+    meta.textContent = time;
+    row.append(bubble, meta);
+  }
+
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderPeteSaendeeHistory() {
+  const container = document.getElementById("saendeeChatMessages");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  Object.entries(PETE_SAENDEE_HISTORY).forEach(([date, messages]) => {
+    const divider = document.createElement("div");
+    divider.className = "kao-chat-date";
+    divider.textContent = kaoDateLabel(date);
+    container.appendChild(divider);
+
+    messages.forEach(([time, sender, message, type]) => {
+      addSaendeeBubble(sender, message, time, type || "text");
+    });
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+
+function openSaendeeChat() {
+  switchLinePage("chats");
+
+  const chat = document.getElementById("saendeeChatPage");
+  const nav = document.querySelector(".line-bottom-nav");
+  const gesture = document.querySelector(".line-gesture");
+
+  if (nav) nav.style.display = "none";
+  if (gesture) gesture.style.display = "none";
+
+  if (chat) chat.style.display = "flex";
+
+  const messages = document.getElementById("saendeeChatMessages");
+  if (messages) messages.scrollTop = messages.scrollHeight;
+}
+
+function closeSaendeeChat() {
+  const chat = document.getElementById("saendeeChatPage");
+  if (chat) chat.style.display = "none";
+  switchLinePage("chats");
+}
+
+function sendSaendeeMessage(event) {
+  event.preventDefault();
+
+  const input = document.getElementById("saendeeMessageInput");
+  if (!input) return;
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  const time = kaoTimeNow();
+
+  addSaendeeBubble("พ", message, time);
+
+  document.getElementById("saendeeChatPreview").textContent = message;
+  document.getElementById("saendeeChatTime").textContent = time;
+
+  input.value = "";
+}
+
+// เพิ่มข้อความใหม่ในแชท พร้อมเวลาปัจจุบัน
+function startSaendeeNewMessages() {
+  if (saendeeNewMessagesStarted) return;
+  saendeeNewMessagesStarted = true;
+
+  const container = document.getElementById("saendeeChatMessages");
+  if (!container) return;
+
+  const divider = document.createElement("div");
+  divider.className = "kao-chat-date";
+  divider.textContent = "วันนี้";
+  container.appendChild(divider);
+
+  const messages = [
+    ["พีท มึงเห็นข่าวไอ้เก้ายัง", "text"],
+    ["ส่งลิ้ง", "link"]
+  ];
+
+  messages.forEach(([message, type], index) => {
+    setTimeout(() => {
+      const time = kaoTimeNow();
+
+      addSaendeeBubble("สด", message, time, type);
+
+      document.getElementById("saendeeChatPreview").textContent = message;
+      document.getElementById("saendeeChatTime").textContent = time;
+
+      showSaendeeBanner(message, time);
+    }, index * 1800);
+  });
+}
+
+// แบนเนอร์ LINE ไม่ใช่แจ้งเตือนหน้าล็อก
+function showSaendeeBanner(message, time) {
+  const phone = document.getElementById("phone");
+  if (!phone) return;
+
+  let banner = document.getElementById("saendeeBanner");
+
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "saendeeBanner";
+    phone.appendChild(banner);
+  }
+
+  banner.style.cssText = `
+    position:absolute;
+    top:43px;
+    left:12px;
+    right:12px;
+    z-index:150;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:12px 14px;
+    border-radius:22px;
+    background:rgba(246,247,250,.96);
+    color:#20212b;
+    box-shadow:0 6px 22px rgba(0,0,0,.2);
+    font-family:inherit;
+    cursor:pointer;
+  `;
+
+  banner.replaceChildren();
+
+  const avatar = document.createElement("img");
+avatar.src = "https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg";
+avatar.alt = "แสนดี";
+
+avatar.style.cssText = `
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+`;
+
+  const content = document.createElement("div");
+  content.style.cssText = "flex:1;min-width:0";
+
+  const title = document.createElement("strong");
+  title.textContent = "แสนดี";
+  title.style.fontSize = "14px";
+
+  const body = document.createElement("div");
+  body.textContent = message;
+  body.style.cssText = "font-size:13px;margin-top:3px";
+
+  const clock = document.createElement("span");
+  clock.textContent = time;
+  clock.style.cssText = "font-size:11px;color:#777";
+
+  content.append(title, body);
+  banner.append(avatar, content, clock);
+
+  banner.onclick = () => {
+    banner.remove();
+    openLine();
+    openSaendeeChat();
+  };
+
+  clearTimeout(showSaendeeBanner.hideTimer);
+  showSaendeeBanner.hideTimer = setTimeout(() => banner.remove(), 4500);
+}
+
+renderPeteSaendeeHistory();
 
 </script>
 </body>
