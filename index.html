@@ -3670,7 +3670,36 @@ img.line-profile-avatar {
   font-size: 30px;
   cursor: pointer;
 }
+/* LINE Call Message */
 
+.kao-call-bubble {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kao-call-bubble svg {
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: #555;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kao-call-bubble.missed svg {
+  stroke: #e34b4b;
+}
+
+.kao-call-bubble.completed svg {
+  stroke: #06c755;
+}
+
+.kao-call-bubble span {
+  font-size: inherit;
+}
 </style>
 </head>
 
@@ -6275,6 +6304,7 @@ function addKaoBubble(
     bubble.appendChild(label);
   } else {
     bubble.textContent = message;
+    kaoFormatCallBubble(bubble, text);
   }
 
   const meta = document.createElement("div");
@@ -6449,8 +6479,6 @@ function kaoStoryMessage(message) {
   if (preview) preview.textContent = message;
   if (chatTime) chatTime.textContent = time;
 }
-
-// แสดงแจ้งเตือน LINE บนหน้าล็อก
 // แสดงแจ้งเตือน LINE แบบสะสมทีละบับเบิ้ล
 function showKaoLockNotification(message) {
   const lock = document.getElementById("lockScreen");
@@ -10645,6 +10673,40 @@ function kaoOpenPhoto(src) {
 function kaoClosePhoto() {
   const viewer = document.getElementById("kaoPhotoViewer");
   if (viewer) viewer.style.display = "none";
+}
+function kaoFormatCallBubble(bubble, text) {
+  const isMissed = text === "ไม่ได้รับสาย";
+  const isCompleted = text.startsWith("การโทรด้วยเสียง");
+
+  if (!isMissed && !isCompleted) return;
+
+  bubble.textContent = "";
+  bubble.classList.add("kao-call-bubble");
+  bubble.classList.add(isMissed ? "missed" : "completed");
+
+  const icon = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+
+  icon.setAttribute("viewBox", "0 0 24 24");
+
+  if (isMissed) {
+    icon.innerHTML = `
+      <path d="M6.5 3.5 3.5 6.5c0 6.5 7.5 14 14 14l3-3-5-5-3 3c-2.5-1.2-4.3-3-5.5-5.5l3-3-3.5-3.5Z"/>
+      <path d="M14 4h7v7"/>
+      <path d="m21 4-7 7"/>
+    `;
+  } else {
+    icon.innerHTML = `
+      <path d="M6.5 3.5 3.5 6.5c0 6.5 7.5 14 14 14l3-3-5-5-3 3c-2.5-1.2-4.3-3-5.5-5.5l3-3-3.5-3.5Z"/>
+    `;
+  }
+
+  const label = document.createElement("span");
+  label.textContent = text;
+
+  bubble.append(icon, label);
 }
 
 </script>
