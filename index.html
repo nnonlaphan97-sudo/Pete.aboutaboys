@@ -2850,6 +2850,171 @@ img.line-profile-avatar {
   font-size: 12px;
   color: #555;
 }
+/* ANDROID GALLERY */
+#galleryScreen {
+  flex-direction: column;
+  background: #fff;
+  color: #171717;
+  overflow: hidden;
+}
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 16px;
+}
+
+.gallery-header button,
+.gallery-nav button,
+.gallery-photo button {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.gallery-header strong {
+  font-size: 23px;
+}
+
+.gallery-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.gallery-albums {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.gallery-album {
+  cursor: pointer;
+}
+
+.gallery-album-cover {
+  aspect-ratio: 1;
+  background: #f1f1f1;
+  border-radius: 16px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  font-size: 35px;
+}
+
+.gallery-album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-album-name {
+  font-weight: 600;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.gallery-album-count {
+  font-size: 12px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.gallery-grid-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #eee;
+  cursor: pointer;
+}
+
+.gallery-grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #000;
+  color: #fff;
+  display: none;
+  flex-direction: column;
+}
+
+.gallery-photo-header,
+.gallery-photo-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+}
+
+.gallery-photo-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-photo-main img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.gallery-nav {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #eee;
+  padding: 14px 0 20px;
+}
+
+.gallery-nav button {
+  font-size: 13px;
+}
+
+.gallery-nav button.active {
+  color: #e69a24;
+  font-weight: 700;
+}
+
+.gallery-lock {
+  text-align: center;
+  padding: 50px 10px;
+}
+
+.gallery-lock input {
+  width: 100%;
+  max-width: 260px;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 3px;
+}
+
+.gallery-lock button {
+  display: block;
+  margin: 18px auto;
+  padding: 12px 45px;
+  border: 0;
+  border-radius: 12px;
+  background: #222;
+  color: white;
+}
 
 </style>
 </head>
@@ -3153,12 +3318,17 @@ img.line-profile-avatar {
   <span>Instagram</span>
 </div>
 
-  <div class="home-app">
-    <div class="home-app-icon">S</div>
-    <span>Settings</span>
+<div class="home-app" onclick="openGallery()">
+  <div class="home-app-icon" style="background:#fff4e6;color:#f59e0b">
+    <svg width="34" height="34" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="2" y="3" width="20" height="18" rx="3"/>
+      <circle cx="8" cy="9" r="2"/>
+      <path d="m3 18 6-6 4 4 3-3 5 5"/>
+    </svg>
   </div>
+  <span>รูปภาพ</span>
 </div>
-
 
   <div class="home-dock">
     <span>Phone</span>
@@ -3170,7 +3340,42 @@ img.line-profile-avatar {
     <div class="gesture-bar"></div>
   </div>
 </section>
+<!-- ANDROID GALLERY -->
+<section class="screen" id="galleryScreen">
 
+  <div class="gallery-header">
+    <button onclick="galleryBack()" style="font-size:26px">‹</button>
+    <strong id="galleryTitle">รูปภาพ</strong>
+  </div>
+
+  <div class="gallery-body" id="galleryBody"></div>
+
+  <div class="gallery-nav" id="galleryNav">
+    <button onclick="galleryOpenAlbum('recent')">ล่าสุด</button>
+    <button onclick="galleryOpenAlbum('favorites')">รายการโปรด</button>
+    <button onclick="galleryOpenAlbum('camera')">กล้อง</button>
+    <button onclick="galleryOpenAlbum('secret')">x แฟ้ม x</button>
+  </div>
+
+  <div class="gallery-photo" id="galleryPhoto">
+    <div class="gallery-photo-header">
+      <button onclick="galleryClosePhoto()" style="font-size:28px">‹</button>
+      <span id="galleryPhotoCount"></span>
+    </div>
+
+    <div class="gallery-photo-main">
+      <img id="galleryFullImage" alt="รูปภาพ">
+    </div>
+
+    <div class="gallery-photo-actions">
+      <button onclick="galleryPreviousPhoto()">❮</button>
+      <button onclick="galleryToggleFavorite()" id="galleryFavoriteBtn"
+              style="font-size:28px">♡</button>
+      <button onclick="galleryNextPhoto()">❯</button>
+    </div>
+  </div>
+
+</section>
 <!-- INSTAGRAM ANDROID -->
 <section class="screen" id="instagramScreen">
   <div class="ig-header">
@@ -4303,7 +4508,15 @@ let pinBusy = false;
 let openKaoAfterUnlock = false;
 
 function showPhoneScreen(screenId) {
-  ["lockScreen", "pinScreen", "homeScreen", "lineScreen", "facebookScreen", "instagramScreen"].forEach(id => {
+ [
+  "lockScreen",
+  "pinScreen",
+  "homeScreen",
+  "lineScreen",
+  "facebookScreen",
+  "instagramScreen",
+  "galleryScreen"
+].forEach(id => {
     const screen = document.getElementById(id);
 
     if (screen) {
@@ -8461,6 +8674,285 @@ function instagramSendDM(event) {
 
   instagramRenderDMChat();
   instagramRenderDM();
+}
+// ==========================================
+// ANDROID GALLERY
+// ==========================================
+
+const GALLERY_SECRET_PIN = "999999999";
+
+// ใส่ URL รูปภาพของพีทได้ที่นี่
+const galleryPhotos = [
+  {
+    id: 1,
+    src: "https://i.ibb.co/N6HXs8R0/r07qxo-R-Download.jpg",
+    album: "camera",
+    favorite: false,
+    secret: false
+  },
+  {
+    id: 2,
+    src: "https://i.ibb.co/6c4G1gGX/IMG-4162.jpg",
+    album: "camera",
+    favorite: false,
+    secret: false
+  }
+];
+
+// รูปในอัลบั้มลับ ให้เพิ่มด้วย secret: true
+const gallerySecretPhotos = [];
+
+let galleryCurrentAlbum = "albums";
+let galleryUnlocked = false;
+let galleryVisiblePhotos = [];
+let galleryPhotoIndex = 0;
+
+function openGallery() {
+  galleryUnlocked = false;
+  galleryCurrentAlbum = "albums";
+  document.getElementById("galleryPhoto").style.display = "none";
+
+  showPhoneScreen("galleryScreen");
+  galleryRenderAlbums();
+}
+
+function galleryBack() {
+  if (document.getElementById("galleryPhoto").style.display === "flex") {
+    galleryClosePhoto();
+    return;
+  }
+
+  if (galleryCurrentAlbum !== "albums") {
+    galleryUnlocked = false;
+    galleryCurrentAlbum = "albums";
+    galleryRenderAlbums();
+    return;
+  }
+
+  galleryUnlocked = false;
+  showPhoneScreen("homeScreen");
+}
+
+function galleryGetPhotos(album) {
+  const normal = galleryPhotos.filter(p => !p.secret);
+
+  if (album === "recent") {
+    return [...normal].reverse();
+  }
+
+  if (album === "favorites") {
+    return normal.filter(p => p.favorite).reverse();
+  }
+
+  if (album === "camera") {
+    return normal.filter(p => p.album === "camera").reverse();
+  }
+
+  if (album === "secret" && galleryUnlocked) {
+    return gallerySecretPhotos;
+  }
+
+  return [];
+}
+
+function galleryRenderAlbums() {
+  galleryCurrentAlbum = "albums";
+
+  document.getElementById("galleryTitle").textContent = "รูปภาพ";
+  document.getElementById("galleryNav").style.display = "flex";
+
+  const albums = [
+    { id: "recent", name: "ล่าสุด", icon: "🖼️" },
+    { id: "favorites", name: "รายการโปรด", icon: "❤️" },
+    { id: "camera", name: "กล้อง", icon: "📷" },
+    { id: "secret", name: "x แฟ้ม x", icon: "🔒" }
+  ];
+
+  document.getElementById("galleryBody").innerHTML = `
+    <div class="gallery-albums">
+      ${albums.map(album => {
+        const photos = galleryGetPhotos(album.id);
+        const cover = album.id === "secret" ? null : photos[0];
+
+        return `
+          <div class="gallery-album"
+               onclick="galleryOpenAlbum('${album.id}')">
+            <div class="gallery-album-cover">
+              ${cover
+                ? `<img src="${cover.src}">`
+                : album.icon}
+            </div>
+            <div class="gallery-album-name">${album.name}</div>
+            <div class="gallery-album-count">
+              ${album.id === "secret"
+                ? "อัลบั้มที่ล็อก"
+                : photos.length + " รูป"}
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function galleryOpenAlbum(album) {
+  galleryCurrentAlbum = album;
+
+  const names = {
+    recent: "ล่าสุด",
+    favorites: "รายการโปรด",
+    camera: "กล้อง",
+    secret: "x แฟ้ม x"
+  };
+
+  document.getElementById("galleryTitle").textContent = names[album];
+  document.getElementById("galleryNav").style.display = "flex";
+
+  if (album === "secret" && !galleryUnlocked) {
+    galleryShowLock();
+    return;
+  }
+
+  galleryVisiblePhotos = galleryGetPhotos(album);
+
+  document.getElementById("galleryBody").innerHTML =
+    galleryVisiblePhotos.length
+      ? `
+        <div class="gallery-grid">
+          ${galleryVisiblePhotos.map((photo, index) => `
+            <div class="gallery-grid-item"
+                 onclick="galleryOpenPhoto(${index})">
+              <img src="${photo.src}" loading="lazy">
+            </div>
+          `).join("")}
+        </div>
+      `
+      : `
+        <div style="text-align:center;color:#999;padding:70px 0">
+          ยังไม่มีรูปภาพ
+        </div>
+      `;
+
+  document.querySelectorAll("#galleryNav button")
+    .forEach((button, index) => {
+      button.classList.toggle(
+        "active",
+        ["recent", "favorites", "camera", "secret"][index] === album
+      );
+    });
+}
+
+function galleryShowLock() {
+  document.getElementById("galleryBody").innerHTML = `
+    <div class="gallery-lock">
+      <div style="font-size:55px;margin-bottom:20px">🔒</div>
+      <h2>x แฟ้ม x</h2>
+      <p style="color:#888;margin:12px 0 25px">
+        กรุณาใส่รหัสผ่านเพื่อดูรูปภาพ
+      </p>
+
+      <form onsubmit="galleryUnlock(event)">
+        <input
+          id="galleryPinInput"
+          type="password"
+          inputmode="numeric"
+          maxlength="9"
+          autocomplete="off"
+          placeholder="รหัสผ่าน"
+          required
+        >
+        <button type="submit">ปลดล็อก</button>
+      </form>
+
+      <p id="galleryPinError"
+         style="color:#e53935;font-size:13px"></p>
+    </div>
+  `;
+}
+
+function galleryUnlock(event) {
+  event.preventDefault();
+
+  const pin = document.getElementById("galleryPinInput").value;
+
+  if (pin === GALLERY_SECRET_PIN) {
+    galleryUnlocked = true;
+    galleryOpenAlbum("secret");
+  } else {
+    document.getElementById("galleryPinError").textContent =
+      "รหัสผ่านไม่ถูกต้อง";
+
+    document.getElementById("galleryPinInput").value = "";
+  }
+}
+
+function galleryOpenPhoto(index) {
+  galleryPhotoIndex = index;
+  document.getElementById("galleryPhoto").style.display = "flex";
+  galleryUpdatePhoto();
+}
+
+function galleryUpdatePhoto() {
+  const photo = galleryVisiblePhotos[galleryPhotoIndex];
+  if (!photo) return;
+
+  document.getElementById("galleryFullImage").src = photo.src;
+
+  document.getElementById("galleryPhotoCount").textContent =
+    `${galleryPhotoIndex + 1} / ${galleryVisiblePhotos.length}`;
+
+  document.getElementById("galleryFavoriteBtn").textContent =
+    photo.favorite ? "♥" : "♡";
+}
+
+function galleryPreviousPhoto() {
+  if (galleryPhotoIndex > 0) {
+    galleryPhotoIndex--;
+    galleryUpdatePhoto();
+  }
+}
+
+function galleryNextPhoto() {
+  if (galleryPhotoIndex < galleryVisiblePhotos.length - 1) {
+    galleryPhotoIndex++;
+    galleryUpdatePhoto();
+  }
+}
+
+function galleryToggleFavorite() {
+  const photo = galleryVisiblePhotos[galleryPhotoIndex];
+  if (!photo) return;
+
+  photo.favorite = !photo.favorite;
+  galleryUpdatePhoto();
+
+  // จำรายการโปรดระหว่างการเปิดหน้าเว็บ
+  const favorites = galleryPhotos
+    .filter(p => p.favorite)
+    .map(p => p.id);
+
+  sessionStorage.setItem(
+    "peteGalleryFavorites",
+    JSON.stringify(favorites)
+  );
+}
+
+function galleryClosePhoto() {
+  document.getElementById("galleryPhoto").style.display = "none";
+  galleryOpenAlbum(galleryCurrentAlbum);
+}
+
+// คืนค่ารายการโปรดหลังรีเฟรชในแท็บเดิม
+try {
+  const savedFavorites = JSON.parse(
+    sessionStorage.getItem("peteGalleryFavorites") || "[]"
+  );
+
+  galleryPhotos.forEach(photo => {
+    photo.favorite = savedFavorites.includes(photo.id);
+  });
+} catch (error) {
+  console.warn("Cannot load gallery favorites", error);
 }
 
 </script>
