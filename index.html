@@ -5522,7 +5522,7 @@ const fbPostsData = [
     text: `จากข่าวที่เกิดขึ้น ผมพยายามนิ่งเงียบมาตลอดเพราะคิดว่า ถ้าไม่ใช่เรื่องจริงเดี๋ยวมันก็ผ่านไป แต่ผมคิดผิด ยิ่งผมเงียบ ข่าวมันยิ่งไปไกลกว่าที่ผมคิดผมและคนรอบข้างได้รับผลกระทบ ผมเลยขอใช้พื้นที่นี้เล่าความจริงในมุมผมเกิดอะไรขึ้น เหตุการณ์วันนั้นลูกศิษย์ผมเมาและขอร้องให้ผมไปส่งบ้านเพราะกลัวพ่อจะรู้ ผมไม่เต็มใจแต่เพราะเขาเคยเป็นลูกศิษย์ผม ผมเลยช่วยเหลือพอไปถึงห้อง น้องได้บอกชอบผม ผมปฏิเสธ แต่น้องกลับเข้ามากอดผมแล้วพ่อน้องก็เข้ามาเห็นพอดี เลยเป็นเรื่องเข้าใจผิด ผมยืนยันว่าผมบริสุทธิ์ใจและไม่เคยคิดเกินเลยนอกไปจากศิษย์กับครู ผมหวังว่าข้อความนี้ จะทำให้ใครหลายคนเข้าใจเหตุการณ์ที่ถูกต้องทั้งหมดและทำให้เลิกเข้าใจในตัวผมผิด ขอบคุณครับ`,
     likes: 1301,
     liked: false,
-    comments: [30]
+    comments: [33]
   },
   {
     author: FB_KAO_NAME,
@@ -5531,38 +5531,37 @@ const fbPostsData = [
     feeling: "รู้สึกภูมิใจ",
     feelingIcon: "proud",
     text: "New Chapter Begin",
-    likes: 56,
+    likes: 69,
     liked: false,
-    comments: [5]
+    comments: [9]
   },
   {
     author: "June Jirawat",
     avatar: LINE_JUNE_AVATAR,
     time: "",
     text: "กูไหว้แล้วไม่รับไหว้ผม พี่เป็น here ไรครับ",
-    likes: 78,
+    likes: 100,
     liked: false,
-    comments: [10]
+    comments: [20]
   },
   {
     author: "Saendee Thanawat",
     avatar: LINE_SAENDEE_AVATAR,
     time: "",
     text: "ฝึกงานวันแรก อยากกลับบ้านไปนอน",
-    likes: 56,
+    likes: 76,
     liked: false,
-    comments: [14]
+    comments: [5]
   },
   {
-  author: "Thada",
-  avatar: LINE_THADA_AVATAR,
-  time: "",
-  text: "ทำไมกูต้องมารับมันด้วยวะ",
-  likes: 428,
-  commentCount: 63,
-  liked: false,
-  comments: []
-}
+    author: "Thada",
+    avatar: LINE_THADA_AVATAR,
+    time: "",
+    text: "ทำไมกูต้องมารับมันด้วยวะ",
+    likes: 87,
+    liked: false,
+    comments: [4]
+  }
 ];
 /* เปิดจากไอคอน = หน้าฟีด */
 function openFacebook() {
@@ -5718,7 +5717,7 @@ if (post.feeling) {
     const stats = document.createElement("div");
     stats.className = "fb-muted";
     stats.textContent =
-      `${post.likes} ถูกใจ · ${post.comments.length} ความคิดเห็น`;
+      `${post.likes} ถูกใจ · ${(post.commentCount || 0) + post.comments.length} ความคิดเห็น`;
 
     /* ปุ่มต่าง ๆ */
     const actions = document.createElement("div");
