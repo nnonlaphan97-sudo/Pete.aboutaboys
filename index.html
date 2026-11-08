@@ -2852,17 +2852,27 @@ img.line-profile-avatar {
 }
 /* ANDROID GALLERY */
 #galleryScreen {
+  display: none;
   flex-direction: column;
-  background: #fff;
+  background: #fafafa;
   color: #171717;
   overflow: hidden;
+  z-index: 8;
 }
 
 .gallery-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 15px;
-  padding: 18px 16px;
+  padding: 70px 24px 25px;
+  flex-shrink: 0;
+}
+
+.gallery-header strong {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
 }
 
 .gallery-header button,
@@ -2874,15 +2884,11 @@ img.line-profile-avatar {
   cursor: pointer;
 }
 
-.gallery-header strong {
-  font-size: 23px;
-}
-
 .gallery-body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px;
+  padding: 32px 20px 20px;
 }
 
 .gallery-albums {
@@ -2897,8 +2903,8 @@ img.line-profile-avatar {
 
 .gallery-album-cover {
   aspect-ratio: 1;
-  background: #f1f1f1;
-  border-radius: 16px;
+  background: #ededed;
+  border-radius: 26px;
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -2913,8 +2919,8 @@ img.line-profile-avatar {
 
 .gallery-album-name {
   font-weight: 600;
-  margin-top: 8px;
-  font-size: 14px;
+  margin-top: 12px;
+  font-size: 16px;
 }
 
 .gallery-album-count {
@@ -2977,8 +2983,10 @@ img.line-profile-avatar {
 .gallery-nav {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   border-top: 1px solid #eee;
-  padding: 14px 0 20px;
+  padding: 17px 0 30px;
+  background: #fafafa;
 }
 
 .gallery-nav button {
@@ -3319,14 +3327,45 @@ img.line-profile-avatar {
 </div>
 
 <div class="home-app" onclick="openGallery()">
-  <div class="home-app-icon" style="background:#fff4e6;color:#f59e0b">
-    <svg width="34" height="34" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="2" y="3" width="20" height="18" rx="3"/>
-      <circle cx="8" cy="9" r="2"/>
-      <path d="m3 18 6-6 4 4 3-3 5 5"/>
+  <div class="home-app-icon"
+       style="background:#c90055;
+              border-radius:16px;
+              overflow:hidden;">
+
+    <svg width="54" height="54"
+         viewBox="0 0 512 512"
+         xmlns="http://www.w3.org/2000/svg">
+
+      <rect width="512" height="512"
+            rx="100" fill="#c90055"/>
+
+      <g fill="#ffffff">
+        <path id="galleryPetal"
+              d="M256 206
+                 C232 178 195 95 196 67
+                 C197 37 213 33 256 33
+                 C299 33 315 37 316 67
+                 C317 95 280 178 256 206Z"/>
+
+        <use href="#galleryPetal"
+             transform="rotate(60 256 256)"/>
+        <use href="#galleryPetal"
+             transform="rotate(120 256 256)"/>
+        <use href="#galleryPetal"
+             transform="rotate(180 256 256)"/>
+        <use href="#galleryPetal"
+             transform="rotate(240 256 256)"/>
+        <use href="#galleryPetal"
+             transform="rotate(300 256 256)"/>
+      </g>
+
+      <circle cx="256" cy="256"
+              r="50" fill="#c90055"/>
     </svg>
+
   </div>
+  <span>แกลเลอรี</span>
+</div>
   <span>รูปภาพ</span>
 </div>
 
@@ -3345,7 +3384,7 @@ img.line-profile-avatar {
 
   <div class="gallery-header">
     <button onclick="galleryBack()" style="font-size:26px">‹</button>
-    <strong id="galleryTitle">รูปภาพ</strong>
+    <strong id="galleryTitle">แกลเลอรี</strong>
   </div>
 
   <div class="gallery-body" id="galleryBody"></div>
@@ -8758,7 +8797,7 @@ function galleryGetPhotos(album) {
 function galleryRenderAlbums() {
   galleryCurrentAlbum = "albums";
 
-  document.getElementById("galleryTitle").textContent = "รูปภาพ";
+  document.getElementById("galleryTitle").textContent = "แกลเลอรี";
   document.getElementById("galleryNav").style.display = "flex";
 
   const albums = [
@@ -8802,7 +8841,7 @@ function galleryOpenAlbum(album) {
     recent: "ล่าสุด",
     favorites: "รายการโปรด",
     camera: "กล้อง",
-    secret: "x แฟ้ม x"
+    secret: "x"
   };
 
   document.getElementById("galleryTitle").textContent = names[album];
