@@ -5246,7 +5246,13 @@ renderAboutBoyzHistory();
 ========================================= */
 
 const FB_PETE_AVATAR =
-  "https://i.ibb.co/3mFG65xJ/r07qxo-R-Download.jpg";
+  "https://i.ibb.co/pvBWjjTb/r07qxo-R-Download.jpg";
+
+const FB_KAO_AVATAR =
+  "https://i.ibb.co/N2vPgK03/IMG-4076.jpg";
+
+const FB_PETE_NAME = "Phubodin Ratchatrakul";
+const FB_KAO_NAME = "Phanuwat Chotiwat";
 
 /* SVG ICONS */
 const FB_ICONS = {
@@ -5334,9 +5340,10 @@ function renderFacebookIcons() {
 /* ข้อมูลโพสต์ */
 const fbPostsData = [
   {
-    author: "Phubodin Ratchatrakul",
+    author: FB_KAO_NAME,
+    avatar: FB_KAO_AVATAR,
     time: "โพสต์ล่าสุด",
-    text: "ยินดีต้อนรับสู่ Facebook ของพีท",
+    text: `จากข่าวที่เกิดขึ้น ผมพยายามนิ่งเงียบมาตลอดเพราะคิดว่า ถ้าไม่ใช่เรื่องจริงเดี๋ยวมันก็ผ่านไป แต่ผมคิดผิด ยิ่งผมเงียบ ข่าวมันยิ่งไปไกลกว่าที่ผมคิดผมและคนรอบข้างได้รับผลกระทบ ผมเลยขอใช้พื้นที่นี้เล่าความจริงในมุมผมเกิดอะไรขึ้น เหตุการณ์วันนั้นลูกศิษย์ผมเมาและขอร้องให้ผมไปส่งบ้านเพราะกลัวพ่อจะรู้ ผมไม่เต็มใจแต่เพราะเขาเคยเป็นลูกศิษย์ผม ผมเลยช่วยเหลือพอไปถึงห้อง น้องได้บอกชอบผม ผมปฏิเสธ แต่น้องกลับเข้ามากอดผมแล้วพ่อน้องก็เข้ามาเห็นพอดี เลยเป็นเรื่องเข้าใจผิด ผมยืนยันว่าผมบริสุทธิ์ใจและไม่เคยคิดเกินเลยนอกไปจากศิษย์กับครู ผมหวังว่าข้อความนี้ จะทำให้ใครหลายคนเข้าใจเหตุการณ์ที่ถูกต้องทั้งหมดและทำให้เลิกเข้าใจในตัวผมผิด ขอบคุณครับ`,
     likes: 0,
     liked: false,
     comments: []
@@ -5415,14 +5422,15 @@ function facebookCreatePost() {
 
   if (!message) return;
 
-  fbPostsData.unshift({
-    author: "Phubodin Ratchatrakul",
-    time: "เมื่อสักครู่",
-    text: message,
-    likes: 0,
-    liked: false,
-    comments: []
-  });
+ fbPostsData.unshift({
+  author: FB_PETE_NAME,
+  avatar: FB_PETE_AVATAR,
+  time: "เมื่อสักครู่",
+  text: message,
+  likes: 0,
+  liked: false,
+  comments: []
+});
 
   input.value = "";
   facebookRenderPosts();
@@ -5445,8 +5453,8 @@ function facebookRenderPosts() {
 
     const avatar = document.createElement("img");
     avatar.className = "fb-avatar";
-    avatar.src = FB_PETE_AVATAR;
-    avatar.alt = "พีท";
+    avatar.src = post.avatar || FB_PETE_AVATAR;
+    avatar.alt = post.author;
 
     const info = document.createElement("div");
 
@@ -5528,7 +5536,7 @@ function facebookRenderPosts() {
       item.className = "fb-comment-item";
 
       const commenter = document.createElement("b");
-      commenter.textContent = "Phubodin Ratchatrakul: ";
+      commenter.textContent = FB_PETE_NAME + ": ";
 
       item.append(
         commenter,
@@ -5593,7 +5601,7 @@ function facebookLiveComment(event) {
   item.className = "fb-comment-item";
 
   const name = document.createElement("b");
-  name.textContent = "Phubodin Ratchatrakul: ";
+  name.textContent = FB_PETE_NAME + ": ";
 
   item.append(
     name,
