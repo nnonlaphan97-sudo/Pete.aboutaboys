@@ -2186,11 +2186,14 @@ img.line-profile-avatar {
 .ig-story-viewer {
   position: absolute;
   inset: 0;
-  z-index: 90;
+  width: 100%;
+  height: 100%;
+  z-index: 200;
   background: #111;
   color: white;
   display: none;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .ig-story-progress {
@@ -2255,7 +2258,9 @@ img.line-profile-avatar {
   flex: 1;
   min-height: 0;
   width: 100%;
+  height: 100%;
   object-fit: contain;
+  background: #111;
 }
 
 </style>
@@ -2600,20 +2605,26 @@ img.line-profile-avatar {
     <div id="igOtherPage" style="display:none"></div>
   </div>
 
-  <nav class="ig-bottom">
-    <button onclick="instagramTab('home')" id="igHomeBtn">
-      <span data-ig-icon="home"></span>
-    </button>
-    <button onclick="instagramTab('search')">
-      <span data-ig-icon="search"></span>
-    </button>
-    <button onclick="instagramTab('reels')">
-      <span data-ig-icon="reels"></span>
-    </button>
-    <button onclick="instagramTab('profile')">
-      <span data-ig-icon="user"></span>
-    </button>
-    <div id="igStoryViewer" class="ig-story-viewer">
+<nav class="ig-bottom">
+  <button onclick="instagramTab('home')" id="igHomeBtn">
+    <span data-ig-icon="home"></span>
+  </button>
+
+  <button onclick="instagramTab('search')">
+    <span data-ig-icon="search"></span>
+  </button>
+
+  <button onclick="instagramTab('reels')">
+    <span data-ig-icon="reels"></span>
+  </button>
+
+  <button onclick="instagramTab('profile')">
+    <span data-ig-icon="user"></span>
+  </button>
+</nav>
+
+<!-- หน้าดู Instagram Story -->
+<div id="igStoryViewer" class="ig-story-viewer">
 
   <div class="ig-story-progress">
     <span id="igStoryProgressBar"></span>
@@ -2627,15 +2638,23 @@ img.line-profile-avatar {
       ×
     </button>
   </div>
-  <img id="igStoryImage" class="ig-story-viewer-image" src="" alt="">
+
+  <img
+    id="igStoryImage"
+    class="ig-story-viewer-image"
+    src=""
+    alt=""
+  >
+
+  <video
+    id="igStoryVideo"
+    class="ig-story-viewer-image"
+    playsinline
+    preload="metadata"
+    style="display:none;"
+  ></video>
+
 </div>
-<video
-  id="igStoryVideo"
-  class="ig-story-viewer-image"
-  playsinline
-  style="display:none;"
-></video>
-  </nav>
   <div class="app-gesture">
   <div class="gesture-bar"></div>
 </div>
@@ -6613,18 +6632,14 @@ function instagramCloseStory() {
   igStoryTimer = null;
 
   const video = document.getElementById("igStoryVideo");
+  const viewer = document.getElementById("igStoryViewer");
+
   video.pause();
+  video.onended = null;
   video.removeAttribute("src");
   video.load();
 
-  document.getElementById("igStoryViewer").style.display = "none";
-}
-
-function instagramCloseStory() {
-  clearTimeout(igStoryTimer);
-  igStoryTimer = null;
-
-  document.getElementById("igStoryViewer").style.display = "none";
+  viewer.style.display = "none";
 }
 /* =========================================
    RENDER POSTS
