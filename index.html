@@ -1010,6 +1010,7 @@ html, body {
   align-items: center;
   z-index: 11;
   cursor: pointer;
+  touch-action: none;
 }
 
 .app-gesture .gesture-bar {
@@ -2475,8 +2476,8 @@ img.line-profile-avatar {
       <span data-ig-icon="user"></span>
     </button>
   </nav>
-  <div class="app-swipe-home" data-swipe-home="instagram">
-  <div class="app-swipe-bar"></div>
+  <div class="app-gesture">
+  <div class="gesture-bar"></div>
 </div>
 </section>
 
@@ -2650,8 +2651,8 @@ img.line-profile-avatar {
       <button class="fb-primary" type="submit">ส่ง</button>
     </form>
   </div>
-  <div class="app-swipe-home" data-swipe-home="facebook">
-  <div class="app-swipe-bar"></div>
+  <div class="app-gesture">
+  <div class="gesture-bar"></div>
 </div>
 </section>
 
@@ -3327,9 +3328,8 @@ img.line-profile-avatar {
       <span>Wallet</span>
     </button>
   </nav>
-
-  <!-- ขีดด้านล่างสำหรับกลับหน้าโฮม -->
-  <div class="app-gesture" onclick="closeLine()">
+  
+  <div class="app-gesture">
     <div class="gesture-bar"></div>
   </div>
 </section>
@@ -3611,7 +3611,7 @@ function switchLinePage(page) {
   if (aboutBoyzChat) aboutBoyzChat.style.display = "none";
   if (nav) nav.style.display = "flex";
 
-  const gesture = document.querySelector(".line-gesture");
+  const gesture = document.querySelector("#lineScreen .app-gesture");
   if (gesture) gesture.style.display = "flex";
   const pages = {
     chats: "lineChatsPage",
@@ -3703,7 +3703,7 @@ function openKaoChat() {
 
   const chat = document.getElementById("kaoChatPage");
   const nav = document.querySelector(".line-bottom-nav");
-  const gesture = document.querySelector(".line-gesture");
+  const gesture = document.querySelector("#lineScreen .app-gesture");
 
   if (nav) nav.style.display = "none";
   if (gesture) gesture.style.display = "none";
@@ -4245,7 +4245,7 @@ function openJoeChat() {
 
   const joeChat = document.getElementById("joeChatPage");
   const nav = document.querySelector(".line-bottom-nav");
-  const gesture = document.querySelector(".line-gesture");
+  const gesture = document.querySelector("#lineScreen .app-gesture");
 
   if (nav) nav.style.display = "none";
   if (gesture) gesture.style.display = "none";
@@ -4892,7 +4892,7 @@ function openSaendeeChat() {
 
   const chat = document.getElementById("saendeeChatPage");
   const nav = document.querySelector(".line-bottom-nav");
-  const gesture = document.querySelector(".line-gesture");
+  const gesture = document.querySelector("#lineScreen .app-gesture");
 
   if (nav) nav.style.display = "none";
   if (gesture) gesture.style.display = "none";
@@ -5270,7 +5270,7 @@ function openGangChat() {
   if (chat) chat.style.display = "flex";
 
   const nav = document.querySelector(".line-bottom-nav");
-  const gesture = document.querySelector(".line-gesture");
+  const gesture = document.querySelector("#lineScreen .app-gesture");
 
   if (nav) nav.style.display = "none";
   if (gesture) gesture.style.display = "none";
@@ -5553,7 +5553,7 @@ function openAboutBoyzChat() {
   if (chat) chat.style.display = "flex";
 
   const nav = document.querySelector(".line-bottom-nav");
-  const gesture = document.querySelector(".line-gesture");
+  const gesture = document.querySelector("#lineScreen .app-gesture");
 
   if (nav) nav.style.display = "none";
   if (gesture) gesture.style.display = "none";
@@ -6350,6 +6350,29 @@ function instagramTab(tab) {
     </div>
   `;
 }
+document.querySelectorAll(".app-gesture").forEach(area => {
+  let startY = null;
+
+  area.addEventListener("touchstart", e => {
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  area.addEventListener("touchend", e => {
+    if (startY === null) return;
+
+    const distance = startY - e.changedTouches[0].clientY;
+
+    if (distance > 35) {
+      if (area.closest("#lineScreen")) {
+        closeLine();
+      } else {
+        showPhoneScreen("homeScreen");
+      }
+    }
+
+    startY = null;
+  }, { passive: true });
+});
 
 </script>
 </body>
