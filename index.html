@@ -2031,31 +2031,38 @@ img.line-profile-avatar {
 }
 
 .ig-story {
-  flex: 0 0 70px;
-  width: 70px;
-  min-width: 70px;
+  box-sizing: border-box;
+  flex: 0 0 82px;
+  width: 82px;
+  min-width: 82px;
   text-align: center;
   font-size: 11px;
+  cursor: pointer;
 }
 
 .ig-story-ring {
   box-sizing: border-box;
-  width: 66px;
-  height: 66px;
+  width: 76px;
+  height: 76px;
   padding: 3px;
   border-radius: 50%;
-  background: linear-gradient(35deg,#feda75,#fa7e1e,#d62976,#962fbf);
+  background: linear-gradient(35deg, #feda75, #fa7e1e, #d62976, #962fbf);
   margin: 0 auto 6px;
   overflow: hidden;
 }
 
 .ig-story-ring img {
   display: block;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 2px solid #fff;
   border-radius: 50%;
-  border: 2px solid white;
   object-fit: cover;
+  object-position: center;
 }
 .ig-post {
   padding-bottom: 16px;
@@ -2116,10 +2123,6 @@ img.line-profile-avatar {
 .ig-stories {
   gap: 15px;
   padding: 15px 12px 12px;
-}
-
-.ig-story {
-  cursor: pointer;
 }
 
 .ig-story-name {
@@ -3718,6 +3721,7 @@ img.line-profile-avatar {
 
 #kaoChatMessages .kao-media-message img {
   object-fit: cover;
+  }
 /* LINE VOICE MESSAGE */
 
 .kao-message-row .kao-message-bubble.kao-voice-bubble {
@@ -9353,12 +9357,20 @@ function instagramComment(id) {
 
 function openInstagram() {
   showPhoneScreen("instagramScreen");
+
   document.querySelector(".status-bar").style.display = "none";
+
   renderInstagramIcons();
   instagramRenderStories();
   instagramRenderPosts();
 
   instagramTab("home");
+
+  const stories = document.getElementById("igStories");
+
+  if (stories) {
+    stories.scrollLeft = 0;
+  }
 }
 
 function closeInstagram() {
