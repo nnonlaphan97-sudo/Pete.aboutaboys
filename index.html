@@ -2602,12 +2602,19 @@ img.line-profile-avatar {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: block;
   padding: 16px;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+}
+
+.ig-dm-chat-messages > .ig-dm-date {
+  margin: 12px 0;
+  text-align: center;
+}
+
+.ig-dm-chat-messages > .ig-dm-message-row {
+  margin-bottom: 10px;
 }
 
 .ig-dm-compose {
@@ -8338,17 +8345,18 @@ function instagramOpenDMChat(id) {
   const container = document.getElementById("igDMChatMessages");
 
   page.style.display = "flex";
+
   instagramRenderDMChat();
 
   const goToLatest = () => {
-    container.scrollTop = container.scrollHeight;
+    container.scrollTop =
+      container.scrollHeight - container.clientHeight;
   };
 
   requestAnimationFrame(() => {
-  requestAnimationFrame(() => {
     goToLatest();
+    requestAnimationFrame(goToLatest);
   });
-});
 }
 
 function instagramRenderDMChat() {
