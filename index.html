@@ -2016,36 +2016,47 @@ img.line-profile-avatar {
 
 .ig-stories {
   display: flex;
+  flex-direction: row;
   gap: 14px;
   padding: 16px 12px;
   overflow-x: auto;
+  overflow-y: hidden;
   border-bottom: 1px solid #eee;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ig-stories::-webkit-scrollbar {
+  display: none;
 }
 
 .ig-story {
-  flex-shrink: 0;
+  flex: 0 0 70px;
   width: 70px;
+  min-width: 70px;
   text-align: center;
   font-size: 11px;
 }
 
 .ig-story-ring {
+  box-sizing: border-box;
   width: 66px;
   height: 66px;
   padding: 3px;
   border-radius: 50%;
   background: linear-gradient(35deg,#feda75,#fa7e1e,#d62976,#962fbf);
-  margin-bottom: 6px;
+  margin: 0 auto 6px;
+  overflow: hidden;
 }
 
 .ig-story-ring img {
+  display: block;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   border: 2px solid white;
   object-fit: cover;
 }
-
 .ig-post {
   padding-bottom: 16px;
   border-bottom: 1px solid #eee;
@@ -3707,49 +3718,94 @@ img.line-profile-avatar {
 
 #kaoChatMessages .kao-media-message img {
   object-fit: cover;
-}
+/* LINE VOICE MESSAGE */
+
 .kao-message-row .kao-message-bubble.kao-voice-bubble {
+  box-sizing: border-box !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: space-between !important;
+  justify-content: flex-start !important;
   flex-wrap: nowrap !important;
-  gap: 12px !important;
 
-  width: 245px !important;
-  max-width: 75% !important;
+  width: 230px !important;
+  max-width: 230px !important;
+  min-width: 0 !important;
+  height: 64px !important;
   min-height: 64px !important;
-  padding: 12px 14px !important;
+
+  gap: 12px !important;
+  padding: 10px 13px !important;
+  margin: 0 !important;
 
   background: #60e873 !important;
   border-radius: 22px 22px 5px 22px !important;
+  color: #172b19 !important;
 }
 
 .kao-voice-bubble .kao-voice-play {
-  flex: 0 0 30px;
-  width: 30px;
-  padding: 0;
+  appearance: none;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 32px !important;
+  width: 32px !important;
+  height: 40px !important;
+
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #172b19 !important;
+  cursor: pointer;
+}
+
+.kao-voice-play svg {
+  display: block;
+  width: 25px;
+  height: 25px;
 }
 
 .kao-voice-bubble .kao-voice-wave {
   display: flex !important;
-  flex: 1 1 auto;
-  min-width: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 40px !important;
+  gap: 3px !important;
+}
+
+.kao-voice-wave span {
+  display: block !important;
+  flex: 0 0 3px !important;
+  width: 3px !important;
+  border-radius: 4px !important;
+  background: #245c2c !important;
+}
+
+.kao-voice-wave span.played {
+  background: #ffffff !important;
 }
 
 .kao-voice-bubble .kao-voice-duration {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  font-size: 18px;
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  color: #172b19 !important;
+  font-variant-numeric: tabular-nums;
 }
 
 .kao-voice-bubble audio {
   display: none !important;
 }
-
 </style>
 </head>
 
@@ -6389,82 +6445,94 @@ if (type === "image") {
   const playBtn = document.createElement("button");
   playBtn.type = "button";
   playBtn.className = "kao-voice-play";
-  playBtn.textContent = "▶";
+  playBtn.setAttribute("aria-label", "เล่นข้อความเสียง");
 
-  const waveform = document.createElement("div");
-  waveform.className = "kao-voice-wave";
+  const playIcon = `
+    <svg viewBox="0 0 24 24" width="25" height="25"
+         fill="currentColor" aria-hidden="true">
+      <path d="M7 4.5a1 1 0 0 1 1.5-.86l12 7.5a1 1 0 0 1 0 1.72l-12 7.5A1 1 0 0 1 7 19.5z"/>
+    </svg>
+  `;
 
-  const heights = [17, 29, 39, 34, 24, 36, 28, 18];
+  const pauseIcon = `
+    <svg viewBox="0 0 24 24" width="25" height="25"
+         fill="currentColor" aria-hidden="true">
+      <rect x="5" y="4" width="5" height="16" rx="1"/>
+      <rect x="14" y="4" width="5" height="16" rx="1"/>
+    </svg>
+  `;
+
+  playBtn.innerHTML = playIcon;
+
+  const wave = document.createElement("div");
+  wave.className = "kao-voice-wave";
+
+  const heights = [14, 25, 36, 28, 39, 32, 20, 35, 27, 16];
 
   heights.forEach(height => {
     const bar = document.createElement("span");
-    bar.style.height = height + "px";
-    waveform.appendChild(bar);
+    bar.style.height = `${height}px`;
+    wave.appendChild(bar);
   });
 
-  const duration = document.createElement("span");
-  duration.className = "kao-voice-duration";
-  duration.textContent = "00:00";
+  const timer = document.createElement("span");
+  timer.className = "kao-voice-duration";
+  timer.textContent = "00:00";
 
-  const formatTime = seconds => {
+  function formatTime(seconds) {
     if (!Number.isFinite(seconds)) return "00:00";
+    const n = Math.max(0, Math.ceil(seconds));
+    return `${String(Math.floor(n / 60)).padStart(2, "0")}:${String(n % 60).padStart(2, "0")}`;
+  }
 
-    const value = Math.max(0, Math.ceil(seconds));
-
-    return String(Math.floor(value / 60)).padStart(2, "0") +
-      ":" + String(value % 60).padStart(2, "0");
-  };
-
-  const updateTime = () => {
-    duration.textContent = formatTime(
-      (audio.duration || 0) - audio.currentTime
-    );
-
-    const progress = audio.duration
-      ? audio.currentTime / audio.duration
+  function updateVoice() {
+    const total = Number.isFinite(audio.duration)
+      ? audio.duration
       : 0;
 
-    [...waveform.children].forEach((bar, index) => {
+    timer.textContent = formatTime(total - audio.currentTime);
+
+    const progress = total ? audio.currentTime / total : 0;
+
+    [...wave.children].forEach((bar, i) => {
       bar.classList.toggle(
         "played",
-        index / waveform.children.length < progress
+        (i + 1) / wave.children.length <= progress
       );
     });
-  };
+  }
 
-  audio.addEventListener("loadedmetadata", updateTime);
-  audio.addEventListener("timeupdate", updateTime);
+  audio.addEventListener("loadedmetadata", updateVoice);
+  audio.addEventListener("durationchange", updateVoice);
+  audio.addEventListener("timeupdate", updateVoice);
 
   audio.addEventListener("play", () => {
-    playBtn.textContent = "Ⅱ";
+    playBtn.innerHTML = pauseIcon;
   });
 
   audio.addEventListener("pause", () => {
-    playBtn.textContent = "▶";
+    playBtn.innerHTML = playIcon;
   });
 
   audio.addEventListener("ended", () => {
     audio.currentTime = 0;
-    updateTime();
+    updateVoice();
   });
 
   playBtn.addEventListener("click", () => {
     if (audio.paused) {
-      document.querySelectorAll(
-        ".kao-voice-bubble audio"
-      ).forEach(other => {
-        if (other !== audio) other.pause();
-      });
+      document.querySelectorAll(".kao-voice-bubble audio")
+        .forEach(other => {
+          if (other !== audio) other.pause();
+        });
 
-      audio.play().catch(error => {
-        console.error("ไม่สามารถเล่นเสียงได้", error);
-      });
+      audio.play().catch(console.error);
     } else {
       audio.pause();
     }
   });
 
-  bubble.append(playBtn, waveform, duration, audio);
+  bubble.append(playBtn, wave, timer, audio);
 } else if (type === "file") {
   bubble.classList.add("kao-media-message");
   bubble.innerHTML = kaoMediaIcon(type);
