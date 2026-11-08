@@ -8893,7 +8893,12 @@ const gallerySecretPhotos = [
   "https://i.ibb.co/9HfQNjNr/IMG-4169.jpg",
   "https://i.ibb.co/cS6gzkx4/IMG-4166.jpg",
   "https://i.ibb.co/1fw6ntsg/IMG-4165.jpg",
-  "https://i.ibb.co/C5mP1PfR/IMG-4164.jpg"
+  "https://i.ibb.co/C5mP1PfR/IMG-4164.jpg",
+  "https://i.ibb.co/M5DYVDgz/IMG-4158.jpg",
+  "https://i.ibb.co/ddqqpnY/IMG-4157.jpg",
+  "https://i.ibb.co/b5FbmgWF/IMG-4156.jpg",
+  "https://i.ibb.co/pr3vkfMJ/IMG-4155.jpg",
+  "https://i.ibb.co/XktWF8NW/IMG-4154.jpg"
 ].map((src, index) => ({
   id: 1000 + index,
   src,
@@ -8993,17 +8998,19 @@ function galleryRenderAlbums() {
   gallerySetActiveTab("albums");
   
   const albums = [
-    { id: "recent", name: "ล่าสุด", icon: "🖼️" },
-    { id: "favorites", name: "รายการโปรด", icon: "❤️" },
-    { id: "camera", name: "กล้อง", icon: "📷" },
-    { id: "secret", name: "x", icon: "🔒" }
-  ];
+  { id: "recent", name: "ล่าสุด" },
+  { id: "favorites", name: "รายการโปรด" },
+  { id: "camera", name: "กล้อง" },
+  { id: "secret", name: "x" }
+];
 
   document.getElementById("galleryBody").innerHTML = `
     <div class="gallery-albums">
       ${albums.map(album => {
         const photos = galleryGetPhotos(album.id);
-        const cover = album.id === "secret" ? null : photos[0];
+        const cover = album.id === "secret"
+  ? { src: "https://i.ibb.co/M5DYVDgz/IMG-4158.jpg" }
+  : photos[0];
 
         return `
           <div class="gallery-album"
@@ -9011,7 +9018,7 @@ function galleryRenderAlbums() {
             <div class="gallery-album-cover">
               ${cover
                 ? `<img src="${cover.src}">`
-                : album.icon}
+                : ""
             </div>
             <div class="gallery-album-name">${album.name}</div>
             <div class="gallery-album-count">
