@@ -2599,23 +2599,98 @@ img.line-profile-avatar {
 }
 
 .ig-dm-bubble {
-  max-width: 80%;
-  padding: 11px 14px;
-  border-radius: 18px;
-  font-size: 13px;
+  max-width: 100%;
+  width: fit-content;
+  padding: 11px 15px;
+  border-radius: 22px;
+  font-size: 14px;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
 .ig-dm-bubble.received {
   align-self: flex-start;
-  background: #efefef;
+  background: #efeff1;
+  color: #111;
 }
 
 .ig-dm-bubble.sent {
   align-self: flex-end;
-  background: #3797f0;
-  color: #fff;
+  background: #7538f5;
+  color: white;
+}
+.ig-dm-date {
+  align-self: center;
+  color: #85858e;
+  font-size: 12px;
+  margin: 18px 0 12px;
+  text-align: center;
+}
+
+.ig-dm-message-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.ig-dm-message-row.received {
+  justify-content: flex-start;
+}
+
+.ig-dm-message-row.sent {
+  justify-content: flex-end;
+}
+
+.ig-dm-msg-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ig-dm-message-body {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-width: 78%;
+  min-width: 0;
+}
+
+.ig-dm-message-row.sent .ig-dm-message-body {
+  align-items: flex-end;
+}
+
+.ig-dm-message-row.received .ig-dm-message-body {
+  align-items: flex-start;
+}
+
+.ig-dm-story-text {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #777985;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ig-dm-message-row.sent .ig-dm-story-text {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.ig-dm-unavailable {
+  padding-left: 11px;
+  border-left: 3px solid #eeeef2;
+  color: #85858e;
+}
+
+.ig-dm-message-row.sent .ig-dm-unavailable {
+  padding-left: 0;
+  padding-right: 11px;
+  border-left: none;
+  border-right: 3px solid #eeeef2;
 }
 
 .ig-dm-story-message {
@@ -7968,6 +8043,7 @@ function instagramRenderDMChat() {
   if (!igDMCurrentChat) return;
 
   const container = document.getElementById("igDMChatMessages");
+  const avatar = igDMCurrentChat.avatar;
 
   const escapeHTML = value => String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -7977,60 +8053,48 @@ function instagramRenderDMChat() {
     .replace(/'/g, "&#39;");
 
   container.innerHTML = igDMCurrentChat.messages.map(message => {
+    const sent = message.type === "sent" || message.sender === "sent";
+    const side = sent ? "sent" : "received";
+    const text = escapeHTML(message.text);
 
-    const isSent = message.type === "sent" || message.sender === "sent";
-    const side = isSent ? "sent" : "received";
+    const avatarHTML = sent ? "" :
+      `<img class="ig-dm-msg-avatar" src="${escapeHTML(avatar)}" alt="">`;
+
+    let content = "";
 
     if (message.type === "story" || message.type === "story-reply") {
-      const isReply = message.type === "story-reply";
+      const title = message.type === "story"
+        ? (sent ? "คุณกล่าวถึงเขาในสตอรี่ของคุณ" : "กล่าวถึงคุณในสตอรี่ของเขา")
+        : (sent ? "คุณตอบกลับสตอรี่ของเขา" : "เขาตอบกลับสตอรี่ของคุณ");
 
-      return `
-        <div class="ig-dm-story-row ${side}">
-          <div class="ig-dm-story-label">
-            ${isSent
-              ? "คุณกล่าวถึงในสตอรี่"
-              : "กล่าวถึงคุณในสตอรี่ของเขา"}
-          </div>
-
-          <div class="ig-dm-story-preview">
-            <div class="ig-dm-story-photo">
-              <img src="${escapeHTML(isSent
-                ? "https://i.ibb.co/pvBWjjTb/r07qxo-R-Download.jpg"
-                : igDMCurrentChat.avatar)}" alt="">
-            </div>
-            <div class="ig-dm-story-overlay">
-              ${isSent ? "@kao.phanuwat" : "@pete.phubodin"}
-            </div>
-          </div>
-
-          ${isReply ? `
-            <div class="ig-dm-bubble ${side}">
-              ${escapeHTML(message.text)}
-            </div>
-          ` : ""}
-
-          <small>${escapeHTML(message.time || "")}</small>
+      content = `
+        <div class="ig-dm-story-text">
+          <span>${title}</span>
+          <div class="ig-dm-unavailable">ไม่สามารถดูสตอรี่ได้</div>
         </div>
+        ${message.type === "story-reply" ? `
+          <div class="ig-dm-bubble ${side}">${text}</div>
+        ` : ""}
       `;
-    }
-
-    if (message.type === "post") {
-      return `
-        <div class="ig-dm-post-row ${side}">
-          <div class="ig-dm-post-card">
-            <img src="${escapeHTML(igKaoProfile.images[0])}" alt="">
-            <div class="ig-dm-post-caption">โพสต์ Instagram</div>
-          </div>
-          <div class="ig-dm-bubble ${side}">
-            ${escapeHTML(message.text)}
-          </div>
+    } else if (message.type === "post") {
+      content = `
+        <div class="ig-dm-story-text">
+          <span>คุณส่งโพสต์</span>
+          <div class="ig-dm-unavailable">ไม่สามารถดูโพสต์ได้</div>
         </div>
+        <div class="ig-dm-bubble ${side}">${text}</div>
       `;
+    } else {
+      content = `<div class="ig-dm-bubble ${side}">${text}</div>`;
     }
 
     return `
-      <div class="ig-dm-bubble ${side}">
-        ${escapeHTML(message.text)}
+      ${message.time ? `
+        <div class="ig-dm-date">${escapeHTML(message.time)}</div>
+      ` : ""}
+      <div class="ig-dm-message-row ${side}">
+        ${avatarHTML}
+        <div class="ig-dm-message-body">${content}</div>
       </div>
     `;
   }).join("");
