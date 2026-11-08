@@ -999,7 +999,7 @@ html, body {
   height: 18px;
 }
 
-.line-gesture {
+.app-gesture {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1012,7 +1012,7 @@ html, body {
   cursor: pointer;
 }
 
-.line-gesture .gesture-bar {
+.app-gesture .gesture-bar {
   background: #161616;
   width: 105px;
 }
@@ -2474,10 +2474,10 @@ img.line-profile-avatar {
     <button onclick="instagramTab('profile')">
       <span data-ig-icon="user"></span>
     </button>
-    <button onclick="closeInstagram()">
-      <span data-ig-icon="close"></span>
-    </button>
   </nav>
+  <div class="app-swipe-home" data-swipe-home="instagram">
+  <div class="app-swipe-bar"></div>
+</div>
 </section>
 
 <!-- FACEBOOK APP -->
@@ -2495,12 +2495,6 @@ img.line-profile-avatar {
             onclick="openPeteFacebookLive()"
             aria-label="เปิดไลฟ์">
       <span data-fb-icon="video"></span>
-    </button>
-
-    <button class="fb-round-btn"
-            onclick="closeFacebook()"
-            aria-label="ปิด Facebook">
-      <span data-fb-icon="close"></span>
     </button>
   </div>
 </div>
@@ -2598,7 +2592,6 @@ img.line-profile-avatar {
       <button onclick="facebookTab('feed')">ฟีด</button>
       <button onclick="facebookTab('profile')">โปรไฟล์</button>
       <button onclick="facebookTab('video')">วิดีโอ</button>
-      <button onclick="closeFacebook()">ออก</button>
     </div>
   </div>
 
@@ -2623,11 +2616,6 @@ img.line-profile-avatar {
           <div class="fb-muted">กำลังถ่ายทอดสด</div>
         </div>
       </div>
-
-      <button class="fb-round-btn"
-        onclick="closeFacebook()"
-        aria-label="ปิด Facebook">
-  <span data-fb-icon="close"></span>
 </button>
 
 </div> <!-- ปิด fb-header ที่ขาดอยู่ -->
@@ -2662,6 +2650,9 @@ img.line-profile-avatar {
       <button class="fb-primary" type="submit">ส่ง</button>
     </form>
   </div>
+  <div class="app-swipe-home" data-swipe-home="facebook">
+  <div class="app-swipe-bar"></div>
+</div>
 </section>
 
 <!-- LINE Android Light Mode -->
@@ -3338,7 +3329,7 @@ img.line-profile-avatar {
   </nav>
 
   <!-- ขีดด้านล่างสำหรับกลับหน้าโฮม -->
-  <div class="line-gesture" onclick="closeLine()">
+  <div class="app-gesture" onclick="closeLine()">
     <div class="gesture-bar"></div>
   </div>
 </section>
