@@ -3751,16 +3751,26 @@ let pinBusy = false;
 let openKaoAfterUnlock = false;
 
 function showPhoneScreen(screenId) {
-["lockScreen", "pinScreen", "homeScreen", "lineScreen", "facebookScreen", "instagramScreen"].forEach(id => {
+  ["lockScreen", "pinScreen", "homeScreen", "lineScreen", "facebookScreen", "instagramScreen"].forEach(id => {
     const screen = document.getElementById(id);
 
     if (screen) {
       screen.style.display = id === screenId ? "flex" : "none";
     }
   });
-if (screenId === "lockScreen") {
-  openKaoAfterUnlock = false;
-}
+
+  // ซ่อนแถบเวลา Wi-Fi และแบตเตอรี่เมื่ออยู่ใน Instagram
+  const statusBar = document.querySelector(".status-bar");
+
+  if (statusBar) {
+    statusBar.style.display =
+      screenId === "instagramScreen" ? "none" : "flex";
+  }
+
+  if (screenId === "lockScreen") {
+    openKaoAfterUnlock = false;
+  }
+
   if (screenId === "pinScreen") {
     typedPin = "";
     pinBusy = false;
@@ -7145,7 +7155,7 @@ function instagramComment(id) {
 
 function openInstagram() {
   showPhoneScreen("instagramScreen");
-
+  document.querySelector(".status-bar").style.display = "none";
   renderInstagramIcons();
   instagramRenderStories();
   instagramRenderPosts();
