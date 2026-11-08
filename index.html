@@ -4725,9 +4725,9 @@ img.line-profile-avatar {
 
       <div class="fb-author" style="flex:1;margin-left:10px">
         <img class="fb-avatar"
-             src="https://i.ibb.co/3mFG65xJ/r07qxo-R-Download.jpg"
-             alt="พีท">
-
+     src="https://i.ibb.co/pvBWjjTb/r07qxo-R-Download.jpg"
+     alt="พีท">
+    
         <div>
           <b>Phubodin Ratchatrakul</b>
           <div class="fb-muted">กำลังถ่ายทอดสด</div>
@@ -7032,10 +7032,11 @@ row.appendChild(avatar);
   if (type === "voice") {
     bubble.textContent = "▶  ข้อความเสียง";
   } else if (type === "link") {
-  bubble.textContent = "ส่งลิ้ง";
+  bubble.textContent = "https://www.facebook.com/kao/posts/10001";
   bubble.style.color = "#0866ff";
   bubble.style.textDecoration = "underline";
   bubble.style.cursor = "pointer";
+  bubble.style.overflowWrap = "anywhere";
 
   bubble.addEventListener("click", openFacebookFromSaendeeLink);
 } else {
@@ -7413,10 +7414,11 @@ if (showAvatar) {
     label.textContent = message;
     bubble.appendChild(label);
   } else if (type === "link") {
-  bubble.textContent = message;
+  bubble.textContent = "https://www.facebook.com/pete/videos/10002";
   bubble.style.color = "#0866ff";
   bubble.style.textDecoration = "underline";
   bubble.style.cursor = "pointer";
+  bubble.style.overflowWrap = "anywhere";
 
   bubble.addEventListener("click", openFacebookFromJuneLink);
 } else {
