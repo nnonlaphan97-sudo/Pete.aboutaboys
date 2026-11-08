@@ -2005,7 +2005,7 @@ img.line-profile-avatar {
 .ig-content {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
 }
 
@@ -2484,6 +2484,7 @@ img.line-profile-avatar {
 .ig-dm-header button {
   border: none;
   background: transparent;
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2606,11 +2607,6 @@ img.line-profile-avatar {
   padding: 16px;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-}
-.ig-dm-chat-messages::before {
-  content: "";
-  margin-top: auto;
-  flex-shrink: 0;
 }
 
 .ig-dm-compose {
@@ -3187,8 +3183,6 @@ img.line-profile-avatar {
     <path d="M10.8 14 Q14.5 10.5 19.5 4.5"/>
   </svg>
 </button>
-        <span data-ig-icon="message"></span>
-      </button>
     </div>
   </div>
 
@@ -7838,6 +7832,7 @@ if (tab === "messages") {
 
 const dmPage = document.getElementById("igDMPage");
 if (dmPage) dmPage.style.display = "none";
+document.querySelector("#instagramScreen .ig-header").style.display = "flex";
 if (tab === "search") {
   instagramOpenExplore();
   return;
@@ -8006,6 +8001,8 @@ const igDMData = [...igDMFriends, ...igDMFans];
 
 let igDMCurrentChat = null;
 function instagramOpenDM() {
+  document.querySelector("#instagramScreen .ig-header").style.display = "none";
+
   document.getElementById("igFeed").style.display = "none";
   document.getElementById("igOtherPage").style.display = "none";
 
@@ -8067,9 +8064,10 @@ function instagramOpenDMChat(id) {
   };
 
   requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
     goToLatest();
-    requestAnimationFrame(goToLatest);
   });
+});
 }
 
 function instagramRenderDMChat() {
