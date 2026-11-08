@@ -2446,7 +2446,9 @@ function showPhoneScreen(screenId) {
       screen.style.display = id === screenId ? "flex" : "none";
     }
   });
-
+if (screenId === "lockScreen") {
+  openKaoAfterUnlock = false;
+}
   if (screenId === "pinScreen") {
     typedPin = "";
     pinBusy = false;
