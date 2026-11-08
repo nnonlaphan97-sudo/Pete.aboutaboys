@@ -6589,6 +6589,7 @@ function instagramOpenStory(index) {
   document.getElementById("igStoryUsername").textContent = story.username;
 
   viewer.style.display = "flex";
+  document.querySelector(".status-bar").style.display = "none";
 
   bar.classList.remove("active");
 
@@ -6640,6 +6641,7 @@ function instagramCloseStory() {
   video.load();
 
   viewer.style.display = "none";
+  document.querySelector(".status-bar").style.display = "flex";
 }
 /* =========================================
    RENDER POSTS
