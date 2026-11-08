@@ -8785,20 +8785,73 @@ const GALLERY_SECRET_PIN = "999999999";
 
 // ใส่ URL รูปภาพของพีทได้ที่นี่
 const galleryPhotos = [
-  {
-    id: 1,
-    src: "https://i.ibb.co/N6HXs8R0/r07qxo-R-Download.jpg",
-    album: "camera",
-    favorite: false,
-    secret: false
-  },
-  {
-    id: 2,
-    src: "https://i.ibb.co/6c4G1gGX/IMG-4162.jpg",
-    album: "camera",
-    favorite: false,
-    secret: false
-  }
+  const galleryPhotos = [
+  // รูปชุดที่ 1
+  "https://i.ibb.co/XxZHTg1S/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/8gXRbSWX/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/zVNT9vXf/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/7NGWBKQz/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/5gLcjqC7/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/rGyk3kh1/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/jPW182JJ/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/XxLwJg1Z/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/wFGKnLQ9/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/Fqh5R7MS/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/H0jLnc8/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/PzcKknTC/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/0VRSM4zS/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/PsL2NCzC/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/LDwLrXCh/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/9HhVdd7J/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/4ZChdx7p/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/N6HXs8R0/r07qxo-R-Download.jpg",
+
+  // รูปชุดที่ 2
+  "https://i.ibb.co/6RPbVYVN/IMG-4117.jpg",
+  "https://i.ibb.co/1YB8XGfM/IMG-4116.jpg",
+  "https://i.ibb.co/TDC4r510/IMG-4168.jpg",
+  "https://i.ibb.co/5hQKg1NR/IMG-4167.jpg",
+  "https://i.ibb.co/6c4G1gGX/IMG-4162.jpg",
+  "https://i.ibb.co/VWdFQH7M/IMG-4161.jpg",
+  "https://i.ibb.co/v4kYy5QM/IMG-4160.jpg",
+  "https://i.ibb.co/TB2BT8tz/IMG-4159.jpg",
+  "https://i.ibb.co/KxMVXCF1/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/zWTjZLn9/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/mVwjCWNY/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/h1Bms6ch/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/Cs3P6mNs/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/k203sw1X/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/CsHKSw2k/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/8g1ypVV9/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/HpxJ2771/r07qxo-R-Download.jpg"
+];
+// รูปทั้งหมดอยู่ในล่าสุด
+const galleryRecentPhotos = galleryPhotos;
+
+// รูปบางส่วนอยู่ในกล้อง
+const galleryCameraPhotos = [
+  galleryPhotos[18],
+  galleryPhotos[19],
+  galleryPhotos[20],
+  galleryPhotos[21],
+  galleryPhotos[22],
+  galleryPhotos[23],
+  galleryPhotos[24],
+  galleryPhotos[25]
+];
+
+// รูปบางส่วนอยู่ในรายการโปรด
+let galleryFavoritePhotos = [
+  galleryPhotos[0],
+  galleryPhotos[3],
+  galleryPhotos[8],
+  galleryPhotos[12],
+  galleryPhotos[17],
+  galleryPhotos[20],
+  galleryPhotos[22],
+  galleryPhotos[26],
+  galleryPhotos[30],
+  galleryPhotos[34]
 ];
 
 // รูปในอัลบั้มลับ ให้เพิ่มด้วย secret: true
