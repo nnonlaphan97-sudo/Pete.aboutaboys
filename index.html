@@ -2460,7 +2460,198 @@ img.line-profile-avatar {
   height: 100%;
   object-fit: cover;
 }
+.ig-dm-page {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  background: #fff;
+  color: #111;
+  overflow: hidden;
+}
 
+.ig-dm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+}
+
+.ig-dm-header strong {
+  font-size: 18px;
+}
+
+.ig-dm-header button {
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ig-dm-search {
+  margin: 8px 15px;
+  padding: 10px 12px;
+  background: #efefef;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ig-dm-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.ig-dm-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 17px 16px 12px;
+  font-size: 14px;
+}
+
+.ig-dm-label span {
+  color: #0095f6;
+  font-weight: 600;
+}
+
+.ig-dm-list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ig-dm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.ig-dm-item > img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ig-dm-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ig-dm-item-info strong {
+  font-size: 14px;
+}
+
+.ig-dm-item-info span {
+  font-size: 12px;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ig-dm-chat {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #fff;
+  flex-direction: column;
+}
+
+.ig-dm-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.ig-dm-chat-header button {
+  border: none;
+  background: transparent;
+  font-size: 30px;
+}
+
+.ig-dm-chat-header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ig-dm-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+}
+
+.ig-dm-bubble {
+  max-width: 80%;
+  padding: 11px 14px;
+  border-radius: 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.ig-dm-bubble.received {
+  align-self: flex-start;
+  background: #efefef;
+}
+
+.ig-dm-bubble.sent {
+  align-self: flex-end;
+  background: #3797f0;
+  color: #fff;
+}
+
+.ig-dm-story-message {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px;
+  background: #f2f2f2;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.ig-dm-compose {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid #eee;
+}
+
+.ig-dm-compose input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: #f1f1f1;
+  border-radius: 22px;
+  padding: 11px 14px;
+}
+
+.ig-dm-compose button {
+  border: none;
+  background: transparent;
+  color: #0095f6;
+  font-weight: 700;
+}
 </style>
 </head>
 
@@ -2821,7 +3012,67 @@ img.line-profile-avatar {
 
     <div id="igOtherPage" style="display:none"></div>
     <div id="igExplorePage" class="ig-explore-page" style="display:none;">
+      <div id="igDMPage" class="ig-dm-page" style="display:none;">
 
+  <div class="ig-dm-header">
+    <button onclick="instagramTab('home')" aria-label="ย้อนกลับ">
+      <svg viewBox="0 0 24 24" width="25" height="25"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18 9 12l6-6"/>
+      </svg>
+    </button>
+
+    <strong>pete.phubodin</strong>
+
+    <button aria-label="เขียนข้อความ">
+      <svg viewBox="0 0 24 24" width="24" height="24"
+           fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9M16 4l4 4-10 10-5 1 1-5L16 4Z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="ig-dm-search">
+    <svg viewBox="0 0 24 24" width="19" height="19"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round">
+      <circle cx="10.8" cy="10.8" r="7.2"/>
+      <path d="m16 16 5 5"/>
+    </svg>
+    <input
+      id="igDMSearch"
+      type="search"
+      placeholder="ค้นหา"
+      oninput="instagramRenderDM()"
+    >
+  </div>
+
+  <div class="ig-dm-label">
+    <strong>ข้อความ</strong>
+    <span>คำขอ</span>
+  </div>
+
+  <div id="igDMList" class="ig-dm-list"></div>
+
+  <div id="igDMChat" class="ig-dm-chat" style="display:none;">
+    <div class="ig-dm-chat-header">
+      <button onclick="instagramCloseDMChat()" aria-label="ย้อนกลับ">‹</button>
+      <img id="igDMChatAvatar" src="" alt="">
+      <strong id="igDMChatName"></strong>
+    </div>
+
+    <div id="igDMChatMessages" class="ig-dm-chat-messages"></div>
+
+    <form class="ig-dm-compose" onsubmit="instagramSendDM(event)">
+      <input id="igDMMessageInput" placeholder="ส่งข้อความ..." autocomplete="off">
+      <button type="submit">ส่ง</button>
+    </form>
+  </div>
+
+</div>
+      
   <div class="ig-explore-search">
     <span data-ig-icon="search"></span>
     <input
@@ -7394,6 +7645,13 @@ function closeInstagram() {
 function instagramTab(tab) {
   const feed = document.getElementById("igFeed");
   const other = document.getElementById("igOtherPage");
+if (tab === "messages") {
+  instagramOpenDM();
+  return;
+}
+
+const dmPage = document.getElementById("igDMPage");
+if (dmPage) dmPage.style.display = "none";
 if (tab === "search") {
   instagramOpenExplore();
   return;
@@ -7446,6 +7704,204 @@ document.querySelectorAll(".app-gesture").forEach(area => {
     startY = null;
   }, { passive: true });
 });
+const igDMFriends = [
+  {
+    id: "kao",
+    username: "kao.phanuwat",
+    name: "เก้า",
+    avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
+    messages: [
+      { text: "กล่าวถึงคุณในสตอรี่ของเขา", type: "story", time: "15:24" },
+      { text: "มึงเห็นสตอรี่ยัง 55555", type: "received", time: "15:25" },
+      { text: "อย่าลืมดูด้วยนะ", type: "received", time: "15:25" }
+    ]
+  },
+  {
+    id: "june",
+    username: "june.jirawat",
+    name: "จูน",
+    avatar: "https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg",
+    messages: [
+      { text: "กล่าวถึงคุณในสตอรี่ของเขา", type: "story", time: "14:58" },
+      { text: "พีททท ดูที่แท็กไปด้วย", type: "received", time: "14:59" }
+    ]
+  },
+  {
+    id: "saendee",
+    username: "saendee.s",
+    name: "แสนดี",
+    avatar: "https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg",
+    messages: [
+      { text: "กล่าวถึงคุณในสตอรี่ของเขา", type: "story", time: "13:40" },
+      { text: "รูปนี้คือดีมากกก", type: "received", time: "13:41" }
+    ]
+  },
+  {
+    id: "thada",
+    username: "thada.t",
+    name: "ธาดา",
+    avatar: "https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg",
+    messages: [
+      { text: "กล่าวถึงคุณในสตอรี่ของเขา", type: "story", time: "12:16" },
+      { text: "ลงให้แล้วนะเว้ย", type: "received", time: "12:17" }
+    ]
+  }
+];
+
+const igDMFanNames = [
+  "mint.mint", "ployy_24", "namwan.nn", "fahfah",
+  "bambam.p", "mookky", "fern.n", "janeee",
+  "pimmy", "nana.love", "mayyy", "praewww",
+  "aommy", "bell.belle", "pinkploy"
+];
+
+const igDMFanMessages = [
+  "พี่พีทหล่อมากกกก 😭💗",
+  "กรี๊ดดด วันนี้พี่พีทน่ารักมากค่ะ",
+  "พี่พีทคะ หนูเป็นแฟนคลับพี่นะ 🥹",
+  "ขอให้วันนี้เป็นวันที่ดีของพี่พีทนะคะ 💕",
+  "พี่พีทลงรูปอีกได้มั้ยคะ คิดถึงงง",
+  "พี่พีทกับพี่เก้าน่ารักมากเลยค่ะ 🫶",
+  "เห็นสตอรี่แล้วใจละลายเลยยย",
+  "แอบชอบพี่พีทมานานแล้วค่ะ 😭",
+  "พี่พีทคะ ขอให้มีความสุขมาก ๆ นะ",
+  "รูปวันนี้ดีมากเลยค่ะ ชอบสุด ๆ",
+  "หนูรอดูสตอรี่พี่ทุกวันเลยค่ะ",
+  "พี่พีทน่ารักที่สุดในโลกกก 💖",
+  "ขอให้พี่พีทตอบ DM สักครั้งได้มั้ยคะ",
+  "พี่พีทกับเพื่อน ๆ น่ารักกันมากเลย",
+  "พี่พีทคะ อย่าลืมพักผ่อนด้วยนะ 💗"
+];
+
+function instagramShuffle(items) {
+  return [...items].sort(() => Math.random() - 0.5);
+}
+
+const igDMFans = instagramShuffle(igDMFanNames).slice(0, 12).map((username, index) => ({
+  id: "fan-" + index,
+  username,
+  name: username,
+  avatar: `https://i.pravatar.cc/100?img=${index + 32}`,
+  messages: [
+    {
+      text: igDMFanMessages[Math.floor(Math.random() * igDMFanMessages.length)],
+      type: "received",
+      time: `${Math.floor(Math.random() * 12) + 1} ชม.`
+    }
+  ]
+}));
+
+const igDMData = [...igDMFriends, ...igDMFans];
+
+let igDMCurrentChat = null;
+function instagramOpenDM() {
+  document.getElementById("igFeed").style.display = "none";
+  document.getElementById("igOtherPage").style.display = "none";
+
+  const explore = document.getElementById("igExplorePage");
+  if (explore) explore.style.display = "none";
+
+  document.getElementById("igDMPage").style.display = "flex";
+
+  instagramCloseDMChat();
+  instagramRenderDM();
+}
+
+function instagramRenderDM() {
+  const query = document.getElementById("igDMSearch").value.toLowerCase();
+  const list = document.getElementById("igDMList");
+
+  list.innerHTML = igDMData
+    .filter(chat =>
+      chat.username.toLowerCase().includes(query) ||
+      chat.name.toLowerCase().includes(query)
+    )
+    .map(chat => {
+      const last = chat.messages[chat.messages.length - 1];
+
+      return `
+        <div class="ig-dm-item" onclick="instagramOpenDMChat('${chat.id}')">
+          <img src="${chat.avatar}" alt="">
+          <div class="ig-dm-item-info">
+            <strong>${chat.username}</strong>
+            <span>${last.text} · ${last.time}</span>
+          </div>
+          <svg viewBox="0 0 24 24" width="20" height="20"
+               fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="8"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+      `;
+    }).join("");
+}
+
+function instagramOpenDMChat(id) {
+  const chat = igDMData.find(item => item.id === id);
+  if (!chat) return;
+
+  igDMCurrentChat = chat;
+
+  document.getElementById("igDMChatName").textContent = chat.username;
+  document.getElementById("igDMChatAvatar").src = chat.avatar;
+
+  instagramRenderDMChat();
+
+  document.getElementById("igDMChat").style.display = "flex";
+}
+
+function instagramRenderDMChat() {
+  if (!igDMCurrentChat) return;
+
+  const container = document.getElementById("igDMChatMessages");
+
+  container.innerHTML = igDMCurrentChat.messages.map(message => {
+    if (message.type === "story") {
+      return `
+        <div class="ig-dm-story-message">
+          <span>กล่าวถึงคุณในสตอรี่</span>
+          <strong>${igDMCurrentChat.username}</strong>
+          <span>${message.time}</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="ig-dm-bubble ${message.type === "sent" ? "sent" : "received"}">
+        ${message.text}
+      </div>
+    `;
+  }).join("");
+
+  container.scrollTop = container.scrollHeight;
+}
+
+function instagramCloseDMChat() {
+  document.getElementById("igDMChat").style.display = "none";
+  igDMCurrentChat = null;
+}
+
+function instagramSendDM(event) {
+  event.preventDefault();
+
+  if (!igDMCurrentChat) return;
+
+  const input = document.getElementById("igDMMessageInput");
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  igDMCurrentChat.messages.push({
+    text,
+    type: "sent",
+    time: "ตอนนี้"
+  });
+
+  input.value = "";
+
+  instagramRenderDMChat();
+  instagramRenderDM();
+}
 
 </script>
 </body>
