@@ -3571,6 +3571,105 @@ img.line-profile-avatar {
   background: #fff;
   border-radius: 20px;
 }
+/* LINE - Call and Photo Messages */
+
+.kao-event-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 175px;
+  padding: 11px 13px;
+}
+
+.kao-event-icon {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background: #e9e9e9;
+  color: #444;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.kao-event-icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kao-event-icon.missed {
+  color: #e54848;
+  background: #ffeaea;
+}
+
+.kao-event-icon.calling {
+  color: #06a64b;
+  background: #e1f8e9;
+}
+
+.kao-event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kao-event-info strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kao-event-info small {
+  font-size: 11px;
+  color: #777;
+}
+
+.kao-photo-bubble {
+  padding: 0 !important;
+  background: transparent !important;
+  overflow: hidden;
+  max-width: 230px;
+  cursor: pointer;
+}
+
+.kao-photo-bubble img {
+  display: block;
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 13px;
+}
+
+.kao-photo-viewer {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,.96);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.kao-photo-viewer img {
+  width: 100%;
+  max-height: 85%;
+  object-fit: contain;
+}
+
+.kao-photo-close {
+  position: absolute;
+  top: 50px;
+  left: 18px;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
 
 </style>
 </head>
@@ -10358,6 +10457,142 @@ function spotifyInitLockScreen() {
 // เริ่มต้นเพลงแรก โดยยังไม่เล่นอัตโนมัติ
 spotifyLoad(0);
 spotifyInitLockScreen();
+/* =====================================
+   LINE CALL / PHOTO MESSAGE
+===================================== */
+
+function addKaoEvent(
+  sender,
+  type,
+  time,
+  options = {}
+) {
+  const containerId =
+    options.containerId || "kaoChatMessages";
+
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const sent = sender === "พ";
+
+  const row = document.createElement("div");
+  row.className =
+    `kao-message-row ${sent ? "sent" : "received"}`;
+
+  if (!sent) {
+    const avatar = document.createElement("img");
+    avatar.className = "kao-message-avatar";
+    avatar.src = options.avatar || KAO_AVATAR_URL;
+    row.appendChild(avatar);
+  }
+
+  const bubble = document.createElement("div");
+  bubble.className = "kao-message-bubble";
+
+  if (type === "photo") {
+    bubble.classList.add("kao-photo-bubble");
+
+    const img = document.createElement("img");
+    img.src = options.src || "";
+    img.alt = "รูปภาพในแชท";
+    img.loading = "lazy";
+
+    img.onclick = () => kaoOpenPhoto(img.src);
+
+    bubble.appendChild(img);
+
+  } else {
+    const missed = type === "missed";
+    const calling = type === "calling";
+
+    const card = document.createElement("div");
+    card.className = "kao-event-card";
+
+    const icon = document.createElement("div");
+    icon.className =
+      "kao-event-icon " + (missed ? "missed" : "calling");
+
+    icon.innerHTML = `
+      <svg viewBox="0 0 24 24">
+        <path d="M6 3 3 6c0 7 8 15 15 15l3-3-5-5-3 3c-2-1-4-3-5-5l3-3-5-5Z"/>
+        ${missed
+          ? '<path d="M15 3h6v6M21 3l-6 6"/>'
+          : '<path d="M15 3h6v6M15 9l6-6"/>'}
+      </svg>
+    `;
+
+    const info = document.createElement("div");
+    info.className = "kao-event-info";
+
+    const title = document.createElement("strong");
+    const subtitle = document.createElement("small");
+
+    if (missed) {
+      title.textContent = "ไม่ได้รับสาย";
+      subtitle.textContent = "การโทรผ่าน LINE";
+    } else if (calling) {
+      title.textContent = "กำลังคอล";
+      subtitle.textContent =
+        options.duration || "การโทรผ่าน LINE";
+    }
+
+    info.append(title, subtitle);
+    card.append(icon, info);
+    bubble.appendChild(card);
+  }
+
+  const meta = document.createElement("div");
+  meta.className =
+    sent ? "kao-message-meta" : "kao-message-time";
+
+  if (sent) {
+    const read = document.createElement("span");
+    read.textContent = "อ่านแล้ว";
+
+    const clock = document.createElement("span");
+    clock.textContent = time;
+
+    meta.append(read, clock);
+    row.append(meta, bubble);
+  } else {
+    meta.textContent = time;
+    row.append(bubble, meta);
+  }
+
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+
+  return row;
+}
+
+/* เปิดรูปภาพแบบเต็มจอ */
+
+function kaoOpenPhoto(src) {
+  let viewer = document.getElementById("kaoPhotoViewer");
+
+  if (!viewer) {
+    viewer = document.createElement("div");
+    viewer.id = "kaoPhotoViewer";
+    viewer.className = "kao-photo-viewer";
+
+    viewer.innerHTML = `
+      <button class="kao-photo-close"
+              onclick="kaoClosePhoto()">×</button>
+      <img id="kaoViewerImage" alt="รูปภาพ">
+    `;
+
+    document.getElementById("lineScreen")
+      .appendChild(viewer);
+  }
+
+  document.getElementById("kaoViewerImage").src = src;
+  viewer.style.display = "flex";
+}
+
+function kaoClosePhoto() {
+  const viewer = document.getElementById("kaoPhotoViewer");
+  if (viewer) viewer.style.display = "none";
+}
 
 </script>
 </body>
