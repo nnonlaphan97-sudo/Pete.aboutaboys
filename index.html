@@ -8,7 +8,7 @@
 <title>Pete Phone</title>
 
 <style>
-* {
+ {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
@@ -3700,6 +3700,15 @@ img.line-profile-avatar {
 .kao-call-bubble span {
   font-size: inherit;
 }
+#kaoChatMessages .kao-message-bubble audio {
+  display: block;
+  max-width: 100%;
+}
+
+#kaoChatMessages .kao-media-message img {
+  object-fit: cover;
+}
+
 </style>
 </head>
 
@@ -5892,15 +5901,14 @@ function sendKaoMessage(event) {
 const PETE_KAO_HISTORY = {
   "12/10": [
     ["16:14","พ","ถ้าขึ้นจากน้ำแล้วไม่เห็นหน้าเจอจัดหนักแน่"],
-    ["19:03","พ","ส่งรูปภาพ","image"],
+    ["16:14","พ","https://i.ibb.co/nHgkYPJ/IMG-4267.jpg","image"],
     ["19:04","พ","ขอบคุณนะไอ้สัส"],
     ["20:00","ก","กูบอกแล้วว่าอย่าเล่นน้ำเยอะ"],
     ["20:01","ก","เป็นไงล่ะ เป็นไข้เลย"],
     ["20:05","พ","ตอบช้า"],
     ["20:05","พ","มึงแอบมีกิ๊กใช่ไหม"],
-    ["20:06","ก","ให้กูไปขี้ไปเยี่ยวบ้างเนอะ"],
-    ["20:07","พ","คอลกัน"],
-    ["20:11","พ","คอลลิ่ง"]
+    ["22:56","ก","ให้กูไปขี้ไปเยี่ยวบ้างเนอะ"],
+    ["23:07","พ","ฝันดีนะมึง"],
   ],
   "15/10": [
     ["15:22","พ","มึงเลิกสอนยัง"],
@@ -5952,7 +5960,10 @@ const PETE_KAO_HISTORY = {
     ["18:02","พ","กูหาเลนส์ตัวใหม่ก่อน"]
   ],
   "25/10": [
-    ["17:00","พ","ส่งรูป","image"],
+    ["17:00","พ",[
+  "https://i.ibb.co/3y3BfDJD/IMG-4092.jpg",
+  "https://i.ibb.co/1GM2GzWK/IMG-4098.jpg"
+],"image"],
     ["17:04","ก","ไหนมึงบอกมึงชอบถ่ายวิวไง"],
     ["17:05","พ","ก็ในวิวของกูมีมึงเสมอ"],
     ["17:07","พ","อย่าลืมหาอะไรมาแลกด้วยนะ"],
@@ -6093,12 +6104,15 @@ const PETE_KAO_HISTORY = {
     ["10:42","พ","อย่าให้กูรู้แล้วกัน"],
     ["15:45","ก","กำลังไป"],
     ["15:46","พ","มีรถมั้ยเดี๋ยวไปรับ"],
-    ["22:36","พ","ส่งไฟล์","file"],
+    ["22:36","พ","videos/ScreenRecording_11-08-2569 21-28-06_1.mp3","audio"],
     ["22:37","ก","พูดอะไรฟังไม่ออก"],
     ["22:37","พ","ไอ้เก้ารักมึงนะ"]
   ],
   "05/12": [
-    ["20:13","พ","ส่งรูปภาพ","image"],
+    ["20:13","พ",[
+  "https://i.ibb.co/5gLcjqC7/r07qxo-R-Download.jpg",
+  "https://i.ibb.co/7NGWBKQz/r07qxo-R-Download.jpg"
+],"image"],
     ["20:13","พ","ถ่ายรูปห่วยสัส"],
     ["20:27","ก","ถ้าคนสอนดีแม่งก็ไม่ห่วยหรอก"],
     ["20:28","พ","ไม่เป็นไรกูถ่ายเก่ง"],
@@ -6300,17 +6314,76 @@ function addKaoBubble(
   const bubble = document.createElement("div");
   bubble.className = "kao-message-bubble";
 
-  if (type === "image" || type === "file") {
-    bubble.classList.add("kao-media-message");
-    bubble.innerHTML = kaoMediaIcon(type);
+if (type === "image") {
+  bubble.classList.add("kao-media-message");
 
-    const label = document.createElement("span");
-    label.textContent = message;
-    bubble.appendChild(label);
-  } else {
-    bubble.textContent = message;
-    kaoFormatCallBubble(bubble, message);
-  }
+  const images = Array.isArray(message) ? message : [message];
+
+  bubble.style.display = "flex";
+  bubble.style.flexDirection = "column";
+  bubble.style.gap = "6px";
+  bubble.style.padding = "4px";
+  bubble.style.background = "transparent";
+
+  images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "รูปภาพในแชท";
+    img.loading = "lazy";
+
+    img.style.width = "100%";
+    img.style.maxWidth = "230px";
+    img.style.borderRadius = "12px";
+    img.style.display = "block";
+    img.style.cursor = "pointer";
+
+    img.addEventListener("click", () => {
+      kaoOpenPhoto(src);
+    });
+
+    bubble.appendChild(img);
+  });
+
+} else if (type === "audio") {
+  bubble.style.width = "245px";
+  bubble.style.maxWidth = "75%";
+  bubble.style.padding = "12px";
+
+  const title = document.createElement("div");
+  title.textContent = "ข้อความเสียง";
+  title.style.fontSize = "13px";
+  title.style.fontWeight = "600";
+  title.style.marginBottom = "8px";
+
+  const audio = document.createElement("audio");
+  audio.src = message;
+  audio.controls = true;
+  audio.preload = "metadata";
+  audio.style.width = "100%";
+  audio.style.height = "40px";
+
+  audio.addEventListener("play", () => {
+    document.querySelectorAll(
+      "#kaoChatMessages audio"
+    ).forEach(other => {
+      if (other !== audio) other.pause();
+    });
+  });
+
+  bubble.append(title, audio);
+
+} else if (type === "file") {
+  bubble.classList.add("kao-media-message");
+  bubble.innerHTML = kaoMediaIcon(type);
+
+  const label = document.createElement("span");
+  label.textContent = message;
+  bubble.appendChild(label);
+
+} else {
+  bubble.textContent = message;
+  kaoFormatCallBubble(bubble, message);
+}
 
   const meta = document.createElement("div");
   meta.className = sent ? "kao-message-meta" : "kao-message-time";
@@ -7139,9 +7212,9 @@ function startSaendeeNewMessages() {
   container.appendChild(divider);
 
   const messages = [
-    ["พีท มึงเห็นข่าวไอ้เก้ายัง", "text"],
-    ["ส่งลิ้ง", "link"]
-  ];
+  ["พีท มึงเห็นข่าวไอ้เก้ายัง", "text"],
+  ["https://www.facebook.com/kao/posts/10001", "link"]
+];
 
 messages.forEach(([message, type], index) => {
   setTimeout(() => {
@@ -7520,10 +7593,10 @@ function startGangNewMessages() {
   gangLastSender = null;
   addKaoDate("วันนี้", "gangChatMessages");
 
-  const messages = [
-    ["พวกมึงไอ้พีทไลฟ์", "text"],
-    ["ส่งลิ้งไปที่เฟสบุ๊ค", "link"]
-  ];
+const messages = [
+  ["พวกมึงไอ้พีทไลฟ์", "text"],
+  ["https://www.facebook.com/pete/videos/10002", "link"]
+];;
 
   messages.forEach(([message, type], index) => {
     setTimeout(() => {
