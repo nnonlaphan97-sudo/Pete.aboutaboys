@@ -1825,6 +1825,123 @@ img.line-profile-avatar {
 #fbLive .fb-live-compose button {
   flex-shrink: 0;
 }
+/* =========================================
+   PETE FACEBOOK PROFILE
+========================================= */
+
+.fb-profile-cover {
+  height: 155px;
+  background: linear-gradient(135deg, #849ec3, #d4e1f4);
+}
+
+.fb-profile-info {
+  position: relative;
+  background: white;
+  padding: 0 15px 18px;
+  margin-bottom: 8px;
+}
+
+.fb-profile-avatar {
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid white;
+  margin-top: -35px;
+  position: relative;
+}
+
+.fb-profile-info h2 {
+  margin: 8px 0 5px;
+  font-size: 22px;
+  color: #1c1e21;
+}
+
+.fb-profile-heading {
+  padding: 15px;
+  background: white;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.fb-profile-post {
+  margin-top: 8px;
+}
+
+.fb-profile-author-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.fb-feeling-emoji {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.fb-feeling-text {
+  color: #8a8d91;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.fb-profile-reactions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #65676b;
+  font-size: 13px;
+  min-height: 24px;
+}
+
+/* Facebook Like + Love ซ้อนกัน */
+
+.fb-reaction-icons {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+}
+
+.fb-reaction-like,
+.fb-reaction-love {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-sizing: border-box;
+  position: relative;
+  color: white;
+}
+
+.fb-reaction-like {
+  background: #0866ff;
+  z-index: 1;
+}
+
+.fb-reaction-love {
+  background: #f02849;
+  margin-left: -7px;
+  z-index: 2;
+}
+
+.fb-reaction-like svg,
+.fb-reaction-love svg {
+  width: 13px;
+  height: 13px;
+}
+
+.fb-reaction-like .fb-svg-icon {
+  width: 13px !important;
+  height: 13px !important;
+}
+
 </style>
 </head>
 
@@ -2200,29 +2317,32 @@ img.line-profile-avatar {
       <div id="fbPosts"></div>
     </div>
 
-    <!-- PROFILE -->
-    <div id="fbProfileView" class="fb-scroll"
-         style="display:none">
+ <!-- PROFILE -->
+<div id="fbProfileView" class="fb-scroll" style="display:none">
 
-      <div style="height:150px;background:linear-gradient(135deg,#849ec3,#d4e1f4)">
-      </div>
+  <!-- รูปหน้าปก -->
+  <div class="fb-profile-cover"></div>
 
-      <div class="fb-card" style="margin-top:-30px;position:relative">
-        <img
-          src="https://i.ibb.co/3mFG65xJ/r07qxo-R-Download.jpg"
-          alt="พีท"
-          style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:4px solid white">
+  <!-- ข้อมูลโปรไฟล์ -->
+  <div class="fb-profile-info">
 
-        <h2 style="margin:8px 0">Phubodin Ratchatrakul</h2>
-        <div class="fb-muted">โปรไฟล์ Facebook ของพีท</div>
+    <img
+      src="https://i.ibb.co/pvBWjjTb/r07qxo-R-Download.jpg"
+      class="fb-profile-avatar"
+      alt="Pete">
 
-        <button class="fb-primary"
-                style="margin-top:16px"
-                onclick="facebookTab('feed')">
-          ดูโพสต์
-        </button>
-      </div>
-    </div>
+    <h2>Phubodin Ratchatrakul</h2>
+
+    <div class="fb-muted">โปรไฟล์ Facebook ของพีท</div>
+
+  </div>
+
+  <div class="fb-profile-heading">โพสต์</div>
+
+  <!-- โพสต์ในโปรไฟล์พีท -->
+  <div id="fbPeteProfilePosts"></div>
+
+</div>
 
     <!-- VIDEO -->
     <div id="fbVideoView" class="fb-scroll"
@@ -5613,6 +5733,233 @@ function facebookLiveComment(event) {
 
   input.value = "";
 }
+/* =========================================
+   PETE FACEBOOK PROFILE POSTS
+========================================= */
+
+const fbPeteProfilePosts = [
+  {
+    text: "ในวันที่เรามีความสุข ถ้ามีใครอยู่ข้าง ๆ ก็คงดี....",
+    time: "โพสต์ล่าสุด",
+    feeling: null,
+    likes: 0,
+    liked: false,
+    comments: []
+  },
+  {
+    text: "ที่ฝึกงานเรียกสัมภาษณ์แล้วววว ดีใจโคตร😁",
+    time: "โพสต์ก่อนหน้า",
+    feeling: "รู้สึกตื่นเต้น",
+    feelingEmoji: "😁",
+    likes: 78,
+    liked: false,
+    comments: []
+  }
+];
+
+function facebookRenderPeteProfilePosts() {
+  const container = document.getElementById("fbPeteProfilePosts");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  fbPeteProfilePosts.forEach(post => {
+    const card = document.createElement("div");
+    card.className = "fb-card fb-profile-post";
+
+    const author = document.createElement("div");
+    author.className = "fb-author";
+
+    const avatar = document.createElement("img");
+    avatar.className = "fb-avatar";
+    avatar.src = FB_PETE_AVATAR;
+    avatar.alt = "Pete";
+
+    const info = document.createElement("div");
+
+    const nameRow = document.createElement("div");
+    nameRow.className = "fb-profile-author-name";
+
+    const name = document.createElement("strong");
+    name.textContent = "Phubodin Ratchatrakul";
+    nameRow.appendChild(name);
+
+    if (post.feeling) {
+      const feelingEmoji = document.createElement("span");
+      feelingEmoji.className = "fb-feeling-emoji";
+      feelingEmoji.innerHTML = `
+  <svg viewBox="0 0 36 36" width="20" height="20"
+       xmlns="http://www.w3.org/2000/svg"
+       aria-label="รู้สึกตื่นเต้น">
+    <defs>
+      <radialGradient id="fbExcitedGradient" cx="35%" cy="25%" r="75%">
+        <stop offset="0%" stop-color="#FFEE72"/>
+        <stop offset="70%" stop-color="#FFCF31"/>
+        <stop offset="100%" stop-color="#F5A623"/>
+      </radialGradient>
+    </defs>
+
+    <circle cx="18" cy="18" r="17" fill="url(#fbExcitedGradient)"/>
+
+    <!-- ตาหยี -->
+    <path d="M7.5 13.5 Q11 9.5 14.5 13.5"
+          fill="none" stroke="#744400"
+          stroke-width="2.7" stroke-linecap="round"/>
+    <path d="M21.5 13.5 Q25 9.5 28.5 13.5"
+          fill="none" stroke="#744400"
+          stroke-width="2.7" stroke-linecap="round"/>
+
+    <!-- ปากยิ้มกว้าง -->
+    <path d="M7.5 19 Q18 32 28.5 19 Q18 22 7.5 19Z"
+          fill="#713600"/>
+
+    <!-- ฟันสีขาว -->
+    <path d="M9 20 Q18 23 27 20 Q26 24 18 24 Q11 24 9 20Z"
+          fill="#FFFFFF"/>
+  </svg>
+`;
+
+      const feelingText = document.createElement("span");
+      feelingText.className = "fb-feeling-text";
+      feelingText.textContent = "รู้สึกตื่นเต้น";
+
+      nameRow.append(feelingEmoji, feelingText);
+    }
+
+    const time = document.createElement("div");
+    time.className = "fb-muted";
+    time.style.display = "flex";
+    time.style.alignItems = "center";
+    time.style.gap = "5px";
+
+    const timeLabel = document.createElement("span");
+    timeLabel.textContent = post.time;
+
+    time.appendChild(timeLabel);
+    time.insertAdjacentHTML("beforeend", fbIcon("globe", 12));
+
+    info.append(nameRow, time);
+    author.append(avatar, info);
+
+    const text = document.createElement("div");
+    text.className = "fb-post-text";
+    text.textContent = post.text;
+
+    const stats = document.createElement("div");
+    stats.className = "fb-profile-reactions";
+
+    if (post.likes > 0) {
+      const reactionIcons = document.createElement("span");
+      reactionIcons.className = "fb-reaction-icons";
+
+      reactionIcons.innerHTML = `
+        <span class="fb-reaction-like">
+          ${fbIcon("like", 12)}
+        </span>
+        <span class="fb-reaction-love">
+          <svg viewBox="0 0 24 24" width="13" height="13"
+               fill="white" aria-hidden="true">
+            <path d="M12 21s-9-5.6-9-12a5 5 0 0 1 9-3
+                     5 5 0 0 1 9 3c0 6.4-9 12-9 12z"/>
+          </svg>
+        </span>
+      `;
+
+      const count = document.createElement("span");
+      count.textContent = post.likes;
+
+      stats.append(reactionIcons, count);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "fb-actions";
+
+    const likeButton = document.createElement("button");
+    likeButton.innerHTML =
+      fbIcon("like", 19) +
+      "<span>ถูกใจ</span>";
+
+    if (post.liked) likeButton.classList.add("liked");
+
+    likeButton.onclick = () => {
+      post.liked = !post.liked;
+      post.likes += post.liked ? 1 : -1;
+      facebookRenderPeteProfilePosts();
+    };
+
+    const commentButton = document.createElement("button");
+    commentButton.innerHTML =
+      fbIcon("comment", 19) +
+      "<span>แสดงความคิดเห็น</span>";
+
+    const shareButton = document.createElement("button");
+    shareButton.innerHTML =
+      fbIcon("share", 19) +
+      "<span>แชร์</span>";
+
+    shareButton.onclick = () => {
+      if (navigator.share) {
+        navigator.share({text: post.text}).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(post.text).catch(() => {});
+      }
+    };
+
+    actions.append(likeButton, commentButton, shareButton);
+
+    const commentList = document.createElement("div");
+
+    post.comments.forEach(comment => {
+      const item = document.createElement("div");
+      item.className = "fb-comment-item";
+
+      const commenter = document.createElement("b");
+      commenter.textContent = "Phubodin Ratchatrakul: ";
+
+      item.append(commenter, document.createTextNode(comment));
+      commentList.appendChild(item);
+    });
+
+    const form = document.createElement("form");
+    form.className = "fb-comment";
+
+    const input = document.createElement("input");
+    input.className = "fb-input";
+    input.placeholder = "เขียนความคิดเห็น...";
+
+    const send = document.createElement("button");
+    send.className = "fb-primary";
+    send.type = "submit";
+    send.innerHTML = fbIcon("send", 18);
+    send.setAttribute("aria-label", "ส่งความคิดเห็น");
+
+    commentButton.onclick = () => input.focus();
+
+    form.onsubmit = event => {
+      event.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+
+      post.comments.push(message);
+      facebookRenderPeteProfilePosts();
+    };
+
+    form.append(input, send);
+
+    card.append(
+      author,
+      text,
+      stats,
+      actions,
+      commentList,
+      form
+    );
+
+    container.appendChild(card);
+  });
+}
+
+facebookRenderPeteProfilePosts();
 
 /* เริ่มต้น Facebook */
 facebookRenderPosts();
