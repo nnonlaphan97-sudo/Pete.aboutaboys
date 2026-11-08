@@ -9928,7 +9928,19 @@ const spotifySongs = [
     artist: "เต ตะวัน, นิว ฐิติภูมิ",
     src: "videos/ไม่มีนิยาย.mp3",
     cover: "https://i.ibb.co/0jmbBGL0/IMG-4180.jpg"
-  }
+  },
+  {
+  title: "ผิดสัญญา",
+  artist: "Instinct",
+  src: "videos/ผิดสัญญา.mp3",
+  cover: "https://i.ibb.co/jvzW7VJj/IMG-4252.webp"
+},
+{
+  title: "ต่อให้เป็นจูบสุดท้าย",
+  artist: "ฟลุ๊ค กวิน (Gawin Caskey)",
+  src: "videos/ต่อให้เป็นจูบสุดท้าย.mp3",
+  cover: "https://i.ibb.co/WpY2516T/IMG-4255.jpg"
+}
 ];
 
 const spotifyAudio = new Audio();
@@ -10304,14 +10316,15 @@ function spotifyInitLockScreen() {
   const content = lockMusic.querySelector(".music-song");
 
   [art, content].forEach(element => {
-    if (!element) return;
+  if (!element) return;
 
-    element.style.cursor = "pointer";
-    element.addEventListener("click", event => {
-      event.stopPropagation();
-      openSpotify();
-    });
+  element.style.cursor = "pointer";
+
+  element.addEventListener("click", event => {
+    event.stopPropagation();
+    spotifyOpenPlayer();
   });
+});
 
   const buttons = lockMusic.querySelectorAll(
     ".music-controls button"
