@@ -2197,9 +2197,20 @@ img.line-profile-avatar {
 }
 
 .ig-story-progress {
+  position: relative;
+  z-index: 2;
   display: flex;
   gap: 4px;
   padding: 12px 10px 8px;
+}
+
+.ig-story-viewer-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
 }
 
 .ig-story-progress span {
@@ -2227,13 +2238,6 @@ img.line-profile-avatar {
   to { width: 100%; }
 }
 
-.ig-story-viewer-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
-}
-
 .ig-story-viewer-header img {
   width: 34px;
   height: 34px;
@@ -2255,11 +2259,11 @@ img.line-profile-avatar {
 }
 
 .ig-story-viewer-image {
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   background: #111;
 }
 
