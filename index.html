@@ -2596,6 +2596,7 @@ img.line-profile-avatar {
   flex-direction: column;
   gap: 10px;
   padding: 16px;
+  justify-content: safe flex-end;
 }
 
 .ig-dm-bubble {
@@ -2816,6 +2817,18 @@ img.line-profile-avatar {
   padding: 9px;
   font-size: 12px;
   color: #555;
+}
+/* ตัวอักษรทั้งหมดใน Instagram DM เป็นสีดำ */
+#igDMPage,
+#igDMPage .ig-dm-bubble,
+#igDMPage .ig-dm-bubble.sent,
+#igDMPage .ig-dm-bubble.received,
+#igDMPage .ig-dm-story-text,
+#igDMPage .ig-dm-unavailable,
+#igDMPage .ig-dm-date,
+#igDMPage .ig-dm-item-info span,
+#igDMPage .ig-dm-story-label {
+  color: #000 !important;
 }
 
 </style>
@@ -8034,9 +8047,16 @@ function instagramOpenDMChat(id) {
   document.getElementById("igDMChatName").textContent = chat.username;
   document.getElementById("igDMChatAvatar").src = chat.avatar;
 
-  instagramRenderDMChat();
-
   document.getElementById("igDMChat").style.display = "flex";
+
+instagramRenderDMChat();
+
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const container = document.getElementById("igDMChatMessages");
+    container.scrollTop = container.scrollHeight;
+  });
+});
 }
 
 function instagramRenderDMChat() {
