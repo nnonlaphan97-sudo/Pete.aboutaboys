@@ -7403,10 +7403,15 @@ if (showAvatar) {
     label.textContent = message;
     bubble.appendChild(label);
   } else if (type === "link") {
-    bubble.textContent = "🔗 " + message;
-  } else {
-    bubble.textContent = message;
-  }
+  bubble.textContent = "ส่งลิ้ง";
+  bubble.style.color = "#0866ff";
+  bubble.style.textDecoration = "underline";
+  bubble.style.cursor = "pointer";
+
+  bubble.addEventListener("click", openFacebookFromSaendeeLink);
+} else {
+  bubble.textContent = message;
+}
 
   content.appendChild(bubble);
 
@@ -8008,7 +8013,25 @@ function openPeteFacebookLive() {
 function openFacebookFromJuneLink() {
   openPeteFacebookLive();
 }
+function openFacebookFromSaendeeLink() {
+  openFacebook();
 
+  requestAnimationFrame(() => {
+    const feed = document.getElementById("fbFeedView");
+    const posts = document.getElementById("fbPosts");
+
+    if (!feed || !posts) return;
+
+    const kaoPost = posts.querySelector(".fb-card");
+
+    if (kaoPost) {
+      kaoPost.scrollIntoView({
+        behavior: "instant",
+        block: "start"
+      });
+    }
+  });
+}
 /* กลับจากไลฟ์ไปฟีด */
 function facebookBackFromLive() {
   openFacebook();
