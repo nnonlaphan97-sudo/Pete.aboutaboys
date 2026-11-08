@@ -6950,7 +6950,7 @@ function answerKaoStoryCall() {
     );
   }
 
-  speakKaoApology();
+   kaoPlayAnswerAudio();
 }
 // กดวางสาย
 function endKaoStoryCall() {
@@ -6964,7 +6964,8 @@ function endKaoStoryCall() {
 
   const duration = kaoFormatCallDuration(elapsed);
 
-  kaoStopCallTimer();
+    kaoStopCallTimer();
+  kaoStopAnswerAudio();
   kaoCallStartTime = null;
 
   if ("speechSynthesis" in window) {
@@ -10707,6 +10708,20 @@ function kaoFormatCallBubble(bubble, text) {
   label.textContent = text;
 
   bubble.append(icon, label);
+}
+const kaoAnswerAudio = new Audio("videos/เสียงตอนรับโทรศัพท์.mp3");
+kaoAnswerAudio.preload = "auto";
+
+function kaoPlayAnswerAudio() {
+  kaoAnswerAudio.currentTime = 0;
+  kaoAnswerAudio.play().catch(error => {
+    console.error("เล่นเสียงรับสายไม่ได้:", error);
+  });
+}
+
+function kaoStopAnswerAudio() {
+  kaoAnswerAudio.pause();
+  kaoAnswerAudio.currentTime = 0;
 }
 
 </script>
