@@ -2179,6 +2179,84 @@ img.line-profile-avatar {
 .ig-content {
   padding-bottom: 35px;
 }
+.ig-story-ring.viewed {
+  background: #d1d1d1;
+}
+
+.ig-story-viewer {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  background: #111;
+  color: white;
+  display: none;
+  flex-direction: column;
+}
+
+.ig-story-progress {
+  display: flex;
+  gap: 4px;
+  padding: 12px 10px 8px;
+}
+
+.ig-story-progress span {
+  height: 3px;
+  flex: 1;
+  border-radius: 4px;
+  background: rgba(255,255,255,.35);
+  overflow: hidden;
+}
+
+.ig-story-progress span::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 0;
+  background: white;
+}
+
+.ig-story-progress span.active::after {
+  animation: igStoryProgress var(--story-duration, 5s) linear forwards;
+}
+
+@keyframes igStoryProgress {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.ig-story-viewer-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+}
+
+.ig-story-viewer-header img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ig-story-viewer-header strong {
+  flex: 1;
+  font-size: 14px;
+}
+
+.ig-story-viewer-header button {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 29px;
+  cursor: pointer;
+}
+
+.ig-story-viewer-image {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+}
 
 </style>
 </head>
@@ -2535,6 +2613,28 @@ img.line-profile-avatar {
     <button onclick="instagramTab('profile')">
       <span data-ig-icon="user"></span>
     </button>
+    <div id="igStoryViewer" class="ig-story-viewer">
+
+  <div class="ig-story-progress">
+    <span id="igStoryProgressBar"></span>
+  </div>
+
+  <div class="ig-story-viewer-header">
+    <img id="igStoryAvatar" src="" alt="">
+    <strong id="igStoryUsername"></strong>
+
+    <button onclick="instagramCloseStory()" aria-label="ปิดสตอรี่">
+      ×
+    </button>
+  </div>
+  <img id="igStoryImage" class="ig-story-viewer-image" src="" alt="">
+</div>
+<video
+  id="igStoryVideo"
+  class="ig-story-viewer-image"
+  playsinline
+  style="display:none;"
+></video>
   </nav>
   <div class="app-gesture">
   <div class="gesture-bar"></div>
@@ -6376,9 +6476,11 @@ const igStoriesData = [
     own: true
   },
   {
-    username: "kao",
-    avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
-  },
+  username: "kao",
+  avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
+  video: "videos/copy_3289DB3C-580C-4B37-B405-CADDD4B909C4.mp4",
+  viewed: false
+},
   {
     username: "june",
     avatar: "https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg"
@@ -6423,23 +6525,107 @@ const igPostsData = [
 /* =========================================
    RENDER STORIES
 ========================================= */
-
 function instagramRenderStories() {
   const container = document.getElementById("igStories");
 
-  container.innerHTML = igStoriesData.map(story => `
-    <div class="ig-story ${story.own ? "ig-story-own" : ""}">
-      <div class="ig-story-ring">
+  container.innerHTML = igStoriesData.map((story, index) => `
+    <div class="ig-story ${story.own ? "ig-story-own" : ""}"
+         onclick="instagramOpenStory(${index})">
+
+      <div class="ig-story-ring ${story.viewed ? "viewed" : ""}">
         <img src="${story.avatar}" alt="${story.username}">
         ${story.own ? '<span class="ig-story-add">+</span>' : ""}
       </div>
+
       <span class="ig-story-name">
         ${story.own ? "สตอรี่ของคุณ" : story.username}
       </span>
+
     </div>
   `).join("");
 }
 
+let igStoryTimer = null;
+
+function instagramOpenStory(index) {
+  const story = igStoriesData[index];
+  if (!story) return;
+
+  clearTimeout(igStoryTimer);
+
+  story.viewed = true;
+  instagramRenderStories();
+
+  const viewer = document.getElementById("igStoryViewer");
+  const image = document.getElementById("igStoryImage");
+  const video = document.getElementById("igStoryVideo");
+  const bar = document.getElementById("igStoryProgressBar");
+
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  video.onended = null;
+
+  document.getElementById("igStoryAvatar").src = story.avatar;
+  document.getElementById("igStoryUsername").textContent = story.username;
+
+  viewer.style.display = "flex";
+
+  bar.classList.remove("active");
+
+  if (story.video) {
+    image.style.display = "none";
+    video.style.display = "block";
+    video.src = story.video;
+
+    video.onended = instagramCloseStory;
+    video.currentTime = 0;
+    video.play().catch(console.error);
+
+    // วิดีโอเล่นตามความยาวจริง
+    bar.style.animationDuration = "0s";
+
+    video.onloadedmetadata = () => {
+      bar.style.setProperty(
+        "--story-duration",
+        `${video.duration}s`
+      );
+      bar.classList.remove("active");
+      void bar.offsetWidth;
+      bar.classList.add("active");
+    };
+
+  } else {
+    video.style.display = "none";
+    image.style.display = "block";
+    image.src = story.image || story.avatar;
+
+    bar.style.setProperty("--story-duration", "5s");
+    void bar.offsetWidth;
+    bar.classList.add("active");
+
+    igStoryTimer = setTimeout(instagramCloseStory, 5000);
+  }
+}
+
+function instagramCloseStory() {
+  clearTimeout(igStoryTimer);
+  igStoryTimer = null;
+
+  const video = document.getElementById("igStoryVideo");
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+
+  document.getElementById("igStoryViewer").style.display = "none";
+}
+
+function instagramCloseStory() {
+  clearTimeout(igStoryTimer);
+  igStoryTimer = null;
+
+  document.getElementById("igStoryViewer").style.display = "none";
+}
 /* =========================================
    RENDER POSTS
 ========================================= */
