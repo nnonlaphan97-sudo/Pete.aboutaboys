@@ -1764,7 +1764,67 @@ img.line-profile-avatar {
   justify-content: center;
   gap: 6px;
 }
-  
+  /* =========================================
+   FIX FACEBOOK LIVE LAYOUT
+========================================= */
+
+#facebookScreen {
+  flex-direction: column;
+}
+
+#fbLive {
+  display: none;
+  flex-direction: column !important;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+#fbLive > .fb-header {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+#fbLive > .fb-live-video {
+  width: 100%;
+  flex-shrink: 0;
+  aspect-ratio: 9 / 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+#fbLive > .fb-live-comments {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+}
+
+#fbLive > .fb-live-compose {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#fbLive .fb-live-compose input {
+  flex: 1;
+  min-width: 0;
+}
+
+#fbLive .fb-live-compose button {
+  flex-shrink: 0;
+}
 </style>
 </head>
 
