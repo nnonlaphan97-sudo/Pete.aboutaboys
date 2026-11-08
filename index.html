@@ -2266,6 +2266,144 @@ img.line-profile-avatar {
   object-fit: cover;
   background: #111;
 }
+.ig-user-profile {
+  position: absolute;
+  inset: 0;
+  z-index: 150;
+  background: #fff;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ig-user-topbar {
+  height: 54px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.ig-user-topbar strong {
+  font-size: 17px;
+}
+
+.ig-user-topbar button {
+  border: none;
+  background: none;
+  font-size: 32px;
+  color: #111;
+  cursor: pointer;
+}
+
+.ig-user-topbar span {
+  font-size: 25px;
+}
+
+.ig-user-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 30px;
+  scrollbar-width: none;
+}
+
+.ig-user-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ig-user-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 15px 12px;
+}
+
+.ig-user-avatar {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ig-user-stats {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.ig-user-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ig-user-stats strong {
+  font-size: 16px;
+}
+
+.ig-user-stats span {
+  font-size: 11px;
+}
+
+.ig-user-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 16px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ig-user-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 15px 18px;
+}
+
+.ig-user-actions button {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  background: #efefef;
+  color: #111;
+  padding: 9px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ig-user-actions button:first-child {
+  background: #0095f6;
+  color: #fff;
+}
+
+.ig-user-grid-tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 43px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.ig-user-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.ig-user-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  cursor: pointer;
+}
 
 </style>
 </head>
@@ -2586,6 +2724,7 @@ img.line-profile-avatar {
     <div class="gesture-bar"></div>
   </div>
 </section>
+
 <!-- INSTAGRAM ANDROID -->
 <section class="screen" id="instagramScreen">
   <div class="ig-header">
@@ -2626,7 +2765,59 @@ img.line-profile-avatar {
     <span data-ig-icon="user"></span>
   </button>
 </nav>
+<div id="igKaoProfilePage" class="ig-user-profile" style="display:none;">
 
+  <div class="ig-user-topbar">
+    <button type="button" onclick="instagramCloseKaoProfile()" aria-label="ย้อนกลับ">
+      ‹
+    </button>
+    <strong>kao.phanuwat</strong>
+    <span>⋯</span>
+  </div>
+
+  <div class="ig-user-scroll">
+
+    <div class="ig-user-info">
+      <img
+        class="ig-user-avatar"
+        src="https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+        alt="Kao"
+      >
+
+      <div class="ig-user-stats">
+        <div><strong>15</strong><span>โพสต์</span></div>
+        <div><strong>1,284</strong><span>ผู้ติดตาม</span></div>
+        <div><strong>326</strong><span>กำลังติดตาม</span></div>
+      </div>
+    </div>
+
+    <div class="ig-user-bio">
+      <strong>เก้า ภาณุวัฒน์</strong>
+      <span>📐 Mathematics Tutor</span>
+      <span>📚 รับสอนพิเศษคณิตศาสตร์</span>
+      <span>✏️ ม.ต้น | ม.ปลาย | เตรียมสอบ</span>
+      <span>📩 DM for tutoring</span>
+    </div>
+
+    <div class="ig-user-actions">
+      <button type="button" id="igKaoFollowBtn" onclick="instagramToggleKaoFollow()">
+        ติดตาม
+      </button>
+      <button type="button">ส่งข้อความ</button>
+    </div>
+
+    <div class="ig-user-grid-tab">
+      <svg viewBox="0 0 24 24" width="23" height="23" fill="none"
+           stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="2" width="20" height="20" rx="1"/>
+        <path d="M9 2v20M16 2v20M2 9h20M2 16h20"/>
+      </svg>
+    </div>
+
+    <div id="igKaoPhotoGrid" class="ig-user-grid"></div>
+
+  </div>
+</div>
 <!-- หน้าดู Instagram Story -->
 <div id="igStoryViewer" class="ig-story-viewer">
 
@@ -6655,6 +6846,40 @@ const igPostsData = [
     comments: []
   }
 ];
+const igKaoProfile = {
+  username: "kao.phanuwat",
+  name: "เก้า ภาณุวัฒน์",
+  avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
+  posts: 15,
+  followers: "1,284",
+  following: 326,
+  bio: [
+    "📐 Mathematics Tutor",
+    "📚 รับสอนพิเศษคณิตศาสตร์",
+    "✏️ ม.ต้น | ม.ปลาย | เตรียมสอบ",
+    "📩 DM for tutoring"
+  ],
+  images: [
+    // 3 รูปเดิม
+    "https://i.ibb.co/MxhHKtr0/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/DPjmSxXF/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/BHT8tFbN/r07qxo-R-Download.jpg",
+
+    // 12 รูปใหม่
+    "https://i.ibb.co/hj0DVRB/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/cK2XqTCc/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/ynVhsqQc/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/RpKmm6VK/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/ccd1RH1g/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/xK1x1Z33/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/nN8Cb8nq/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/TxKsWyJ5/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/Rkz9y9ct/r07qxo-R-Download.jpg",
+    "https://i.ibb.co/0y5ZMH7w/IMG-4074.jpg",
+    "https://i.ibb.co/ymMdnHVM/IMG-4075.jpg",
+    "https://i.ibb.co/9m7cJMnJ/IMG-4057.jpg"
+  ]
+};
 
 /* =========================================
    RENDER STORIES
@@ -6768,11 +6993,23 @@ function instagramRenderPosts() {
   container.innerHTML = igPostsData.map(post => `
     <article class="ig-post">
 
-      <div class="ig-post-header">
-        <img src="${post.avatar}" alt="">
-        <strong>${post.username}</strong>
-        <button class="ig-post-more" aria-label="เพิ่มเติม">⋯</button>
-      </div>
+   <div class="ig-post-header">
+  <img
+    src="${post.avatar}"
+    alt=""
+    onclick="if('${post.username}' === 'kao.phanuwat') instagramOpenKaoProfile()"
+    style="cursor:pointer;"
+  >
+
+  <strong
+    onclick="if('${post.username}' === 'kao.phanuwat') instagramOpenKaoProfile()"
+    style="cursor:pointer;"
+  >
+    ${post.username}
+  </strong>
+
+  <button class="ig-post-more" aria-label="เพิ่มเติม">⋯</button>
+</div>
 
       <img
         class="ig-post-image"
@@ -6842,7 +7079,36 @@ function instagramRenderPosts() {
     </article>
   `).join("");
 }
+let igKaoFollowing = false;
 
+function instagramOpenKaoProfile() {
+  const page = document.getElementById("igKaoProfilePage");
+  const grid = document.getElementById("igKaoPhotoGrid");
+
+  grid.innerHTML = igKaoProfile.images.map((src, index) => `
+    <img
+      src="${src}"
+      alt="Kao post ${index + 1}"
+      loading="lazy"
+    >
+  `).join("");
+
+  page.style.display = "flex";
+}
+
+function instagramCloseKaoProfile() {
+  document.getElementById("igKaoProfilePage").style.display = "none";
+}
+
+function instagramToggleKaoFollow() {
+  igKaoFollowing = !igKaoFollowing;
+
+  const button = document.getElementById("igKaoFollowBtn");
+
+  button.textContent = igKaoFollowing ? "กำลังติดตาม" : "ติดตาม";
+  button.style.background = igKaoFollowing ? "#efefef" : "#0095f6";
+  button.style.color = igKaoFollowing ? "#111" : "#fff";
+}
 /* =========================================
    INTERACTIONS
 ========================================= */
