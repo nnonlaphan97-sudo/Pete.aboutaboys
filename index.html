@@ -2436,7 +2436,7 @@ setBattery(50);
 const PHONE_PIN = "9999";
 let typedPin = "";
 let pinBusy = false;
-
+let openKaoAfterUnlock = false;
 
 function showPhoneScreen(screenId) {
   ["lockScreen", "pinScreen", "homeScreen", "lineScreen"].forEach(id => {
@@ -2480,12 +2480,20 @@ function enterPin(number) {
   setTimeout(() => {
     showPhoneScreen("homeScreen");
 
-  // ปลดล็อกแล้วรอ 2 วินาที ก่อนเก้าโทรเข้า
-kaoStoryTimer = setTimeout(() => {
-  startKaoIncomingCall();
-}, 2000);
+    if (openKaoAfterUnlock) {
+      openKaoAfterUnlock = false;
+
+      openLine();
+      openKaoChat();
+    }
+
+    // เก้าโทรเข้าหลังปลดล็อก 2 วินาที
+    kaoStoryTimer = setTimeout(() => {
+      startKaoIncomingCall();
+    }, 2000);
 
   }, 250);
+}
 } else {
       document.getElementById("pinError").textContent =
         "รหัสผ่านไม่ถูกต้อง";
@@ -3485,6 +3493,11 @@ icon.style.cssText = `
 
   notification.appendChild(icon);
   notification.appendChild(content);
+  notification.style.cursor = "pointer";
+  notification.addEventListener("click", () => {
+  openKaoAfterUnlock = true;
+  showPhoneScreen("pinScreen");
+});
 
   // เพิ่มข้อความใหม่ไว้ด้านล่างของข้อความก่อนหน้า
   list.appendChild(notification);
