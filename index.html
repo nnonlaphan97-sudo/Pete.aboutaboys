@@ -4046,27 +4046,21 @@ img.line-profile-avatar {
 </div>
 <!-- SPOTIFY APP ICON -->
 <div class="home-app" onclick="openSpotify()">
-  <div class="home-app-icon"
-       style="background:#1DB954;border-radius:16px;overflow:hidden;">
-
-    <svg viewBox="0 0 64 64" width="54" height="54"
-         xmlns="http://www.w3.org/2000/svg">
-      <rect width="64" height="64" rx="15" fill="#1DB954"/>
-
-      <path d="M13 25 C26 19 43 20 53 27"
-            fill="none" stroke="#101010"
-            stroke-width="5.5" stroke-linecap="round"/>
-
-      <path d="M16 35 C28 30 41 32 50 38"
-            fill="none" stroke="#101010"
-            stroke-width="4.8" stroke-linecap="round"/>
-
-      <path d="M19 44 C29 40 39 42 47 47"
-            fill="none" stroke="#101010"
-            stroke-width="4" stroke-linecap="round"/>
-    </svg>
-
-  </div>
+  <div class="home-app-icon" style="background:#121212;overflow:hidden;">
+  <svg viewBox="0 0 64 64" width="48" height="48"
+       xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="29" fill="#1ED760"/>
+    <path d="M15 24 Q32 17 50 26"
+          fill="none" stroke="#121212"
+          stroke-width="5" stroke-linecap="round"/>
+    <path d="M17 33 Q32 27 47 35"
+          fill="none" stroke="#121212"
+          stroke-width="4" stroke-linecap="round"/>
+    <path d="M20 42 Q32 37 44 43"
+          fill="none" stroke="#121212"
+          stroke-width="3.5" stroke-linecap="round"/>
+  </svg>
+</div>
   <span>Spotify</span>
 </div>
 
@@ -6104,7 +6098,7 @@ const PETE_KAO_HISTORY = {
     ["10:42","พ","อย่าให้กูรู้แล้วกัน"],
     ["15:45","ก","กำลังไป"],
     ["15:46","พ","มีรถมั้ยเดี๋ยวไปรับ"],
-    ["22:36","พ","videos/ScreenRecording_11-08-2569 21-28-06_1.mp3","audio"],
+    ["22:36","พ","videos/copy_EDA6A5F2-8A6B-43D7-A6E1-7DA16C5BEFD5.mp3","audio"],
     ["22:37","ก","พูดอะไรฟังไม่ออก"],
     ["22:37","พ","ไอ้เก้ารักมึงนะ"]
   ],
@@ -6345,33 +6339,91 @@ if (type === "image") {
   });
 
 } else if (type === "audio") {
-  bubble.style.width = "245px";
-  bubble.style.maxWidth = "75%";
-  bubble.style.padding = "12px";
-
-  const title = document.createElement("div");
-  title.textContent = "ข้อความเสียง";
-  title.style.fontSize = "13px";
-  title.style.fontWeight = "600";
-  title.style.marginBottom = "8px";
+  bubble.classList.add("kao-voice-bubble");
 
   const audio = document.createElement("audio");
   audio.src = message;
-  audio.controls = true;
   audio.preload = "metadata";
-  audio.style.width = "100%";
-  audio.style.height = "40px";
 
-  audio.addEventListener("play", () => {
-    document.querySelectorAll(
-      "#kaoChatMessages audio"
-    ).forEach(other => {
-      if (other !== audio) other.pause();
-    });
+  const playBtn = document.createElement("button");
+  playBtn.type = "button";
+  playBtn.className = "kao-voice-play";
+  playBtn.textContent = "▶";
+
+  const waveform = document.createElement("div");
+  waveform.className = "kao-voice-wave";
+
+  const heights = [17, 29, 39, 34, 24, 36, 28, 18];
+
+  heights.forEach(height => {
+    const bar = document.createElement("span");
+    bar.style.height = height + "px";
+    waveform.appendChild(bar);
   });
 
-  bubble.append(title, audio);
+  const duration = document.createElement("span");
+  duration.className = "kao-voice-duration";
+  duration.textContent = "00:00";
 
+  const formatTime = seconds => {
+    if (!Number.isFinite(seconds)) return "00:00";
+
+    const value = Math.max(0, Math.ceil(seconds));
+
+    return String(Math.floor(value / 60)).padStart(2, "0") +
+      ":" + String(value % 60).padStart(2, "0");
+  };
+
+  const updateTime = () => {
+    duration.textContent = formatTime(
+      (audio.duration || 0) - audio.currentTime
+    );
+
+    const progress = audio.duration
+      ? audio.currentTime / audio.duration
+      : 0;
+
+    [...waveform.children].forEach((bar, index) => {
+      bar.classList.toggle(
+        "played",
+        index / waveform.children.length < progress
+      );
+    });
+  };
+
+  audio.addEventListener("loadedmetadata", updateTime);
+  audio.addEventListener("timeupdate", updateTime);
+
+  audio.addEventListener("play", () => {
+    playBtn.textContent = "Ⅱ";
+  });
+
+  audio.addEventListener("pause", () => {
+    playBtn.textContent = "▶";
+  });
+
+  audio.addEventListener("ended", () => {
+    audio.currentTime = 0;
+    updateTime();
+  });
+
+  playBtn.addEventListener("click", () => {
+    if (audio.paused) {
+      document.querySelectorAll(
+        ".kao-voice-bubble audio"
+      ).forEach(other => {
+        if (other !== audio) other.pause();
+      });
+
+      audio.play().catch(error => {
+        console.error("ไม่สามารถเล่นเสียงได้", error);
+      });
+    } else {
+      audio.pause();
+    }
+  });
+
+  bubble.append(playBtn, waveform, duration, audio);
 } else if (type === "file") {
   bubble.classList.add("kao-media-message");
   bubble.innerHTML = kaoMediaIcon(type);
