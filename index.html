@@ -4178,24 +4178,39 @@ const GANG_AVATAR_URL =
   "https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg";
 
 let gangNewMessagesStarted = false;
+let gangLastSender = null;
 
 function addGangBubble(sender, message, time, type = "text") {
   const container = document.getElementById("gangChatMessages");
   if (!container) return;
 
-  const sent = sender === "พ";
-  const member = GANG_MEMBERS[sender];
+ const sent = sender === "พ";
+const member = GANG_MEMBERS[sender];
 
-  const row = document.createElement("div");
-  row.className = `kao-message-row ${sent ? "sent" : "received"}`;
+// แสดงรูปเฉพาะข้อความแรกของคนที่ส่งต่อเนื่องกัน
+const showAvatar = !sent && gangLastSender !== sender;
 
-  if (!sent) {
+const row = document.createElement("div");
+row.className = `kao-message-row ${sent ? "sent" : "received"}`;
+row.style.alignItems = "center";
+
+if (!sent) {
+  if (showAvatar) {
     const avatar = document.createElement("img");
     avatar.className = "kao-message-avatar";
     avatar.src = member.avatar;
     avatar.alt = member.name;
+    avatar.style.alignSelf = "center";
     row.appendChild(avatar);
+  } else {
+    // เว้นพื้นที่เท่ารูป เพื่อให้บับเบิ้ลตรงกัน
+    const spacer = document.createElement("div");
+    spacer.style.cssText = "width:32px;flex-shrink:0";
+    row.appendChild(spacer);
   }
+}
+
+gangLastSender = sender;
 
   const content = document.createElement("div");
   content.style.cssText = `
@@ -4206,8 +4221,8 @@ function addGangBubble(sender, message, time, type = "text") {
     min-width:0;
   `;
 
-  if (!sent) {
-    const name = document.createElement("div");
+ if (showAvatar) {
+  const name = document.createElement("div");
     name.textContent = member.name;
     name.style.cssText = `
       font-size:11px;
@@ -4262,10 +4277,11 @@ function renderPeteGangHistory() {
   if (!container) return;
 
   container.replaceChildren();
+  gangLastSender = null;
 
-  Object.entries(PETE_GANG_HISTORY).forEach(([date, messages]) => {
-    addKaoDate(kaoDateLabel(date), "gangChatMessages");
-
+Object.entries(PETE_GANG_HISTORY).forEach(([date, messages]) => {
+  gangLastSender = null;
+  addKaoDate(kaoDateLabel(date), "gangChatMessages");
     messages.forEach(([time, sender, message, type]) => {
       addGangBubble(sender, message, time, type || "text");
     });
@@ -4324,7 +4340,8 @@ function startGangNewMessages() {
 
   const container = document.getElementById("gangChatMessages");
   if (!container) return;
-
+  
+  gangLastSender = null;
   addKaoDate("วันนี้", "gangChatMessages");
 
   const messages = [
