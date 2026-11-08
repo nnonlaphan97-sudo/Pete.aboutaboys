@@ -2442,8 +2442,10 @@ function enterPin(number) {
   setTimeout(() => {
     showPhoneScreen("homeScreen");
 
-    // ปลดล็อกสำเร็จแล้ว เก้าโทรเข้า
-    startKaoIncomingCall();
+  // ปลดล็อกแล้วรอ 5 วินาที ก่อนเก้าโทรเข้า
+kaoStoryTimer = setTimeout(() => {
+  startKaoIncomingCall();
+}, 5000);
 
   }, 250);
 } else {
@@ -3467,13 +3469,6 @@ messages.forEach((message, index) => {
   setTimeout(() => {
     kaoStoryMessage(message);
     showKaoLockNotification(message);
-
-    // หลังข้อความสุดท้ายของเก้า 5 วินาที
-    if (index === messages.length - 1) {
-      setTimeout(() => {
-        startSaendeeNewMessages();
-      }, 5000);
-    }
   }, index * 1800);
 });
 }
@@ -3709,8 +3704,13 @@ function endKaoStoryCall() {
   if (kaoStoryAnswered) {
     kaoStoryFinished = true;
 
-    // ข้อความนี้ขึ้นหลังวางสายเท่านั้น
+    // เก้าส่งข้อความหลังวางสาย
     kaoStoryMessage("ให้อภัยกูได้ไหม");
+
+    // รอ 5 วินาที แล้วแสนดีส่งข้อความ
+    setTimeout(() => {
+      startSaendeeNewMessages();
+    }, 5000);
   }
 }
 
