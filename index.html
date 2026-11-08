@@ -1861,7 +1861,23 @@ img.line-profile-avatar {
     <span id="gangChatTime">19:12</span>
   </div>
 </div>
+<!-- แชทกลุ่ม about a boyz -->
+<div class="line-chat-item" onclick="openAboutBoyzChat()">
+  <img class="line-avatar"
+     src="https://i.ibb.co/60C1NZLJ/6-B69-D2-BE-4944-4-FDE-943-E-CFA3-C1046153.png"
+     alt="about a boyz">
 
+  <div class="line-chat-body">
+    <div class="line-chat-name">about a boyz</div>
+    <div class="line-chat-preview" id="aboutBoyzPreview">
+      พี่โจ้: about a boyz คนใหม่ของเรา
+    </div>
+  </div>
+
+  <div class="line-chat-meta">
+    <span id="aboutBoyzTime">12:00</span>
+  </div>
+</div>
 <!-- แชทพี่โจ้ -->
 <div class="line-chat-item" onclick="openJoeChat()">
   <img class="line-avatar"
@@ -2107,7 +2123,9 @@ img.line-profile-avatar {
       </div>
 
       <div class="line-friend-row">
-        <div class="line-avatar line-avatar-blue">A</div>
+        <img class="line-avatar"
+     src="https://i.ibb.co/60C1NZLJ/6-B69-D2-BE-4944-4-FDE-943-E-CFA3-C1046153.png"
+     alt="about a boyz">
         <div><strong>about a boyz</strong></div>
       </div>
     </div>
@@ -2304,6 +2322,46 @@ img.line-profile-avatar {
     </button>
   </form>
 </div>
+<!-- ห้องแชท about a boyz -->
+<div class="line-page kao-chat-page" id="aboutBoyzChatPage">
+
+  <div class="kao-chat-header">
+    <button type="button" class="kao-back"
+            onclick="closeAboutBoyzChat()">‹</button>
+
+    <img
+  src="https://i.ibb.co/60C1NZLJ/6-B69-D2-BE-4944-4-FDE-943-E-CFA3-C1046153.png"
+  alt="about a boyz"
+  style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+
+    <strong class="kao-chat-title">about a boyz</strong>
+  </div>
+
+  <div class="kao-chat-messages" id="aboutBoyzMessages"></div>
+
+  <form class="kao-chat-compose"
+        onsubmit="sendAboutBoyzMessage(event)">
+
+    <button type="button" class="kao-tool-btn">+</button>
+
+    <div class="kao-input-wrap">
+      <input id="aboutBoyzInput"
+             type="text"
+             placeholder="Aa"
+             autocomplete="off">
+    </div>
+
+      <button type="submit" class="kao-send-btn" aria-label="ส่งข้อความ">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="m4 12 16-8-5 16-3-7-8-1z"/>
+        <path d="m12 13 8-9"/>
+      </svg>
+    </button>
+  </form>
+</div>
+
 <!-- ห้องแชทแก๊งเราโคตรเท่ -->
 <div class="line-page kao-chat-page" id="gangChatPage">
 
@@ -2656,12 +2714,14 @@ function switchLinePage(page) {
   const kaoChat = document.getElementById("kaoChatPage");
   const joeChat = document.getElementById("joeChatPage");
   const saendeeChat = document.getElementById("saendeeChatPage");
-
+  const gangChat = document.getElementById("gangChatPage");
+  const aboutBoyzChat = document.getElementById("aboutBoyzChatPage");
+  
   if (kaoChat) kaoChat.style.display = "none";
   if (joeChat) joeChat.style.display = "none";
   if (saendeeChat) saendeeChat.style.display = "none";
-const gangChat = document.getElementById("gangChatPage");
-if (gangChat) gangChat.style.display = "none";
+  if (gangChat) gangChat.style.display = "none";
+  if (aboutBoyzChat) aboutBoyzChat.style.display = "none";
   if (nav) nav.style.display = "flex";
 
   const gesture = document.querySelector(".line-gesture");
@@ -4464,8 +4524,184 @@ function showGangBanner(message, time) {
     banner.remove();
   }, 4500);
 }
-
 renderPeteGangHistory();
+/* ===== ABOUT A BOYZ ===== */
+
+const ABOUT_BOYZ_HISTORY = {
+  "30/10": [
+    ["14:00", "พจ", "พรุ่งนี้เรามีนัดที่สตูกันนะเด็กๆ"],
+    ["14:00", "พจ", "อย่าลืมหาเมนูอาหารมาทำด้วย"]
+  ],
+
+  "17/11": [
+    ["16:40", "พจ", "เด็กๆ พรุ่งนี้มาเจอกันที่สตูนะครับ"],
+    ["16:41", "พจ", "อย่าลืมคิดไอเดียเรื่องสินค้า"],
+    ["16:43", "พจ", "ที่เพิ่มความสัมพันธ์กับครอบครัวนะ"],
+    ["16:44", "พจ", "นี่โจทย์สุดท้ายเราแล้ว"]
+  ],
+
+  "12/12": [
+    ["12:00", "พจ", "ยินดีด้วยกับพีท ภูบดินทร์"],
+    ["12:00", "พจ", "about a boyz คนใหม่ของเรา"]
+  ]
+};
+
+const ABOUT_BOYZ_MEMBERS = {
+  "พจ": {
+    name: "P’Joe",
+    avatar: "https://i.ibb.co/rRyGbq0L/IMG-4112.jpg"
+  }
+};
+
+let aboutBoyzLastSender = null;
+
+function addAboutBoyzBubble(sender, message, time) {
+  const container = document.getElementById("aboutBoyzMessages");
+  if (!container) return;
+
+  const sent = sender === "พ";
+  const member = ABOUT_BOYZ_MEMBERS[sender];
+
+  const showAvatar = !sent && aboutBoyzLastSender !== sender;
+
+  const row = document.createElement("div");
+  row.className = `kao-message-row ${sent ? "sent" : "received"}`;
+  row.style.alignItems = "center";
+
+  if (showAvatar) {
+    row.style.marginTop = "16px";
+  }
+
+  if (!sent) {
+    if (showAvatar) {
+      const avatar = document.createElement("img");
+      avatar.className = "kao-message-avatar";
+      avatar.src = member.avatar;
+      avatar.alt = member.name;
+      row.appendChild(avatar);
+    } else {
+      const spacer = document.createElement("div");
+      spacer.style.cssText = "width:32px;flex-shrink:0";
+      row.appendChild(spacer);
+    }
+  }
+
+  const content = document.createElement("div");
+  content.style.cssText = `
+    display:flex;
+    flex-direction:column;
+    align-items:${sent ? "flex-end" : "flex-start"};
+    max-width:75%;
+    min-width:0;
+    position:relative;
+  `;
+
+  if (showAvatar) {
+    const name = document.createElement("div");
+    name.textContent = member.name;
+    name.style.cssText = `
+      position:absolute;
+      bottom:calc(100% + 4px);
+      left:8px;
+      font-size:11px;
+      color:#536075;
+      white-space:nowrap;
+    `;
+    content.appendChild(name);
+  }
+
+  const bubble = document.createElement("div");
+  bubble.className = "kao-message-bubble";
+  bubble.style.maxWidth = "100%";
+  bubble.textContent = message;
+
+  content.appendChild(bubble);
+
+  const meta = document.createElement("div");
+  meta.className = sent ? "kao-message-meta" : "kao-message-time";
+
+  if (sent) {
+    const read = document.createElement("span");
+    read.textContent = "อ่านแล้ว";
+
+    const clock = document.createElement("span");
+    clock.textContent = time;
+
+    meta.append(read, clock);
+    row.append(meta, content);
+  } else {
+    meta.textContent = time;
+    row.append(content, meta);
+  }
+
+  container.appendChild(row);
+  aboutBoyzLastSender = sender;
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderAboutBoyzHistory() {
+  const container = document.getElementById("aboutBoyzMessages");
+  if (!container) return;
+
+  container.replaceChildren();
+  aboutBoyzLastSender = null;
+
+  Object.entries(ABOUT_BOYZ_HISTORY).forEach(([date, messages]) => {
+    aboutBoyzLastSender = null;
+
+    addKaoDate(kaoDateLabel(date), "aboutBoyzMessages");
+
+    messages.forEach(([time, sender, message]) => {
+      addAboutBoyzBubble(sender, message, time);
+    });
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+
+function openAboutBoyzChat() {
+  switchLinePage("chats");
+
+  const chat = document.getElementById("aboutBoyzChatPage");
+  if (chat) chat.style.display = "flex";
+
+  const nav = document.querySelector(".line-bottom-nav");
+  const gesture = document.querySelector(".line-gesture");
+
+  if (nav) nav.style.display = "none";
+  if (gesture) gesture.style.display = "none";
+
+  const container = document.getElementById("aboutBoyzMessages");
+  if (container) container.scrollTop = container.scrollHeight;
+}
+
+function closeAboutBoyzChat() {
+  switchLinePage("chats");
+}
+
+function sendAboutBoyzMessage(event) {
+  event.preventDefault();
+
+  const input = document.getElementById("aboutBoyzInput");
+  if (!input) return;
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  const time = kaoTimeNow();
+
+  addAboutBoyzBubble("พ", message, time);
+
+  document.getElementById("aboutBoyzPreview").textContent =
+    "พีท: " + message;
+
+  document.getElementById("aboutBoyzTime").textContent = time;
+
+  input.value = "";
+}
+
+renderAboutBoyzHistory();
+
 </script>
 </body>
 </html>
