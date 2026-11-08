@@ -1844,6 +1844,23 @@ img.line-profile-avatar {
     <span id="saendeeChatTime">20:54</span>
   </div>
 </div>
+<!-- แชทกลุ่มแก๊งเราโคตรเท่ -->
+<div class="line-chat-item" onclick="openGangChat()">
+  <img class="line-avatar"
+       src="https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg"
+       alt="แก๊งเราโคตรเท่">
+
+  <div class="line-chat-body">
+    <div class="line-chat-name">แก๊งเราโคตรเท่</div>
+    <div class="line-chat-preview" id="gangChatPreview">
+      พีท: คนเราต้องประหยัดปะวะ
+    </div>
+  </div>
+
+  <div class="line-chat-meta">
+    <span id="gangChatTime">19:12</span>
+  </div>
+</div>
 
 <!-- แชทพี่โจ้ -->
 <div class="line-chat-item" onclick="openJoeChat()">
@@ -1863,20 +1880,6 @@ img.line-profile-avatar {
   </div>
 </div>
 
-      <div class="line-chat-item">
-        <div class="line-avatar line-avatar-blue">
-          <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M15 15a5 5 0 0 1 6 5"/></svg>
-        </div>
-        <div class="line-chat-body">
-          <div class="line-chat-name">กลุ่มเพื่อน</div>
-          <div class="line-chat-preview">ส่งรูปภาพ</div>
-        </div>
-        <div class="line-chat-meta">
-          <span>18:45</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- หน้าหลัก -->
   <div class="line-page" id="lineHomePage">
@@ -2301,6 +2304,41 @@ img.line-profile-avatar {
     </button>
   </form>
 </div>
+<!-- ห้องแชทแก๊งเราโคตรเท่ -->
+<div class="line-page kao-chat-page" id="gangChatPage">
+
+  <div class="kao-chat-header">
+    <button type="button" class="kao-back"
+            onclick="closeGangChat()">‹</button>
+
+    <img src="https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg"
+         alt="แก๊งเราโคตรเท่">
+
+    <strong class="kao-chat-title">แก๊งเราโคตรเท่</strong>
+  </div>
+
+  <div class="kao-chat-messages" id="gangChatMessages"></div>
+
+  <form class="kao-chat-compose" onsubmit="sendGangMessage(event)">
+    <button type="button" class="kao-tool-btn">+</button>
+
+    <div class="kao-input-wrap">
+      <input id="gangMessageInput"
+             type="text"
+             placeholder="Aa"
+             autocomplete="off">
+    </div>
+
+    <button type="submit" class="kao-send-btn" aria-label="ส่งข้อความ">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="m4 12 16-8-5 16-3-7-8-1z"/>
+        <path d="m12 13 8-9"/>
+      </svg>
+    </button>
+  </form>
+</div>
 
   <!-- แถบนำทางด้านล่าง -->
   <nav class="line-bottom-nav">
@@ -2612,7 +2650,8 @@ function switchLinePage(page) {
   if (kaoChat) kaoChat.style.display = "none";
   if (joeChat) joeChat.style.display = "none";
   if (saendeeChat) saendeeChat.style.display = "none";
-
+const gangChat = document.getElementById("gangChatPage");
+if (gangChat) gangChat.style.display = "none";
   if (nav) nav.style.display = "flex";
 
   const gesture = document.querySelector(".line-gesture");
@@ -3945,18 +3984,26 @@ function startSaendeeNewMessages() {
     ["ส่งลิ้ง", "link"]
   ];
 
-  messages.forEach(([message, type], index) => {
-    setTimeout(() => {
-      const time = kaoTimeNow();
+messages.forEach(([message, type], index) => {
+  setTimeout(() => {
+    const time = kaoTimeNow();
 
-      addSaendeeBubble("สด", message, time, type);
+    addSaendeeBubble("สด", message, time, type);
 
-      document.getElementById("saendeeChatPreview").textContent = message;
-      document.getElementById("saendeeChatTime").textContent = time;
+    document.getElementById("saendeeChatPreview").textContent = message;
+    document.getElementById("saendeeChatTime").textContent = time;
 
-      showSaendeeBanner(message, time);
-    }, index * 1800);
-  });
+    showSaendeeBanner(message, time);
+
+    // หลังแสนดีส่งข้อความสุดท้าย รออีก 5 วินาที
+    if (index === messages.length - 1) {
+      setTimeout(() => {
+        startGangNewMessages();
+      }, 5000);
+    }
+
+  }, index * 1800);
+});
 }
 
 // แบนเนอร์ LINE ไม่ใช่แจ้งเตือนหน้าล็อก
@@ -4033,7 +4080,349 @@ avatar.style.cssText = `
 }
 
 renderPeteSaendeeHistory();
+const PETE_GANG_HISTORY = {
+  
+  "19/10": [
+    ["17:33","จ","อยากกินหมูทะว่ะ"],
+    ["17:36","ธ","เอาดิร้านไหน"],
+    ["17:37","สด","มารับกูด้วย"],
+    ["17:39","จ","ให้ผัวไปรับสิจ๊ะ"],
+    ["17:40","สด","ผัวที่หน้ามึงอ่ะ"],
+    ["17:41","จ","กูยังไม่ว่าใครนะแสนดี"],
+    ["17:42","สด","ไปแดกคนเดียวเลยไอ้จูน"],
+    ["17:56","จ","พวกมึงสองตัวจะไปมั้ยไอ้พีท ไอ้เก้า"],
+    ["17:58","ก","ไม่ไป"],
+    ["17:59","จ","ผัวมึงอ่ะไปมั้ย"],
+    ["17:59","จ","อยู่ด้วยไม่ใช่เหรอฝากถาม"],
+    ["18:00","ก","อยู่ด้วยกันห่าไร"],
+    ["18:00","ก","กูมาสอนพิเศษ"],
+    ["18:00","ก","แต่มันไม่ไปหรอก"],
+    ["18:01","จ","จ้ะ"]
+  ],
 
+  "27/10": [
+    ["18:10","จ","ไอ้พีทใช่มึงปะเนี่ย"],
+    ["18:11","จ","ส่งรูป","image"],
+    ["18:11","สด","เห้ยไอ้พีท"],
+    ["18:12","สด","เดี๋ยวนี้มึงลงสมัครอะไรแบบนี้ด้วยเหรอ"],
+    ["18:13","พ","พี่โจ้เจ้าของเพจมาขอร้องกูช่วย"],
+    ["18:14","พ","แม่งทวงบุญคุณ"],
+    ["18:15","จ","ไอ้พีทคำว่า boy คือเด็กผู้ชาย"],
+    ["18:16","จ","มึงอ่ะเป็นลุงแล้ว"],
+    ["18:17","พ","ลุงพ่อมึงดิ"]
+  ],
+
+  "17/11": [
+    ["17:50","สด","กูไม่ทำแล้วได้ปะวะ"],
+    ["17:51","สด","กิจกรรมยังกงยังเกียร์เหี้ยไรเนี่ย"],
+    ["17:52","สด","ไปทำเหี้ยไรสามวันสองคืน"],
+    ["17:53","ธ","เห้ยไอ้แสน มึงก็ใจเย็นหน่อย"],
+    ["17:53","ธ","เดี๋ยวพวกกูช่วยคิดให้"],
+    ["17:54","สด","เพราะมึงอ่ะ"],
+    ["17:55","สด","ทั้งแก๊งต้องเป็นประธานค่ายส้นตีนเนี่ย"],
+    ["17:56","ก","ใจเย็นเว้ย"],
+    ["17:57","ก","ผัวเมียเหมือนลิ้นกับฟันนั่นแหละ"],
+    ["17:58","ก","ค่อยๆ คุยกัน"],
+    ["18:00","สด","ผัวเมียพ่อมึงดิ"],
+    ["18:00","ธ","ผัวเมียพ่อมึงดิ"],
+    ["18:20","จ","พวกมึง"],
+    ["18:21","จ","ไอ้พีทจะพูดเปิดงานยังเกียร์"],
+    ["18:21","จ","จริงเท็จแค่ไหนครับคุณภูบดินทร์"],
+    ["18:25","พ","อืม จริง"],
+    ["18:25","จ","เชรดดดดดด"],
+    ["18:25","ธ","เชรดดดดดด"],
+    ["18:26","จ","มึงจะไหวเหรอวะพูดหน้าชั้นยังสั่นเป็นเจ้าเข้า"],
+    ["18:27","พ","เดี๋ยวไอ้เก้าเทรนให้กู"],
+    ["18:28","จ","เนี่ยยยยยยยยยยย"],
+    ["18:28","จ","ความผัวเมีย"],
+    ["18:30","ก","ผัวเมียพ่อม"],
+    ["18:30","พ","ผัวเมียพ่อม"]
+  ],
+
+  "20/11": [
+    ["18:56","จ","หมูกระทะกัน"],
+    ["18:56","จ","พวกมึงจัดงานเสร็จยัง"],
+    ["19:01","พ","กูกับไอ้เก้าเสร็จแล้ว"],
+    ["19:02","พ","มึงจองร้านเลยไอ้จูน"],
+    ["19:04","จ","ติดกันเป็นผัวเมียเลยน๊าพวกมึงเนี่ย"],
+    ["19:05","ก","ผัวเมียพ่อมึงอ่ะ"],
+    ["19:06","สด","เดี๋ยวกูกับธาดาตามไป"],
+    ["19:07","พ","เค้ามีโปรเช็คอินแลกน้ำฟรีด้วย"],
+    ["19:10","จ","ได้ค้าบพี่"],
+    ["19:11","จ","บ้านพี่ก็รวย เสือกจะเอาโปร"],
+    ["19:12","พ","คนเราต้องประหยัดปะวะ"]
+  ]
+};
+/* ===== ระบบแชทแก๊งเราโคตรเท่ ===== */
+
+const GANG_MEMBERS = {
+  "จ": {
+    name: "จูน",
+    avatar: "https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg"
+  },
+  "ธ": {
+    name: "ธาดา",
+    avatar: "https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg"
+  },
+  "สด": {
+    name: "แสนดี",
+    avatar: "https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg"
+  },
+  "ก": {
+    name: "เก้า",
+    avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+  }
+};
+
+const GANG_AVATAR_URL =
+  "https://i.ibb.co/qY6Z1V3P/IMG-4077.jpg";
+
+let gangNewMessagesStarted = false;
+
+function addGangBubble(sender, message, time, type = "text") {
+  const container = document.getElementById("gangChatMessages");
+  if (!container) return;
+
+  const sent = sender === "พ";
+  const member = GANG_MEMBERS[sender];
+
+  const row = document.createElement("div");
+  row.className = `kao-message-row ${sent ? "sent" : "received"}`;
+
+  if (!sent) {
+    const avatar = document.createElement("img");
+    avatar.className = "kao-message-avatar";
+    avatar.src = member.avatar;
+    avatar.alt = member.name;
+    row.appendChild(avatar);
+  }
+
+  const content = document.createElement("div");
+  content.style.cssText = `
+    display:flex;
+    flex-direction:column;
+    align-items:${sent ? "flex-end" : "flex-start"};
+    max-width:75%;
+    min-width:0;
+  `;
+
+  if (!sent) {
+    const name = document.createElement("div");
+    name.textContent = member.name;
+    name.style.cssText = `
+      font-size:11px;
+      color:#536075;
+      margin:0 0 4px 8px;
+    `;
+    content.appendChild(name);
+  }
+
+  const bubble = document.createElement("div");
+  bubble.className = "kao-message-bubble";
+  bubble.style.maxWidth = "100%";
+
+  if (type === "image") {
+    bubble.classList.add("kao-media-message");
+    bubble.innerHTML = kaoMediaIcon("image");
+
+    const label = document.createElement("span");
+    label.textContent = message;
+    bubble.appendChild(label);
+  } else if (type === "link") {
+    bubble.textContent = "🔗 " + message;
+  } else {
+    bubble.textContent = message;
+  }
+
+  content.appendChild(bubble);
+
+  const meta = document.createElement("div");
+  meta.className = sent ? "kao-message-meta" : "kao-message-time";
+
+  if (sent) {
+    const read = document.createElement("span");
+    read.textContent = "อ่านแล้ว";
+
+    const clock = document.createElement("span");
+    clock.textContent = time;
+
+    meta.append(read, clock);
+    row.append(meta, content);
+  } else {
+    meta.textContent = time;
+    row.append(content, meta);
+  }
+
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderPeteGangHistory() {
+  const container = document.getElementById("gangChatMessages");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  Object.entries(PETE_GANG_HISTORY).forEach(([date, messages]) => {
+    addKaoDate(kaoDateLabel(date), "gangChatMessages");
+
+    messages.forEach(([time, sender, message, type]) => {
+      addGangBubble(sender, message, time, type || "text");
+    });
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+
+function openGangChat() {
+  switchLinePage("chats");
+
+  const chat = document.getElementById("gangChatPage");
+  if (chat) chat.style.display = "flex";
+
+  const nav = document.querySelector(".line-bottom-nav");
+  const gesture = document.querySelector(".line-gesture");
+
+  if (nav) nav.style.display = "none";
+  if (gesture) gesture.style.display = "none";
+
+  const container = document.getElementById("gangChatMessages");
+  if (container) container.scrollTop = container.scrollHeight;
+}
+
+function closeGangChat() {
+  const chat = document.getElementById("gangChatPage");
+  if (chat) chat.style.display = "none";
+
+  switchLinePage("chats");
+}
+
+function sendGangMessage(event) {
+  event.preventDefault();
+
+  const input = document.getElementById("gangMessageInput");
+  if (!input) return;
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  const time = kaoTimeNow();
+
+  addGangBubble("พ", message, time);
+
+  document.getElementById("gangChatPreview").textContent =
+    "พีท: " + message;
+
+  document.getElementById("gangChatTime").textContent = time;
+
+  input.value = "";
+}
+
+function startGangNewMessages() {
+  if (gangNewMessagesStarted) return;
+  gangNewMessagesStarted = true;
+
+  const container = document.getElementById("gangChatMessages");
+  if (!container) return;
+
+  addKaoDate("วันนี้", "gangChatMessages");
+
+  const messages = [
+    ["พวกมึงไอ้พีทไลฟ์", "text"],
+    ["ส่งลิ้งไปที่เฟสบุ๊ค", "link"]
+  ];
+
+  messages.forEach(([message, type], index) => {
+    setTimeout(() => {
+      const time = kaoTimeNow();
+
+      addGangBubble("จ", message, time, type);
+
+      document.getElementById("gangChatPreview").textContent =
+        "จูน: " + message;
+
+      document.getElementById("gangChatTime").textContent = time;
+
+      showGangBanner(message, time);
+    }, index * 1800);
+  });
+}
+
+function showGangBanner(message, time) {
+  const phone = document.getElementById("phone");
+  if (!phone) return;
+
+  let banner = document.getElementById("gangBanner");
+
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "gangBanner";
+    phone.appendChild(banner);
+  }
+
+  banner.style.cssText = `
+    position:absolute;
+    top:43px;
+    left:12px;
+    right:12px;
+    z-index:150;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:12px 14px;
+    border-radius:22px;
+    background:rgba(246,247,250,.97);
+    color:#20212b;
+    box-shadow:0 6px 22px rgba(0,0,0,.2);
+    font-family:inherit;
+    cursor:pointer;
+  `;
+
+  banner.replaceChildren();
+
+  const avatar = document.createElement("img");
+  avatar.src = GANG_AVATAR_URL;
+  avatar.alt = "แก๊งเราโคตรเท่";
+  avatar.style.cssText = `
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+  `;
+
+  const content = document.createElement("div");
+  content.style.cssText = "flex:1;min-width:0";
+
+  const title = document.createElement("strong");
+  title.textContent = "แก๊งเราโคตรเท่";
+  title.style.fontSize = "14px";
+
+  const body = document.createElement("div");
+  body.textContent = "จูน: " + message;
+  body.style.cssText = "font-size:13px;margin-top:3px";
+
+  const clock = document.createElement("span");
+  clock.textContent = time;
+  clock.style.cssText = "font-size:11px;color:#777";
+
+  content.append(title, body);
+  banner.append(avatar, content, clock);
+
+  banner.onclick = () => {
+    banner.remove();
+    openLine();
+    openGangChat();
+  };
+
+  clearTimeout(showGangBanner.hideTimer);
+
+  showGangBanner.hideTimer = setTimeout(() => {
+    banner.remove();
+  }, 4500);
+}
+
+renderPeteGangHistory();
 </script>
 </body>
 </html>
