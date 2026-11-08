@@ -2404,7 +2404,67 @@ img.line-profile-avatar {
   object-fit: cover;
   cursor: pointer;
 }
+.ig-explore-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: #fff;
+}
 
+.ig-explore-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 10px 12px;
+  padding: 9px 12px;
+  background: #efefef;
+  border-radius: 11px;
+}
+
+.ig-explore-search svg {
+  width: 19px;
+  height: 19px;
+  color: #777;
+}
+
+.ig-explore-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #111;
+  font-size: 14px;
+}
+
+.ig-explore-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+  align-content: start;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: none;
+}
+
+.ig-explore-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.ig-explore-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ig-explore-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
 </head>
 
@@ -2746,6 +2806,21 @@ img.line-profile-avatar {
     </div>
 
     <div id="igOtherPage" style="display:none"></div>
+    <div id="igExplorePage" class="ig-explore-page" style="display:none;">
+
+  <div class="ig-explore-search">
+    <span data-ig-icon="search"></span>
+    <input
+      type="search"
+      id="igExploreInput"
+      placeholder="ค้นหา"
+      oninput="instagramFilterExplore()"
+    >
+  </div>
+
+  <div id="igExploreGrid" class="ig-explore-grid"></div>
+
+</div>
   </div>
 
 <nav class="ig-bottom">
@@ -6890,7 +6965,59 @@ const igKaoProfile = {
     "https://i.ibb.co/9m7cJMnJ/IMG-4057.jpg"
   ]
 };
+const igExploreData = [
+  // รูปเก้า
+  ...igKaoProfile.images.map((image, index) => ({
+    image,
+    category: "kao",
+    username: "kao.phanuwat",
+    caption: "เก้า"
+  })),
 
+  // รูปท่องเที่ยว
+  {
+    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=700",
+    category: "travel",
+    caption: "Nature"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?w=700",
+    category: "travel",
+    caption: "Travel"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=700",
+    category: "travel",
+    caption: "Mountains"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=700",
+    category: "travel",
+    caption: "Adventure"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=700",
+    category: "travel",
+    caption: "Landscape"
+  },
+
+  // รูปกล้องถ่ายรูป
+  {
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=700",
+    category: "camera",
+    caption: "Photography"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?w=700",
+    category: "camera",
+    caption: "Camera"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=700",
+    category: "camera",
+    caption: "Photography"
+  }
+];
 /* =========================================
    RENDER STORIES
 ========================================= */
@@ -7119,6 +7246,70 @@ function instagramToggleKaoFollow() {
   button.style.background = igKaoFollowing ? "#efefef" : "#0095f6";
   button.style.color = igKaoFollowing ? "#111" : "#fff";
 }
+function instagramOpenExplore() {
+  document.getElementById("igFeed").style.display = "none";
+  document.getElementById("igOtherPage").style.display = "none";
+
+  const explore = document.getElementById("igExplorePage");
+  explore.style.display = "flex";
+
+  instagramRenderExplore();
+}
+
+function instagramRenderExplore(keyword = "") {
+  const grid = document.getElementById("igExploreGrid");
+
+  const query = keyword.trim().toLowerCase();
+
+  const items = igExploreData.filter(item => {
+    if (!query) return true;
+
+    const keywords = {
+      kao: "เก้า kao kao.phanuwat",
+      travel: "เที่ยว travel nature landscape mountain adventure ท่องเที่ยว ธรรมชาติ",
+      camera: "กล้อง camera photography ถ่ายรูป"
+    };
+
+    return (
+      item.caption.toLowerCase().includes(query) ||
+      (keywords[item.category] || "").includes(query)
+    );
+  });
+
+  // สลับรูปเก้ากับรูปหมวดอื่นให้ฟีดดูหลากหลาย
+  if (!query) {
+    const kao = items.filter(item => item.category === "kao");
+    const others = items.filter(item => item.category !== "kao");
+    const mixed = [];
+
+    while (kao.length || others.length) {
+      if (others.length) mixed.push(others.shift());
+      if (kao.length) mixed.push(kao.shift());
+      if (others.length) mixed.push(others.shift());
+    }
+
+    grid.innerHTML = instagramExploreHTML(mixed);
+  } else {
+    grid.innerHTML = instagramExploreHTML(items);
+  }
+}
+
+function instagramExploreHTML(items) {
+  return items.map(item => `
+    <div class="ig-explore-item"
+      ${item.category === "kao"
+        ? 'onclick="instagramOpenKaoProfile()"'
+        : ""}
+    >
+      <img src="${item.image}" alt="${item.caption}" loading="lazy">
+    </div>
+  `).join("");
+}
+
+function instagramFilterExplore() {
+  const keyword = document.getElementById("igExploreInput").value;
+  instagramRenderExplore(keyword);
+}
 /* =========================================
    INTERACTIONS
 ========================================= */
@@ -7170,7 +7361,12 @@ function closeInstagram() {
 function instagramTab(tab) {
   const feed = document.getElementById("igFeed");
   const other = document.getElementById("igOtherPage");
+if (tab === "search") {
+  instagramOpenExplore();
+  return;
+}
 
+document.getElementById("igExplorePage").style.display = "none";
   if (tab === "home") {
     feed.style.display = "block";
     other.style.display = "none";
