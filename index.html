@@ -1599,15 +1599,33 @@ img.line-profile-avatar {
   padding-top: 7px;
 }
 
+.fb-actions {
+  display: grid;
+  grid-template-columns: 0.8fr 1.6fr 0.8fr;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
 .fb-actions button {
-  flex: 1;
-  background: none;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 0;
   border: none;
-  padding: 10px 2px;
+  background: transparent;
   color: #65676b;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
+}
+
+.fb-actions button .fb-svg-icon {
+  flex-shrink: 0;
 }
 
 .fb-actions button.liked {
@@ -1940,6 +1958,17 @@ img.line-profile-avatar {
 .fb-reaction-like .fb-svg-icon {
   width: 13px !important;
   height: 13px !important;
+}
+.fb-profile-post .fb-post-text {
+  margin: 12px 0 8px;
+}
+
+.fb-profile-post .fb-profile-reactions:empty {
+  display: none;
+}
+
+.fb-profile-post .fb-actions {
+  margin-top: 4px;
 }
 
 </style>
@@ -5376,6 +5405,29 @@ const FB_KAO_NAME = "Phanuwat Chotiwat";
 
 /* SVG ICONS */
 const FB_ICONS = {
+  globe: `<svg viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" stroke-width="1.8"
+  stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9"/>
+  <path d="M3 12h18"/>
+  <path d="M12 3c-3 3-4.5 6-4.5 9s1.5 6 4.5 9"/>
+  <path d="M12 3c3 3 4.5 6 4.5 9s-1.5 6-4.5 9"/>
+</svg>`,
+
+excited: `<svg viewBox="0 0 36 36"
+  xmlns="http://www.w3.org/2000/svg">
+  <circle cx="18" cy="18" r="17" fill="#FFCC4D"/>
+  <path d="M7 13 Q11 9 15 13"
+    fill="none" stroke="#664500" stroke-width="2.7"
+    stroke-linecap="round"/>
+  <path d="M21 13 Q25 9 29 13"
+    fill="none" stroke="#664500" stroke-width="2.7"
+    stroke-linecap="round"/>
+  <path d="M7 19 Q18 33 29 19 Q18 22 7 19Z"
+    fill="#664500"/>
+  <path d="M9 20 Q18 23 27 20 Q26 24 18 24 Q10 24 9 20Z"
+    fill="#fff"/>
+</svg>`,
   home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>
@@ -5418,13 +5470,6 @@ const FB_ICONS = {
     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 16V3m0 0L7 8m5-5 5 5"/>
     <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>
-  </svg>`,
-
-  globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    stroke-width="1.8" stroke-linecap="round">
-    <circle cx="12" cy="12" r="9"/>
-    <path d="M3 12h18M12 3c-5 5-5 13 0 18M12 3c5 5 13 5 18 0" style="display:none"/>
-    <path d="M3 12h18M12 3c-5 5-5 13 0 18M12 3c5 5 5 13 0 18"/>
   </svg>`,
 
   send: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -5693,14 +5738,13 @@ function facebookRenderPosts() {
 
     form.append(input, send);
 
-    card.append(
-      author,
-      text,
-      stats,
-      actions,
-      commentList,
-      form
-    );
+   card.append(author, text);
+
+if (post.likes > 0) {
+  card.appendChild(stats);
+}
+
+card.append(actions, commentList, form);
 
     container.appendChild(card);
   });
@@ -5787,7 +5831,7 @@ function facebookRenderPeteProfilePosts() {
     if (post.feeling) {
       const feelingEmoji = document.createElement("span");
       feelingEmoji.className = "fb-feeling-emoji";
-      feelingEmoji.innerHTML = `
+      feelingEmoji.innerHTML = fbIcon("excited", 20);`
   <svg viewBox="0 0 36 36" width="20" height="20"
        xmlns="http://www.w3.org/2000/svg"
        aria-label="รู้สึกตื่นเต้น">
@@ -5843,7 +5887,12 @@ function facebookRenderPeteProfilePosts() {
 
     const text = document.createElement("div");
     text.className = "fb-post-text";
-    text.textContent = post.text;
+    text.innerHTML = post.text
+  .split("😁")
+  .map(part => part.replace(/&/g, "&amp;")
+                   .replace(/</g, "&lt;")
+                   .replace(/>/g, "&gt;"))
+  .join(fbIcon("excited", 24));
 
     const stats = document.createElement("div");
     stats.className = "fb-profile-reactions";
