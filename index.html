@@ -8785,8 +8785,6 @@ const GALLERY_SECRET_PIN = "999999999";
 
 // ใส่ URL รูปภาพของพีทได้ที่นี่
 const galleryPhotos = [
-  const galleryPhotos = [
-  // รูปชุดที่ 1
   "https://i.ibb.co/XxZHTg1S/r07qxo-R-Download.jpg",
   "https://i.ibb.co/8gXRbSWX/r07qxo-R-Download.jpg",
   "https://i.ibb.co/zVNT9vXf/r07qxo-R-Download.jpg",
@@ -8805,8 +8803,6 @@ const galleryPhotos = [
   "https://i.ibb.co/9HhVdd7J/r07qxo-R-Download.jpg",
   "https://i.ibb.co/4ZChdx7p/r07qxo-R-Download.jpg",
   "https://i.ibb.co/N6HXs8R0/r07qxo-R-Download.jpg",
-
-  // รูปชุดที่ 2
   "https://i.ibb.co/6RPbVYVN/IMG-4117.jpg",
   "https://i.ibb.co/1YB8XGfM/IMG-4116.jpg",
   "https://i.ibb.co/TDC4r510/IMG-4168.jpg",
@@ -8824,35 +8820,13 @@ const galleryPhotos = [
   "https://i.ibb.co/CsHKSw2k/r07qxo-R-Download.jpg",
   "https://i.ibb.co/8g1ypVV9/r07qxo-R-Download.jpg",
   "https://i.ibb.co/HpxJ2771/r07qxo-R-Download.jpg"
-];
-// รูปทั้งหมดอยู่ในล่าสุด
-const galleryRecentPhotos = galleryPhotos;
-
-// รูปบางส่วนอยู่ในกล้อง
-const galleryCameraPhotos = [
-  galleryPhotos[18],
-  galleryPhotos[19],
-  galleryPhotos[20],
-  galleryPhotos[21],
-  galleryPhotos[22],
-  galleryPhotos[23],
-  galleryPhotos[24],
-  galleryPhotos[25]
-];
-
-// รูปบางส่วนอยู่ในรายการโปรด
-let galleryFavoritePhotos = [
-  galleryPhotos[0],
-  galleryPhotos[3],
-  galleryPhotos[8],
-  galleryPhotos[12],
-  galleryPhotos[17],
-  galleryPhotos[20],
-  galleryPhotos[22],
-  galleryPhotos[26],
-  galleryPhotos[30],
-  galleryPhotos[34]
-];
+].map((src, index) => ({
+  id: index + 1,
+  src,
+  album: index >= 18 && index <= 25 ? "camera" : "other",
+  favorite: [0, 3, 8, 12, 17, 20, 22, 26, 30, 34].includes(index),
+  secret: false
+}));
 
 // รูปในอัลบั้มลับ ให้เพิ่มด้วย secret: true
 const gallerySecretPhotos = [];
@@ -9118,17 +9092,18 @@ function galleryClosePhoto() {
 
 // คืนค่ารายการโปรดหลังรีเฟรชในแท็บเดิม
 try {
-  const savedFavorites = JSON.parse(
-    sessionStorage.getItem("peteGalleryFavorites") || "[]"
-  );
+  const saved = sessionStorage.getItem("peteGalleryFavorites");
 
-  galleryPhotos.forEach(photo => {
-    photo.favorite = savedFavorites.includes(photo.id);
-  });
+  if (saved !== null) {
+    const savedFavorites = JSON.parse(saved);
+
+    galleryPhotos.forEach(photo => {
+      photo.favorite = savedFavorites.includes(photo.id);
+    });
+  }
 } catch (error) {
   console.warn("Cannot load gallery favorites", error);
 }
-
 </script>
 </body>
 </html>
