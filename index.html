@@ -2100,6 +2100,86 @@ img.line-profile-avatar {
   justify-content: space-around;
   flex-shrink: 0;
 }
+/* Instagram Home Feed */
+.ig-stories {
+  gap: 15px;
+  padding: 15px 12px 12px;
+}
+
+.ig-story {
+  cursor: pointer;
+}
+
+.ig-story-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #222;
+}
+
+.ig-story-own .ig-story-ring {
+  background: #ededed;
+  position: relative;
+}
+
+.ig-story-add {
+  position: absolute;
+  right: -2px;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0095f6;
+  color: white;
+  border: 2px solid white;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.ig-post-header strong {
+  flex: 1;
+  font-size: 13px;
+}
+
+.ig-post-more {
+  border: none;
+  background: none;
+  font-size: 22px;
+  color: #111;
+}
+
+.ig-post-actions button.ig-liked {
+  color: #ff3040;
+}
+
+.ig-post-actions button.ig-saved {
+  color: #111;
+}
+
+.ig-post-caption {
+  margin-top: 4px;
+}
+
+.ig-post-comments {
+  display: block;
+  margin-top: 5px;
+  color: #888;
+  cursor: pointer;
+}
+
+.ig-post-time {
+  font-size: 10px;
+  color: #999;
+  margin-top: 7px;
+}
+
+.ig-content {
+  padding-bottom: 35px;
+}
+
 </style>
 </head>
 
@@ -6285,10 +6365,207 @@ function renderInstagramIcons() {
     el.innerHTML = igIcon(el.dataset.igIcon);
   });
 }
+/* =========================================
+   INSTAGRAM HOME DATA
+========================================= */
+
+const igStoriesData = [
+  {
+    username: IG_PETE_USERNAME,
+    avatar: IG_PETE_AVATAR,
+    own: true
+  },
+  {
+    username: "kao",
+    avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg"
+  },
+  {
+    username: "june",
+    avatar: "https://i.ibb.co/S4G7HVXY/r07qxo-R-Download.jpg"
+  },
+  {
+    username: "saendee",
+    avatar: "https://i.ibb.co/sdw1C756/r07qxo-R-Download.jpg"
+  },
+  {
+    username: "thada",
+    avatar: "https://i.ibb.co/1tcxZ8xF/IMG-4047.jpg"
+  }
+];
+
+const igPostsData = [
+  {
+    id: 1,
+    username: IG_PETE_USERNAME,
+    avatar: IG_PETE_AVATAR,
+    image: IG_PETE_AVATAR,
+    caption: "📸",
+    likes: 1248,
+    time: "2 ชั่วโมงที่แล้ว",
+    liked: false,
+    saved: false,
+    comments: []
+  },
+  {
+    id: 2,
+    username: "kao",
+    avatar: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
+    image: "https://i.ibb.co/N2vPgK03/IMG-4076.jpg",
+    caption: "New chapter ✨",
+    likes: 2356,
+    time: "5 ชั่วโมงที่แล้ว",
+    liked: false,
+    saved: false,
+    comments: []
+  }
+];
+
+/* =========================================
+   RENDER STORIES
+========================================= */
+
+function instagramRenderStories() {
+  const container = document.getElementById("igStories");
+
+  container.innerHTML = igStoriesData.map(story => `
+    <div class="ig-story ${story.own ? "ig-story-own" : ""}">
+      <div class="ig-story-ring">
+        <img src="${story.avatar}" alt="${story.username}">
+        ${story.own ? '<span class="ig-story-add">+</span>' : ""}
+      </div>
+      <span class="ig-story-name">
+        ${story.own ? "สตอรี่ของคุณ" : story.username}
+      </span>
+    </div>
+  `).join("");
+}
+
+/* =========================================
+   RENDER POSTS
+========================================= */
+
+function instagramRenderPosts() {
+  const container = document.getElementById("igPosts");
+
+  container.innerHTML = igPostsData.map(post => `
+    <article class="ig-post">
+
+      <div class="ig-post-header">
+        <img src="${post.avatar}" alt="">
+        <strong>${post.username}</strong>
+        <button class="ig-post-more" aria-label="เพิ่มเติม">⋯</button>
+      </div>
+
+      <img
+        class="ig-post-image"
+        src="${post.image}"
+        alt="Instagram post"
+        ondblclick="instagramLike(${post.id})"
+      >
+
+      <div class="ig-post-actions">
+        <button
+          class="${post.liked ? "ig-liked" : ""}"
+          onclick="instagramLike(${post.id})"
+          aria-label="ถูกใจ"
+        >
+          ${igIcon("heart")}
+        </button>
+
+        <button
+          onclick="instagramComment(${post.id})"
+          aria-label="แสดงความคิดเห็น"
+        >
+          ${igIcon("comment")}
+        </button>
+
+        <button aria-label="แชร์">
+          ${igIcon("message")}
+        </button>
+
+        <button
+          class="ig-save ${post.saved ? "ig-saved" : ""}"
+          onclick="instagramSave(${post.id})"
+          aria-label="บันทึก"
+        >
+          ${post.saved
+            ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14v18l-7-5-7 5z"/></svg>'
+            : igIcon("save")}
+        </button>
+      </div>
+
+      <div class="ig-post-info">
+        <strong>${post.likes.toLocaleString("en-US")} ถูกใจ</strong>
+
+        <div class="ig-post-caption">
+          <strong>${post.username}</strong>
+          ${post.caption}
+        </div>
+
+        <span
+          class="ig-post-comments"
+          onclick="instagramComment(${post.id})"
+        >
+          ${post.comments.length
+            ? `ดูความคิดเห็นทั้งหมด ${post.comments.length} รายการ`
+            : "เพิ่มความคิดเห็น..."}
+        </span>
+
+        ${post.comments.map(comment => `
+          <div>
+            <strong>${IG_PETE_USERNAME}</strong>
+            ${comment}
+          </div>
+        `).join("")}
+
+        <div class="ig-post-time">${post.time}</div>
+      </div>
+
+    </article>
+  `).join("");
+}
+
+/* =========================================
+   INTERACTIONS
+========================================= */
+
+function instagramLike(id) {
+  const post = igPostsData.find(p => p.id === id);
+  if (!post) return;
+
+  post.liked = !post.liked;
+  post.likes += post.liked ? 1 : -1;
+
+  instagramRenderPosts();
+}
+
+function instagramSave(id) {
+  const post = igPostsData.find(p => p.id === id);
+  if (!post) return;
+
+  post.saved = !post.saved;
+  instagramRenderPosts();
+}
+
+function instagramComment(id) {
+  const post = igPostsData.find(p => p.id === id);
+  if (!post) return;
+
+  const comment = prompt("เขียนความคิดเห็น");
+
+  if (!comment || !comment.trim()) return;
+
+  post.comments.push(comment.trim());
+  instagramRenderPosts();
+}
 
 function openInstagram() {
   showPhoneScreen("instagramScreen");
+
   renderInstagramIcons();
+  instagramRenderStories();
+  instagramRenderPosts();
+
   instagramTab("home");
 }
 
