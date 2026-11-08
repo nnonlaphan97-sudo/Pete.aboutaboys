@@ -3077,6 +3077,501 @@ img.line-profile-avatar {
 #galleryPinError:empty {
   display: none;
 }
+/* ===============================
+   SPOTIFY MOBILE
+================================ */
+
+#spotifyScreen {
+  display: none;
+  flex-direction: column;
+  background: #121212;
+  color: #fff;
+  z-index: 8;
+  font-family: Arial, sans-serif;
+}
+
+.spotify-screen button {
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.spotify-screen svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sp-home {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 48px;
+}
+
+.sp-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 17px 14px;
+  flex-shrink: 0;
+}
+
+.sp-avatar {
+  width: 35px;
+  height: 35px;
+  background: #bb8cdd;
+  color: #171717;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  margin-right: 3px;
+}
+
+.sp-chip {
+  border: 0;
+  border-radius: 30px;
+  padding: 9px 16px;
+  background: #292929;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sp-chip.active {
+  background: #1ed760;
+  color: #121212;
+}
+
+.sp-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 16px 175px;
+  scrollbar-width: none;
+}
+
+.sp-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sp-scroll h2 {
+  font-size: 22px;
+  letter-spacing: -.5px;
+  margin: 21px 0 15px;
+}
+
+.sp-feature {
+  display: flex;
+  align-items: center;
+  background: #282828;
+  border-radius: 5px;
+  overflow: hidden;
+  min-height: 76px;
+  cursor: pointer;
+}
+
+.sp-feature img {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sp-feature div {
+  padding: 10px 13px;
+  min-width: 0;
+}
+
+.sp-feature strong,
+.sp-feature small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-feature strong {
+  font-size: 14px;
+}
+
+.sp-feature small {
+  color: #b3b3b3;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.sp-song {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.sp-song img {
+  width: 55px;
+  height: 55px;
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sp-song-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-song-info strong,
+.sp-song-info small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sp-song-info strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sp-song-info small {
+  font-size: 12px;
+  color: #b3b3b3;
+  margin-top: 5px;
+}
+
+.sp-song.playing strong {
+  color: #1ed760;
+}
+
+.sp-song-more {
+  color: #b3b3b3;
+  font-size: 21px;
+  padding: 10px;
+}
+
+.sp-album-card {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.sp-album-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.sp-album-card strong {
+  font-size: 13px;
+}
+
+.sp-album-card small {
+  font-size: 11px;
+  color: #b3b3b3;
+}
+
+/* Mini player */
+
+.sp-mini {
+  position: absolute;
+  bottom: 91px;
+  left: 8px;
+  right: 8px;
+  height: 61px;
+  background: #38564b;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  padding: 7px 10px 7px 7px;
+  gap: 10px;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.sp-mini img {
+  width: 47px;
+  height: 47px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.sp-mini-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-mini-info strong,
+.sp-mini-info small {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sp-mini-info strong {
+  font-size: 13px;
+}
+
+.sp-mini-info small {
+  font-size: 11px;
+  color: #ddd;
+  margin-top: 4px;
+}
+
+.sp-mini button {
+  border: 0;
+  background: transparent;
+  color: white;
+  padding: 9px;
+}
+
+.sp-mini button svg {
+  width: 27px;
+  height: 27px;
+}
+
+/* Bottom navigation */
+
+.sp-nav {
+  position: absolute;
+  bottom: 27px;
+  left: 0;
+  right: 0;
+  height: 61px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: linear-gradient(
+    0deg, #080808 65%, rgba(8,8,8,.9)
+  );
+  z-index: 9;
+}
+
+.sp-nav button {
+  width: 33.33%;
+  border: 0;
+  background: transparent;
+  color: #a7a7a7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.sp-nav button.selected {
+  color: white;
+}
+
+/* Full player */
+
+.sp-player {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #596c62 0%,
+    #36473f 40%,
+    #19241f 100%
+  );
+  padding: 46px 23px 32px;
+}
+
+.sp-player-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sp-player-top button {
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 22px;
+  width: 32px;
+  height: 36px;
+}
+
+.sp-player-heading {
+  flex: 1;
+  text-align: center;
+}
+
+.sp-player-heading small,
+.sp-player-heading strong {
+  display: block;
+}
+
+.sp-player-heading small {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.sp-player-heading strong {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.sp-player-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sp-big-art {
+  display: block;
+  width: 100%;
+  max-height: min(40dvh, 340px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 15px 35px #0005;
+  margin: 0 auto 25px;
+}
+
+.sp-track-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.sp-track-info > div {
+  min-width: 0;
+}
+
+.sp-track-info h2 {
+  font-size: 21px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-track-info p {
+  font-size: 13px;
+  color: #dedede;
+  margin: 7px 0 0;
+}
+
+.sp-save {
+  border: 0;
+  background: transparent;
+  color: white;
+  padding: 7px;
+}
+
+.sp-save.saved {
+  color: #1ed760;
+}
+
+.sp-progress {
+  width: 100%;
+  margin: 0;
+  height: 4px;
+  accent-color: white;
+  cursor: pointer;
+}
+
+.sp-times {
+  display: flex;
+  justify-content: space-between;
+  color: #ddd;
+  font-size: 11px;
+  margin-top: 9px;
+}
+
+.sp-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 17px;
+}
+
+.sp-controls button {
+  border: 0;
+  background: transparent;
+  color: white;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+}
+
+.sp-controls button svg {
+  width: 27px;
+  height: 27px;
+}
+
+.sp-controls button.sp-main-play {
+  width: 61px;
+  height: 61px;
+  border-radius: 50%;
+  background: white;
+  color: black;
+}
+
+.sp-controls .sp-main-play svg {
+  width: 32px;
+  height: 32px;
+}
+
+.sp-controls button.sp-active {
+  color: #1ed760;
+}
+
+.sp-queue-button {
+  border: 0;
+  background: transparent;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 10px 0;
+}
+
+.sp-queue-button svg {
+  width: 19px;
+  height: 19px;
+}
+
+.sp-gesture {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  z-index: 30;
+  cursor: pointer;
+}
+
+.sp-gesture div {
+  width: 105px;
+  height: 4px;
+  background: #fff;
+  border-radius: 20px;
+}
+
 </style>
 </head>
 
@@ -3177,15 +3672,16 @@ img.line-profile-avatar {
   <div class="lock-music">
     
     <img
-      class="music-art"
-      src="https://placehold.co/100x100/8055aa/ffffff.png?text=Music"
-      alt="Album Cover"
-    >
+  class="music-art"
+  id="lockMusicArt"
+  src="https://i.ibb.co/wryj1R3m/IMG-4249.jpg"
+  alt="Album Cover"
+>
 
     <div class="music-content">
-      <div class="music-song">
-        ชื่อเพลง - ศิลปิน
-      </div>
+     <div class="music-song" id="lockMusicTitle">
+  รักเธอให้น้อยลง - Bandwagon
+</div>
 
       <div class="music-controls">
 
@@ -3310,7 +3806,6 @@ img.line-profile-avatar {
   </div>
 </div>
 
-
 <div class="home-apps">
   <div class="home-app" onclick="openLine()">
 <div class="home-app-icon line-app-icon">
@@ -3412,6 +3907,31 @@ img.line-profile-avatar {
   </div>
   <span>แกลเลอรี</span>
 </div>
+<!-- SPOTIFY APP ICON -->
+<div class="home-app" onclick="openSpotify()">
+  <div class="home-app-icon"
+       style="background:#1DB954;border-radius:16px;overflow:hidden;">
+
+    <svg viewBox="0 0 64 64" width="54" height="54"
+         xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" rx="15" fill="#1DB954"/>
+
+      <path d="M13 25 C26 19 43 20 53 27"
+            fill="none" stroke="#101010"
+            stroke-width="5.5" stroke-linecap="round"/>
+
+      <path d="M16 35 C28 30 41 32 50 38"
+            fill="none" stroke="#101010"
+            stroke-width="4.8" stroke-linecap="round"/>
+
+      <path d="M19 44 C29 40 39 42 47 47"
+            fill="none" stroke="#101010"
+            stroke-width="4" stroke-linecap="round"/>
+    </svg>
+
+  </div>
+  <span>Spotify</span>
+</div>
 
   <div class="home-dock">
     <span>Phone</span>
@@ -3422,6 +3942,209 @@ img.line-profile-avatar {
   <div class="home-bottom" onclick="lockPhone()">
     <div class="gesture-bar"></div>
   </div>
+</section>
+
+<!-- SPOTIFY SCREEN -->
+<section class="screen spotify-screen" id="spotifyScreen">
+
+  <!-- หน้า Home -->
+  <div class="sp-home" id="spHome">
+
+    <div class="sp-top">
+      <div class="sp-avatar">P</div>
+      <button class="sp-chip active" onclick="spotifyTab('home')">
+        ทั้งหมด
+      </button>
+      <button class="sp-chip" onclick="spotifyTab('library')">
+        เพลง
+      </button>
+    </div>
+
+    <div class="sp-scroll">
+
+      <h2>ฟังอีกครั้ง</h2>
+
+      <div class="sp-feature" onclick="spotifyOpenPlayer()">
+        <img id="spFeatureArt"
+             src="https://i.ibb.co/wryj1R3m/IMG-4249.jpg">
+        <div>
+          <strong id="spFeatureTitle">รักเธอให้น้อยลง</strong>
+          <small id="spFeatureArtist">Bandwagon</small>
+        </div>
+      </div>
+
+      <h2>เพลงของคุณ</h2>
+      <div class="sp-song-list" id="spSongList"></div>
+
+      <h2>กำลังฟัง</h2>
+      <div class="sp-album-card" onclick="spotifyOpenPlayer()">
+        <img id="spAlbumArt"
+             src="https://i.ibb.co/wryj1R3m/IMG-4249.jpg">
+        <strong>เพลงโปรดของ Pete</strong>
+        <small>เพลย์ลิสต์ • 3 เพลง</small>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- หน้า Now Playing -->
+  <div class="sp-player" id="spPlayer">
+
+    <div class="sp-player-top">
+      <button onclick="spotifyClosePlayer()" aria-label="ย่อเครื่องเล่น">
+        <svg viewBox="0 0 24 24">
+          <path d="m5 9 7 7 7-7"/>
+        </svg>
+      </button>
+
+      <div class="sp-player-heading">
+        <small>กำลังเล่นจากเพลย์ลิสต์</small>
+        <strong>เพลงโปรดของ Pete</strong>
+      </div>
+
+      <button aria-label="เมนูเพิ่มเติม" onclick="spotifyOpenList()">•••</button>
+    </div>
+
+    <div class="sp-player-main">
+      <img class="sp-big-art" id="spBigArt"
+           src="https://i.ibb.co/wryj1R3m/IMG-4249.jpg">
+
+      <div class="sp-track-info">
+        <div>
+          <h2 id="spBigTitle">รักเธอให้น้อยลง</h2>
+          <p id="spBigArtist">Bandwagon</p>
+        </div>
+
+        <button class="sp-save" id="spSaveBtn"
+                onclick="spotifyToggleSave()"
+                aria-label="บันทึกเพลง">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v8M8 12h8"/>
+          </svg>
+        </button>
+      </div>
+
+      <input type="range" id="spProgress"
+             class="sp-progress"
+             min="0" max="100" value="0"
+             oninput="spotifySeek(this.value)"
+             aria-label="ตำแหน่งเพลง">
+
+      <div class="sp-times">
+        <span id="spCurrentTime">0:00</span>
+        <span id="spDuration">0:00</span>
+      </div>
+
+      <div class="sp-controls">
+
+        <button id="spShuffleBtn"
+                onclick="spotifyToggleShuffle()"
+                aria-label="สุ่มเพลง">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 7h3c5 0 5 10 10 10h3"/>
+            <path d="m17 14 3 3-3 3"/>
+            <path d="M4 17h3c2 0 3-2 4-4"/>
+            <path d="M14 8c1-1 2-1 3-1h3"/>
+            <path d="m17 4 3 3-3 3"/>
+          </svg>
+        </button>
+
+        <button onclick="spotifyPrevious()" aria-label="เพลงก่อนหน้า">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 5v14M19 5 8 12l11 7z"
+                  fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+
+        <button class="sp-main-play" id="spMainPlay"
+                onclick="spotifyToggle()"
+                aria-label="เล่นหรือหยุดเพลง">
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"
+                  fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+
+        <button onclick="spotifyNext()" aria-label="เพลงถัดไป">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 5v14M5 5l11 7-11 7z"
+                  fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+
+        <button id="spRepeatBtn"
+                onclick="spotifyToggleRepeat()"
+                aria-label="เล่นซ้ำ">
+          <svg viewBox="0 0 24 24">
+            <path d="m17 2 4 4-4 4"/>
+            <path d="M3 11V9a3 3 0 0 1 3-3h15"/>
+            <path d="m7 22-4-4 4-4"/>
+            <path d="M21 13v2a3 3 0 0 1-3 3H3"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+
+    <button class="sp-queue-button" onclick="spotifyOpenList()">
+      <svg viewBox="0 0 24 24">
+        <path d="M4 6h16M4 11h16M4 16h10M18 15v6m-3-3h6"/>
+      </svg>
+      ดูรายการเพลง
+    </button>
+  </div>
+
+  <!-- Mini Player -->
+  <div class="sp-mini" id="spMini" onclick="spotifyOpenPlayer()">
+    <img id="spMiniArt"
+         src="https://i.ibb.co/wryj1R3m/IMG-4249.jpg">
+
+    <div class="sp-mini-info">
+      <strong id="spMiniTitle">รักเธอให้น้อยลง</strong>
+      <small id="spMiniArtist">Bandwagon</small>
+    </div>
+
+    <button onclick="event.stopPropagation();spotifyToggle()"
+            id="spMiniPlay" aria-label="เล่นหรือหยุดเพลง">
+      <svg viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z"
+              fill="currentColor" stroke="none"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="sp-nav" id="spNav">
+    <button class="selected" onclick="spotifyTab('home')">
+      <svg viewBox="0 0 24 24">
+        <path d="m3 10 9-7 9 7v10H3z"/>
+        <path d="M9 20v-7h6v7"/>
+      </svg>
+      <span>หน้าหลัก</span>
+    </button>
+
+    <button onclick="spotifyTab('search')">
+      <svg viewBox="0 0 24 24">
+        <circle cx="10" cy="10" r="7"/>
+        <path d="m15 15 6 6"/>
+      </svg>
+      <span>ค้นหา</span>
+    </button>
+
+    <button onclick="spotifyTab('library')">
+      <svg viewBox="0 0 24 24">
+        <path d="M4 4v16M10 4v16M16 7l4 13"/>
+      </svg>
+      <span>คอลเลกชัน</span>
+    </button>
+  </nav>
+
+  <!-- Home Gesture -->
+  <div class="sp-gesture" onclick="showPhoneScreen('homeScreen')">
+    <div></div>
+  </div>
+
 </section>
 
 <!-- ANDROID GALLERY -->
@@ -4653,8 +5376,9 @@ function showPhoneScreen(screenId) {
   "homeScreen",
   "lineScreen",
   "facebookScreen",
-  "instagramScreen",
-  "galleryScreen"
+   "instagramScreen",
+  "galleryScreen",
+  "spotifyScreen"
 ].forEach(id => {
     const screen = document.getElementById(id);
 
@@ -9182,6 +9906,446 @@ try {
 } catch (error) {
   console.warn("Cannot load gallery favorites", error);
 }
+/* =========================================
+   SPOTIFY MUSIC SYSTEM
+========================================= */
+
+const spotifySongs = [
+  {
+    title: "รักเธอให้น้อยลง",
+    artist: "Bandwagon",
+    src: "videos/รักเธอให้น้อยลง.mp3",
+    cover: "https://i.ibb.co/wryj1R3m/IMG-4249.jpg"
+  },
+  {
+    title: "รักเธอคนเดียว",
+    artist: "นัท ณัฐ ศักดาทร",
+    src: "videos/รักเธอคนเดียว.mp3",
+    cover: "https://i.ibb.co/1YYz2rzn/IMG-4251.jpg"
+  },
+  {
+    title: "ไม่มีนิยาม",
+    artist: "เต ตะวัน, นิว ฐิติภูมิ",
+    src: "videos/ไม่มีนิยาย.mp3",
+    cover: "https://i.ibb.co/0jmbBGL0/IMG-4180.jpg"
+  }
+];
+
+const spotifyAudio = new Audio();
+spotifyAudio.preload = "metadata";
+
+let spotifyIndex = 0;
+let spotifyPlaying = false;
+let spotifyShuffle = false;
+let spotifyRepeat = false;
+let spotifySaved = new Set();
+
+const spPlayIcon = `
+  <svg viewBox="0 0 24 24">
+    <path d="M8 5v14l11-7z"
+          fill="currentColor" stroke="none"/>
+  </svg>
+`;
+
+const spPauseIcon = `
+  <svg viewBox="0 0 24 24">
+    <rect x="6" y="4" width="4" height="16"
+          rx="1" fill="currentColor" stroke="none"/>
+    <rect x="14" y="4" width="4" height="16"
+          rx="1" fill="currentColor" stroke="none"/>
+  </svg>
+`;
+
+function spotifyTime(seconds) {
+  if (!Number.isFinite(seconds)) return "0:00";
+
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+function spotifyRenderSongs() {
+  const list = document.getElementById("spSongList");
+  if (!list) return;
+
+  list.innerHTML = spotifySongs.map((song, index) => `
+    <div class="sp-song ${index === spotifyIndex ? "playing" : ""}"
+         onclick="spotifySelect(${index})">
+
+      <img src="${song.cover}" alt="">
+
+      <div class="sp-song-info">
+        <strong>${song.title}</strong>
+        <small>${song.artist}</small>
+      </div>
+
+      <span class="sp-song-more">
+        ${index === spotifyIndex && spotifyPlaying ? "♪" : "•••"}
+      </span>
+    </div>
+  `).join("");
+}
+
+function spotifyUpdateUI() {
+  const song = spotifySongs[spotifyIndex];
+
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  const setImage = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.src = value;
+  };
+
+  setText("spFeatureTitle", song.title);
+  setText("spFeatureArtist", song.artist);
+  setText("spBigTitle", song.title);
+  setText("spBigArtist", song.artist);
+  setText("spMiniTitle", song.title);
+  setText("spMiniArtist", song.artist);
+
+  setImage("spFeatureArt", song.cover);
+  setImage("spAlbumArt", song.cover);
+  setImage("spBigArt", song.cover);
+  setImage("spMiniArt", song.cover);
+
+  // หน้าจอล็อก
+  setText("lockMusicTitle", song.title + " - " + song.artist);
+  setImage("lockMusicArt", song.cover);
+
+  const icon = spotifyPlaying ? spPauseIcon : spPlayIcon;
+
+  ["spMainPlay", "spMiniPlay", "musicPlay"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.innerHTML = icon;
+  });
+
+  const saveBtn = document.getElementById("spSaveBtn");
+  if (saveBtn) {
+    saveBtn.classList.toggle(
+      "saved",
+      spotifySaved.has(spotifyIndex)
+    );
+  }
+
+  const shuffleBtn = document.getElementById("spShuffleBtn");
+  if (shuffleBtn) {
+    shuffleBtn.classList.toggle("sp-active", spotifyShuffle);
+  }
+
+  const repeatBtn = document.getElementById("spRepeatBtn");
+  if (repeatBtn) {
+    repeatBtn.classList.toggle("sp-active", spotifyRepeat);
+  }
+
+  spotifyRenderSongs();
+}
+
+function spotifyLoad(index) {
+  spotifyIndex =
+    (index + spotifySongs.length) % spotifySongs.length;
+
+  spotifyAudio.src = spotifySongs[spotifyIndex].src;
+  spotifyAudio.load();
+
+  spotifyUpdateUI();
+  spotifyUpdateProgress();
+}
+
+async function spotifyPlay() {
+  try {
+    await spotifyAudio.play();
+    spotifyPlaying = true;
+  } catch (error) {
+    spotifyPlaying = false;
+    console.error("ไม่สามารถเล่นเพลงได้:", error);
+  }
+
+  spotifyUpdateUI();
+}
+
+function spotifyPause() {
+  spotifyAudio.pause();
+  spotifyPlaying = false;
+  spotifyUpdateUI();
+}
+
+function spotifyToggle() {
+  if (spotifyAudio.paused) {
+    spotifyPlay();
+  } else {
+    spotifyPause();
+  }
+}
+
+function spotifySelect(index) {
+  spotifyAudio.pause();
+  spotifyPlaying = false;
+  spotifyLoad(index);
+  spotifyPlay();
+}
+
+function spotifyNext() {
+  let nextIndex = spotifyIndex + 1;
+
+  if (spotifyShuffle && spotifySongs.length > 1) {
+    do {
+      nextIndex = Math.floor(
+        Math.random() * spotifySongs.length
+      );
+    } while (nextIndex === spotifyIndex);
+  }
+
+  spotifySelect(nextIndex);
+}
+
+function spotifyPrevious() {
+  if (spotifyAudio.currentTime > 3) {
+    spotifyAudio.currentTime = 0;
+    return;
+  }
+
+  spotifySelect(spotifyIndex - 1);
+}
+
+function spotifyToggleShuffle() {
+  spotifyShuffle = !spotifyShuffle;
+  spotifyUpdateUI();
+}
+
+function spotifyToggleRepeat() {
+  spotifyRepeat = !spotifyRepeat;
+  spotifyUpdateUI();
+}
+
+function spotifyToggleSave() {
+  if (spotifySaved.has(spotifyIndex)) {
+    spotifySaved.delete(spotifyIndex);
+  } else {
+    spotifySaved.add(spotifyIndex);
+  }
+
+  spotifyUpdateUI();
+}
+
+function spotifyUpdateProgress() {
+  const duration = spotifyAudio.duration || 0;
+  const current = spotifyAudio.currentTime || 0;
+
+  const progress = document.getElementById("spProgress");
+
+  if (progress) {
+    progress.value = duration
+      ? (current / duration) * 100
+      : 0;
+  }
+
+  const currentEl = document.getElementById("spCurrentTime");
+  const durationEl = document.getElementById("spDuration");
+
+  if (currentEl) {
+    currentEl.textContent = spotifyTime(current);
+  }
+
+  if (durationEl) {
+    durationEl.textContent = spotifyTime(duration);
+  }
+}
+
+function spotifySeek(value) {
+  if (Number.isFinite(spotifyAudio.duration)) {
+    spotifyAudio.currentTime =
+      (Number(value) / 100) * spotifyAudio.duration;
+  }
+}
+
+spotifyAudio.addEventListener(
+  "timeupdate",
+  spotifyUpdateProgress
+);
+
+spotifyAudio.addEventListener(
+  "loadedmetadata",
+  spotifyUpdateProgress
+);
+
+spotifyAudio.addEventListener("play", () => {
+  spotifyPlaying = true;
+  spotifyUpdateUI();
+});
+
+spotifyAudio.addEventListener("pause", () => {
+  spotifyPlaying = false;
+  spotifyUpdateUI();
+});
+
+spotifyAudio.addEventListener("ended", () => {
+  if (spotifyRepeat) {
+    spotifyAudio.currentTime = 0;
+    spotifyPlay();
+  } else {
+    spotifyNext();
+  }
+});
+
+/* =========================================
+   SPOTIFY NAVIGATION
+========================================= */
+
+function openSpotify() {
+  showPhoneScreen("spotifyScreen");
+
+  document.getElementById("spPlayer").style.display = "none";
+  document.getElementById("spHome").style.display = "flex";
+  document.getElementById("spMini").style.display = "flex";
+  document.getElementById("spNav").style.display = "flex";
+
+  spotifyUpdateUI();
+}
+
+function spotifyOpenPlayer() {
+  showPhoneScreen("spotifyScreen");
+
+  document.getElementById("spPlayer").style.display = "flex";
+  document.getElementById("spMini").style.display = "none";
+  document.getElementById("spNav").style.display = "none";
+
+  spotifyUpdateUI();
+}
+
+function spotifyClosePlayer() {
+  document.getElementById("spPlayer").style.display = "none";
+  document.getElementById("spMini").style.display = "flex";
+  document.getElementById("spNav").style.display = "flex";
+}
+
+function spotifyOpenList() {
+  spotifyClosePlayer();
+  spotifyTab("library");
+}
+
+function spotifyTab(tab) {
+  const scroll = document.querySelector(".sp-scroll");
+  const headings = scroll.querySelectorAll("h2");
+
+  document.getElementById("spPlayer").style.display = "none";
+  document.getElementById("spHome").style.display = "flex";
+  document.getElementById("spMini").style.display = "flex";
+  document.getElementById("spNav").style.display = "flex";
+
+  const navButtons = document.querySelectorAll(".sp-nav button");
+
+  navButtons.forEach((button, index) => {
+    button.classList.toggle(
+      "selected",
+      (tab === "home" && index === 0) ||
+      (tab === "search" && index === 1) ||
+      (tab === "library" && index === 2)
+    );
+  });
+
+  if (tab === "search") {
+    const keyword = prompt("ค้นหาชื่อเพลงหรือศิลปิน");
+
+    if (keyword === null) return;
+
+    const matches = spotifySongs
+      .map((song, index) => ({ song, index }))
+      .filter(item =>
+        (item.song.title + " " + item.song.artist)
+          .toLowerCase()
+          .includes(keyword.trim().toLowerCase())
+      );
+
+    const list = document.getElementById("spSongList");
+
+    list.innerHTML = matches.length
+      ? matches.map(item => `
+          <div class="sp-song"
+               onclick="spotifySelect(${item.index})">
+            <img src="${item.song.cover}">
+            <div class="sp-song-info">
+              <strong>${item.song.title}</strong>
+              <small>${item.song.artist}</small>
+            </div>
+          </div>
+        `).join("")
+      : `<p style="color:#aaa;font-size:13px">
+           ไม่พบเพลงที่ค้นหา
+         </p>`;
+
+    headings[0].textContent = "ผลการค้นหา";
+    scroll.scrollTop = 0;
+    return;
+  }
+
+  spotifyRenderSongs();
+
+  headings[0].textContent =
+    tab === "library" ? "คอลเลกชันของคุณ" : "ฟังอีกครั้ง";
+
+  scroll.scrollTop = tab === "library" ? 120 : 0;
+}
+
+/* =========================================
+   LOCK SCREEN CONNECTION
+========================================= */
+
+function spotifyInitLockScreen() {
+  const lockMusic = document.querySelector(".lock-music");
+
+  if (!lockMusic) return;
+
+  // แตะรูปปกหรือชื่อเพลงเพื่อเปิด Spotify
+  const art = lockMusic.querySelector(".music-art");
+  const content = lockMusic.querySelector(".music-song");
+
+  [art, content].forEach(element => {
+    if (!element) return;
+
+    element.style.cursor = "pointer";
+    element.addEventListener("click", event => {
+      event.stopPropagation();
+      openSpotify();
+    });
+  });
+
+  const buttons = lockMusic.querySelectorAll(
+    ".music-controls button"
+  );
+
+  // ก่อนหน้า
+  if (buttons[0]) {
+    buttons[0].onclick = event => {
+      event.stopPropagation();
+      spotifyPrevious();
+    };
+  }
+
+  // เล่น / หยุด
+  if (buttons[1]) {
+    buttons[1].onclick = event => {
+      event.stopPropagation();
+      spotifyToggle();
+    };
+  }
+
+  // ถัดไป
+  if (buttons[2]) {
+    buttons[2].onclick = event => {
+      event.stopPropagation();
+      spotifyNext();
+    };
+  }
+}
+
+// เริ่มต้นเพลงแรก โดยยังไม่เล่นอัตโนมัติ
+spotifyLoad(0);
+spotifyInitLockScreen();
+
 </script>
 </body>
 </html>
