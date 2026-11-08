@@ -4731,12 +4731,9 @@ img.line-profile-avatar {
           <div class="fb-muted">กำลังถ่ายทอดสด</div>
         </div>
       </div>
-</button>
-
 </div> <!-- ปิด fb-header ที่ขาดอยู่ -->
 
    <div class="fb-live-video" style="position:relative;padding:0;overflow:hidden;">
-
   <video
     id="peteLiveVideo"
     src="videos/copy_442ACDE3-664C-4B07-94C7-717F854232DF.mp4"
@@ -7415,6 +7412,11 @@ if (showAvatar) {
     bubble.appendChild(label);
   } else if (type === "link") {
   bubble.textContent = message;
+  bubble.style.color = "#0866ff";
+  bubble.style.textDecoration = "underline";
+  bubble.style.cursor = "pointer";
+
+  bubble.addEventListener("click", openFacebookFromJuneLink);
 } else {
   bubble.textContent = message;
 }
