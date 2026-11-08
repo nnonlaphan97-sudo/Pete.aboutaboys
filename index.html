@@ -2442,10 +2442,10 @@ function enterPin(number) {
   setTimeout(() => {
     showPhoneScreen("homeScreen");
 
-  // ปลดล็อกแล้วรอ 5 วินาที ก่อนเก้าโทรเข้า
+  // ปลดล็อกแล้วรอ 2 วินาที ก่อนเก้าโทรเข้า
 kaoStoryTimer = setTimeout(() => {
   startKaoIncomingCall();
-}, 5000);
+}, 2000);
 
   }, 250);
 } else {
@@ -3453,6 +3453,87 @@ icon.style.cssText = `
   // เลื่อนรายการลงเพื่อให้เห็นข้อความล่าสุด
   list.scrollTop = list.scrollHeight;
 }
+
+// แบนเนอร์ LINE ของเก้า หลังปลดล็อก
+function showKaoStoryBanner(message) {
+  const phone = document.getElementById("phone");
+  if (!phone) return;
+
+  let banner = document.getElementById("kaoStoryBanner");
+
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "kaoStoryBanner";
+    phone.appendChild(banner);
+  }
+
+  const time = kaoStoryTime();
+
+  banner.style.cssText = `
+    position: absolute;
+    top: 43px;
+    left: 12px;
+    right: 12px;
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px 14px;
+    border-radius: 22px;
+    background: rgba(246,247,250,.97);
+    color: #20212b;
+    box-shadow: 0 6px 22px rgba(0,0,0,.2);
+    font-family: inherit;
+    cursor: pointer;
+  `;
+
+  banner.replaceChildren();
+
+  const avatar = document.createElement("img");
+  avatar.src = "https://i.ibb.co/N2vPgK03/IMG-4076.jpg";
+  avatar.alt = "เก้า";
+  avatar.style.cssText = `
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  `;
+
+  const content = document.createElement("div");
+  content.style.cssText = "flex:1;min-width:0";
+
+  const name = document.createElement("strong");
+  name.textContent = "เก้า";
+  name.style.fontSize = "14px";
+
+  const body = document.createElement("div");
+  body.textContent = message;
+  body.style.cssText = `
+    font-size: 13px;
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+  `;
+
+  const clock = document.createElement("span");
+  clock.textContent = time;
+  clock.style.cssText = "font-size:11px;color:#777";
+
+  content.append(name, body);
+  banner.append(avatar, content, clock);
+
+  banner.onclick = () => {
+    banner.remove();
+    openLine();
+    openKaoChat();
+  };
+
+  clearTimeout(showKaoStoryBanner.hideTimer);
+
+  showKaoStoryBanner.hideTimer = setTimeout(() => {
+    banner.remove();
+  }, 4500);
+}
 // เริ่มข้อความวันนี้ตั้งแต่ยังอยู่หน้าล็อก
 function initializeKaoStory() {
   if (kaoStoryStarted) return;
@@ -3500,9 +3581,6 @@ const KAO_STORY_PHONE_ICON = `
 // แสดงสายโทรเข้าหลังปลดล็อก
 function startKaoIncomingCall() {
   if (kaoStoryFinished || kaoStoryCallOpen) return;
-
-  // เริ่มครั้งแรกเท่านั้นหลังปลดล็อก
-  if (kaoStoryCallNumber >= 2) return;
 
   const phone = document.getElementById("phone");
   if (!phone) return;
@@ -3630,22 +3708,29 @@ function closeKaoStoryCall() {
 function declineKaoStoryCall() {
   closeKaoStoryCall();
 
-  if (kaoStoryCallNumber === 1) {
-    // บันทึกสายที่ไม่ได้รับ
-    kaoStoryMessage("ไม่ได้รับสาย");
+  if (kaoStoryAnswered || kaoStoryFinished) return;
 
-    // เก้าส่งข้อความตามมา
+  // บันทึกสายที่ไม่ได้รับในแชท
+  kaoStoryMessage("ไม่ได้รับสาย");
+
+  // แจ้งเตือนสายที่ไม่ได้รับ
+  showKaoStoryBanner("ไม่ได้รับสาย");
+
+  // เก้าส่งข้อความตามมา
+  setTimeout(() => {
+    if (kaoStoryAnswered || kaoStoryFinished) return;
+
     kaoStoryMessage("รับสายกูหน่อย");
+    showKaoStoryBanner("รับสายกูหน่อย");
+  }, 700);
 
-    // เก้าโทรเข้ามาอีกครั้ง
-    kaoStoryTimer = setTimeout(() => {
+  // รอ 3 วินาที แล้วโทรเข้ามาใหม่
+  // ทำซ้ำได้ไม่จำกัดจนกว่าพีทจะกดรับ
+  kaoStoryTimer = setTimeout(() => {
+    if (!kaoStoryAnswered && !kaoStoryFinished) {
       startKaoIncomingCall();
-    }, 2500);
-
-  } else {
-    kaoStoryMessage("ไม่ได้รับสาย");
-    kaoStoryFinished = true;
-  }
+    }
+  }, 3000);
 }
 
 // พูดเสียงเก้าด้วยระบบเสียงภาษาไทย
@@ -3701,13 +3786,16 @@ function endKaoStoryCall() {
 
   closeKaoStoryCall();
 
-  if (kaoStoryAnswered) {
+  if (kaoStoryAnswered && !kaoStoryFinished) {
     kaoStoryFinished = true;
 
-    // เก้าส่งข้อความหลังวางสาย
+    // เก้าส่งข้อความหลังพีทวางสาย
     kaoStoryMessage("ให้อภัยกูได้ไหม");
 
-    // รอ 5 วินาที แล้วแสนดีส่งข้อความ
+    // แสดงแบนเนอร์แจ้งเตือนเก้า
+    showKaoStoryBanner("ให้อภัยกูได้ไหม");
+
+    // อีก 5 วินาที แสนดีส่งข้อความ
     setTimeout(() => {
       startSaendeeNewMessages();
     }, 5000);
