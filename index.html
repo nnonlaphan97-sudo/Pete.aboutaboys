@@ -2446,17 +2446,12 @@ img.line-profile-avatar {
   overflow-y: auto;
   flex: 1;
   min-height: 0;
-  scrollbar-width: none;
-}
-
-.ig-explore-grid::-webkit-scrollbar {
-  display: none;
 }
 
 .ig-explore-item {
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  cursor: pointer;
 }
 
 .ig-explore-item img {
@@ -2465,6 +2460,7 @@ img.line-profile-avatar {
   height: 100%;
   object-fit: cover;
 }
+
 </style>
 </head>
 
@@ -6966,14 +6962,6 @@ const igKaoProfile = {
   ]
 };
 const igExploreData = [
-  // รูปเก้า
-  ...igKaoProfile.images.map((image, index) => ({
-    image,
-    category: "kao",
-    username: "kao.phanuwat",
-    caption: "เก้า"
-  })),
-
   // รูปท่องเที่ยว
   {
     image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=700",
@@ -7001,22 +6989,33 @@ const igExploreData = [
     caption: "Landscape"
   },
 
-  // รูปกล้องถ่ายรูป
+  // รูปกล้อง
   {
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=700",
     category: "camera",
-    caption: "Photography"
+    caption: "Camera"
   },
   {
     image: "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?w=700",
     category: "camera",
-    caption: "Camera"
+    caption: "Photography"
   },
   {
     image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=700",
     category: "camera",
     caption: "Photography"
-  }
+  },
+
+  // สุ่มรูปเก้า 4 รูปจากทั้งหมด 15 รูป
+  ...[...igKaoProfile.images]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4)
+    .map(image => ({
+      image,
+      category: "kao",
+      username: "kao.phanuwat",
+      caption: "เก้า"
+    }))
 ];
 /* =========================================
    RENDER STORIES
@@ -7258,34 +7257,33 @@ function instagramOpenExplore() {
 
 function instagramRenderExplore(keyword = "") {
   const grid = document.getElementById("igExploreGrid");
-
   const query = keyword.trim().toLowerCase();
+
+  const keywords = {
+    kao: "เก้า kao kao.phanuwat",
+    travel: "เที่ยว travel nature landscape mountain adventure ท่องเที่ยว ธรรมชาติ",
+    camera: "กล้อง camera photography ถ่ายรูป"
+  };
 
   const items = igExploreData.filter(item => {
     if (!query) return true;
 
-    const keywords = {
-      kao: "เก้า kao kao.phanuwat",
-      travel: "เที่ยว travel nature landscape mountain adventure ท่องเที่ยว ธรรมชาติ",
-      camera: "กล้อง camera photography ถ่ายรูป"
-    };
-
     return (
       item.caption.toLowerCase().includes(query) ||
-      (keywords[item.category] || "").includes(query)
+      keywords[item.category].includes(query)
     );
   });
 
-  // สลับรูปเก้ากับรูปหมวดอื่นให้ฟีดดูหลากหลาย
   if (!query) {
     const kao = items.filter(item => item.category === "kao");
     const others = items.filter(item => item.category !== "kao");
+
     const mixed = [];
 
-    while (kao.length || others.length) {
+    while (others.length || kao.length) {
+      if (others.length) mixed.push(others.shift());
       if (others.length) mixed.push(others.shift());
       if (kao.length) mixed.push(kao.shift());
-      if (others.length) mixed.push(others.shift());
     }
 
     grid.innerHTML = instagramExploreHTML(mixed);
