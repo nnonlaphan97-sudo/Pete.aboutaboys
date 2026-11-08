@@ -5408,6 +5408,14 @@ const FB_KAO_NAME = "Phanuwat Chotiwat";
 
 /* SVG ICONS */
 const FB_ICONS = {
+  proud: `<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="18" cy="18" r="17" fill="#FFCC4D"/>
+  <ellipse cx="12" cy="14" rx="1.8" ry="2.5" fill="#664500"/>
+  <ellipse cx="24" cy="14" rx="1.8" ry="2.5" fill="#664500"/>
+  <path d="M10 22 Q18 29 26 22"
+    fill="none" stroke="#664500"
+    stroke-width="2.5" stroke-linecap="round"/>
+</svg>`,
   globe: `<svg viewBox="0 0 24 24" fill="none"
   stroke="currentColor" stroke-width="1.8"
   stroke-linecap="round" stroke-linejoin="round">
@@ -5512,12 +5520,50 @@ const fbPostsData = [
     avatar: FB_KAO_AVATAR,
     time: "โพสต์ล่าสุด",
     text: `จากข่าวที่เกิดขึ้น ผมพยายามนิ่งเงียบมาตลอดเพราะคิดว่า ถ้าไม่ใช่เรื่องจริงเดี๋ยวมันก็ผ่านไป แต่ผมคิดผิด ยิ่งผมเงียบ ข่าวมันยิ่งไปไกลกว่าที่ผมคิดผมและคนรอบข้างได้รับผลกระทบ ผมเลยขอใช้พื้นที่นี้เล่าความจริงในมุมผมเกิดอะไรขึ้น เหตุการณ์วันนั้นลูกศิษย์ผมเมาและขอร้องให้ผมไปส่งบ้านเพราะกลัวพ่อจะรู้ ผมไม่เต็มใจแต่เพราะเขาเคยเป็นลูกศิษย์ผม ผมเลยช่วยเหลือพอไปถึงห้อง น้องได้บอกชอบผม ผมปฏิเสธ แต่น้องกลับเข้ามากอดผมแล้วพ่อน้องก็เข้ามาเห็นพอดี เลยเป็นเรื่องเข้าใจผิด ผมยืนยันว่าผมบริสุทธิ์ใจและไม่เคยคิดเกินเลยนอกไปจากศิษย์กับครู ผมหวังว่าข้อความนี้ จะทำให้ใครหลายคนเข้าใจเหตุการณ์ที่ถูกต้องทั้งหมดและทำให้เลิกเข้าใจในตัวผมผิด ขอบคุณครับ`,
-    likes: 0,
+    likes: 1301,
     liked: false,
-    comments: []
-  }
+    comments: [30]
+  },
+  {
+    author: FB_KAO_NAME,
+    avatar: FB_KAO_AVATAR,
+    time: "",
+    feeling: "รู้สึกภูมิใจ",
+    feelingIcon: "proud",
+    text: "New Chapter Begin",
+    likes: 56,
+    liked: false,
+    comments: [5]
+  },
+  {
+    author: "June Jirawat",
+    avatar: LINE_JUNE_AVATAR,
+    time: "",
+    text: "กูไหว้แล้วไม่รับไหว้ผม พี่เป็น here ไรครับ",
+    likes: 78,
+    liked: false,
+    comments: [10]
+  },
+  {
+    author: "Saendee Thanawat",
+    avatar: LINE_SAENDEE_AVATAR,
+    time: "",
+    text: "ฝึกงานวันแรก อยากกลับบ้านไปนอน",
+    likes: 56,
+    liked: false,
+    comments: [14]
+  },
+  {
+  author: "Thada",
+  avatar: LINE_THADA_AVATAR,
+  time: "",
+  text: "ทำไมกูต้องมารับมันด้วยวะ",
+  likes: 428,
+  commentCount: 63,
+  liked: false,
+  comments: []
+}
 ];
-
 /* เปิดจากไอคอน = หน้าฟีด */
 function openFacebook() {
   showPhoneScreen("facebookScreen");
@@ -5628,6 +5674,25 @@ function facebookRenderPosts() {
 
     const name = document.createElement("b");
     name.textContent = post.author;
+
+if (post.feeling) {
+  const feeling = document.createElement("span");
+
+  feeling.style.cssText = `
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 5px;
+    font-weight: normal;
+    color: #65676b;
+    font-size: 13px;
+  `;
+
+  feeling.innerHTML =
+    `กำลัง ${fbIcon(post.feelingIcon || "proud", 17)} ${post.feeling}`;
+
+  name.appendChild(feeling);
+}
 
     const time = document.createElement("div");
     time.className = "fb-muted";
