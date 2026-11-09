@@ -16969,7 +16969,7 @@ function exitCamera() {
 
   const video = document.createElement("video");
   video.id = "pcamPeteStoryVideo";
-  video.src = "videos/copy_F8F8C42C-6906-455F-B260-AB82AAC45271.mp4";
+  video.src = "videos/Videopete.mp4";
   video.muted = true;
   video.autoplay = true;
   video.loop = true;
@@ -16999,7 +16999,7 @@ function exitCamera() {
   }
   preview.addEventListener("click", play);
   video.addEventListener("error", () => {
-    toast("ไม่พบ videos/copy_F8F8C42C-6906-455F-B260-AB82AAC45271.mp4 — ตรวจไฟล์ในโฟลเดอร์ videos");
+    toast("ไม่พบ videos/Videopete.mp4 — ตรวจไฟล์ในโฟลเดอร์ videos");
   });
   function updateMode() {
     mode = camera.querySelector('.pcam-modes button.active[data-mode]')?.dataset.mode || "photo";
