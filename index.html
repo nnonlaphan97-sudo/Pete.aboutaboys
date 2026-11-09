@@ -14697,6 +14697,714 @@ if (!state.phoneBlockMigrationV1) {
   render();
 })();
 
+/* ==========================================
+   PETE PHONE - SAMSUNG INTERNET
+   ติดตั้งด้วย JavaScript จุดเดียว
+   ========================================== */
+(function () {
+  "use strict";
+
+  if (document.getElementById("samsungInternetScreen")) return;
+
+  const KEY = "pete_samsung_internet_v2";
+
+  const DEFAULT_HISTORY = [
+    "ที่ฝึกงานวิศวะไฟฟ้า",
+    "วงจรตุ๊กตาอัดเสียง",
+    "ลืมแฟนเก่าทำยังไง",
+    "แฟนเก่ามีคนใหม่เร็ว ตัดใจยังไง",
+    "วิธีกล้าพูดต่อหน้าคนเยอะ",
+    "วิธีรับมือกับแฟนน่ารัก"
+  ];
+
+  const RESULTS = {
+    "ที่ฝึกงานวิศวะไฟฟ้า": [
+      ["ที่ฝึกงานสำหรับนักศึกษาวิศวกรรมไฟฟ้า",
+       "แนวทางเลือกบริษัทและเตรียมตัวสมัครฝึกงาน"],
+      ["วิศวะไฟฟ้าฝึกงานตำแหน่งอะไรได้บ้าง",
+       "งานระบบไฟฟ้า ระบบควบคุม Automation และ Maintenance"],
+      ["เตรียม Resume สมัครฝึกงานวิศวกรรม",
+       "ทักษะ โครงงาน และเอกสารที่ควรเตรียม"]
+    ],
+    "วงจรตุ๊กตาอัดเสียง": [
+      ["วงจรบันทึกเสียงสำหรับตุ๊กตา DIY",
+       "การต่อโมดูลบันทึกเสียง ไมโครโฟน และลำโพง"],
+      ["วิธีทำตุ๊กตากดแล้วพูดได้",
+       "ตัวอย่างการใช้สวิตช์ แบตเตอรี่ และโมดูลเล่นเสียง"],
+      ["เลือกโมดูลอัดเสียงสำหรับงานประดิษฐ์",
+       "เปรียบเทียบความจุเสียงและวิธีบันทึก"]
+    ],
+    "ลืมแฟนเก่าทำยังไง": [
+      ["วิธีค่อย ๆ ลืมแฟนเก่าและเริ่มต้นใหม่",
+       "ยอมรับความรู้สึกและค่อย ๆ ปรับตัวหลังเลิกรา"],
+      ["ทำไมยังคิดถึงแฟนเก่าทั้งที่เลิกกันแล้ว",
+       "ความผูกพันและความทรงจำที่ยังมีผลต่อความรู้สึก"],
+      ["วิธีหยุดคิดถึงคนรักเก่า",
+       "ดูแลตัวเองและสร้างกิจวัตรใหม่"]
+    ],
+    "แฟนเก่ามีคนใหม่เร็ว ตัดใจยังไง": [
+      ["แฟนเก่ามีคนใหม่เร็ว เราควรทำยังไง",
+       "รับมือความเสียใจโดยไม่เปรียบเทียบตัวเอง"],
+      ["ทำไมแฟนเก่าถึงมีคนใหม่เร็ว",
+       "ทำความเข้าใจความแตกต่างของการก้าวผ่านความสัมพันธ์"],
+      ["วิธีตัดใจเมื่อแฟนเก่าเริ่มต้นใหม่แล้ว",
+       "ลดการติดตามและกลับมาให้ความสำคัญกับชีวิตตัวเอง"]
+    ],
+    "วิธีกล้าพูดต่อหน้าคนเยอะ": [
+      ["เทคนิคพูดต่อหน้าคนเยอะอย่างมั่นใจ",
+       "การซ้อมพูด จัดลำดับเนื้อหา และสบตาผู้ฟัง"],
+      ["วิธีลดความตื่นเต้นก่อนขึ้นเวที",
+       "เตรียมตัวและฝึกหายใจเพื่อลดความประหม่า"],
+      ["วิธีพูดเปิดงานให้เป็นธรรมชาติ",
+       "โครงสร้างคำกล่าวเปิดและการทักทายผู้ฟัง"]
+    ],
+    "วิธีรับมือกับแฟนน่ารัก": [
+      ["แฟนน่ารักเกินไปทำยังไงดี",
+       "ไอเดียแสดงความรักและดูแลกันในชีวิตประจำวัน"],
+      ["วิธีทำให้แฟนยิ้มได้ทุกวัน",
+       "เรื่องเล็ก ๆ ที่ช่วยเติมความสุขให้ความสัมพันธ์"],
+      ["ไอเดียเซอร์ไพรส์แฟนแบบน่ารัก",
+       "ของขวัญทำเอง จดหมาย และกิจกรรมคู่รัก"]
+    ]
+  };
+
+  let history;
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    history = Array.isArray(saved) ? saved : [...DEFAULT_HISTORY];
+  } catch {
+    history = [...DEFAULT_HISTORY];
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(history));
+    } catch (e) {
+      console.warn("Samsung Internet save failed", e);
+    }
+  }
+  save();
+
+  const iconPaths = {
+    back: '<path d="m15 5-7 7 7 7"/>',
+    next: '<path d="m9 5 7 7-7 7"/>',
+    home: '<path d="m3 11 9-8 9 8v10H3z"/><path d="M9 21v-7h6v7"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/>',
+    search: '<circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/>',
+    menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    close: '<path d="M5 5 19 19M19 5 5 19"/>'
+  };
+
+  function ico(name, size=22) {
+    return `<svg viewBox="0 0 24 24"
+      width="${size}" height="${size}"
+      fill="none" stroke="currentColor"
+      stroke-width="1.8" stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true">${iconPaths[name] || ""}</svg>`;
+  }
+
+  /* ---------- CSS ---------- */
+  const style = document.createElement("style");
+  style.textContent = `
+    .home-dock .si-dock-button {
+      border:0;
+      background:transparent;
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      color:white;
+      font-size:10px;
+      cursor:pointer;
+    }
+    .home-dock .si-dock-button svg {
+      width:48px;
+      height:48px;
+      display:block;
+    }
+    #samsungInternetScreen {
+      display:none;
+      flex-direction:column;
+      background:#fff;
+      color:#24242c;
+      z-index:15;
+      font-family:-apple-system,BlinkMacSystemFont,
+                  "Segoe UI",sans-serif;
+    }
+    #samsungInternetScreen * {
+      box-sizing:border-box;
+    }
+    #samsungInternetScreen button,
+    #samsungInternetScreen input {
+      font-family:inherit;
+    }
+    .si-top {
+      padding:53px 19px 15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-shrink:0;
+    }
+    .si-top strong {
+      font-size:20px;
+      font-weight:650;
+    }
+    .si-icon-btn {
+      border:0;
+      background:transparent;
+      color:#474750;
+      display:grid;
+      place-items:center;
+      padding:7px;
+      cursor:pointer;
+    }
+    .si-body {
+      flex:1;
+      min-height:0;
+      overflow-y:auto;
+      padding:15px 20px 100px;
+      scrollbar-width:none;
+    }
+    .si-body::-webkit-scrollbar {
+      display:none;
+    }
+    .si-logo {
+      display:flex;
+      justify-content:center;
+      margin:30px auto 25px;
+    }
+    .si-search {
+      display:flex;
+      align-items:center;
+      gap:11px;
+      width:100%;
+      min-height:49px;
+      padding:0 15px;
+      background:#f1f1f5;
+      border-radius:28px;
+    }
+    .si-search input {
+      border:0;
+      background:transparent;
+      outline:none;
+      flex:1;
+      min-width:0;
+      color:#25252c;
+      font-size:14px;
+    }
+    .si-heading {
+      font-size:17px;
+      font-weight:650;
+      margin:28px 0 13px;
+    }
+    .si-history-item {
+      display:flex;
+      align-items:center;
+      gap:13px;
+      padding:14px 0;
+      border-bottom:1px solid #f0f0f3;
+    }
+    .si-history-open {
+      border:0;
+      background:transparent;
+      color:#25252c;
+      display:flex;
+      align-items:center;
+      gap:13px;
+      text-align:left;
+      flex:1;
+      min-width:0;
+      cursor:pointer;
+      padding:0;
+    }
+    .si-history-icon {
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      background:#f0f0f5;
+      display:grid;
+      place-items:center;
+      color:#777a8d;
+      flex-shrink:0;
+    }
+    .si-history-name {
+      font-size:14px;
+      line-height:1.5;
+      overflow-wrap:anywhere;
+    }
+    .si-history-sub {
+      color:#96969e;
+      font-size:11px;
+      margin-top:4px;
+    }
+    .si-delete {
+      border:0;
+      background:transparent;
+      color:#92929b;
+      padding:8px;
+      cursor:pointer;
+    }
+    .si-link {
+      border:0;
+      background:transparent;
+      color:#6557c7;
+      font-size:13px;
+      cursor:pointer;
+      padding:13px;
+      display:block;
+      margin:16px auto;
+    }
+    .si-result-title {
+      font-size:23px;
+      font-weight:650;
+      line-height:1.4;
+      margin:22px 0 8px;
+    }
+    .si-result-meta {
+      color:#909099;
+      font-size:12px;
+      margin-bottom:15px;
+    }
+    .si-result-card {
+      padding:18px 0;
+      border-bottom:1px solid #eee;
+    }
+    .si-result-site {
+      color:#898994;
+      font-size:12px;
+      margin-bottom:8px;
+    }
+    .si-result-link {
+      color:#315ab2;
+      font-size:17px;
+      font-weight:550;
+      line-height:1.45;
+    }
+    .si-result-desc {
+      color:#666670;
+      font-size:13px;
+      line-height:1.7;
+      margin-top:9px;
+    }
+    .si-toolbar {
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:20px;
+      height:60px;
+      background:white;
+      border-top:1px solid #ededf0;
+      display:flex;
+      align-items:center;
+      justify-content:space-around;
+      z-index:3;
+    }
+    .si-toolbar button {
+      border:0;
+      background:transparent;
+      color:#5c5d68;
+      padding:11px;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+    }
+    .si-gesture {
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:20px;
+      background:white;
+      display:grid;
+      place-items:center;
+      z-index:4;
+      cursor:pointer;
+    }
+    .si-gesture::after {
+      content:"";
+      width:105px;
+      height:4px;
+      border-radius:6px;
+      background:#333;
+    }
+    .si-empty {
+      text-align:center;
+      color:#999;
+      padding:45px 10px;
+      font-size:13px;
+    }
+  `;
+  document.head.appendChild(style);
+
+  /* ---------- สร้างหน้าจอ ---------- */
+  const screen = document.createElement("section");
+  screen.id = "samsungInternetScreen";
+  screen.className = "screen";
+  screen.innerHTML = `
+    <div class="si-top">
+      <strong id="siTitle">Samsung Internet</strong>
+      <button class="si-icon-btn" id="siSearchBtn"
+        aria-label="ค้นหา">${ico("search")}</button>
+    </div>
+    <div class="si-body" id="siBody"></div>
+    <nav class="si-toolbar">
+      <button id="siBack" aria-label="ย้อนกลับ">${ico("back")}</button>
+      <button id="siNext" aria-label="ไปข้างหน้า">${ico("next")}</button>
+      <button id="siHome" aria-label="หน้าแรก">${ico("home")}</button>
+      <button id="siHistory" aria-label="ประวัติ">${ico("clock")}</button>
+      <button id="siMenu" aria-label="เมนู">${ico("menu")}</button>
+    </nav>
+    <div class="si-gesture" id="siExit"></div>
+  `;
+
+  const phone = document.querySelector(".phone");
+  if (!phone) {
+    console.error("Samsung Internet: ไม่พบ .phone");
+    return;
+  }
+  phone.appendChild(screen);
+
+  /* ---------- สร้างไอคอน Dock ---------- */
+  let dock = document.querySelector(".home-dock");
+
+  if (!dock) {
+    const home = document.getElementById("homeScreen");
+    if (home) {
+      dock = document.createElement("div");
+      dock.className = "home-dock";
+      dock.id = "homeDock";
+      const bottom = home.querySelector(".home-bottom");
+      if (bottom) home.insertBefore(dock,bottom);
+      else home.appendChild(dock);
+    }
+  }
+
+  if (dock) {
+    // ใช้ไอคอนเดิมถ้ามี ป้องกันไอคอนซ้ำ
+    let button = dock.querySelector(".si-dock-button");
+
+    if (!button) {
+      button = document.createElement("button");
+      button.className = "si-dock-button";
+      button.type = "button";
+      dock.appendChild(button);
+    }
+
+    button.innerHTML = `
+      <svg viewBox="0 0 64 64" width="48" height="48"
+           xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="siGradient" x1="0" y1="0"
+                          x2="1" y2="1">
+            <stop offset="0%" stop-color="#9C82EE"/>
+            <stop offset="100%" stop-color="#5646BE"/>
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="16"
+              fill="url(#siGradient)"/>
+        <circle cx="32" cy="32" r="16"
+                fill="none" stroke="#fff" stroke-width="3.4"/>
+        <ellipse cx="32" cy="32" rx="26" ry="8"
+                 transform="rotate(-27 32 32)"
+                 fill="none" stroke="#fff" stroke-width="3.3"/>
+      </svg>
+      <span>Internet</span>
+    `;
+    button.onclick = () => window.openSamsungInternet();
+  }
+
+  /* ---------- ระบบหน้าเว็บ ---------- */
+  const body = document.getElementById("siBody");
+  const title = document.getElementById("siTitle");
+
+  let page = "home";
+  let query = "";
+  let backStack = [];
+  let forwardStack = [];
+
+  function searchBox(value="") {
+    const form = document.createElement("form");
+    form.className = "si-search";
+
+    const symbol = document.createElement("span");
+    symbol.style.color = "#888";
+    symbol.innerHTML = ico("search",20);
+
+    const input = document.createElement("input");
+    input.type = "search";
+    input.placeholder = "ค้นหาหรือป้อน URL";
+    input.value = value;
+
+    form.append(symbol,input);
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      search(input.value);
+    };
+
+    return {form,input};
+  }
+
+  function navigate(nextPage,nextQuery="") {
+    backStack.push({page,query});
+    forwardStack = [];
+    page = nextPage;
+    query = nextQuery;
+    render();
+  }
+
+  function search(text) {
+    const value = String(text).trim();
+    if (!value) return;
+
+    history = history.filter(item => item !== value);
+    history.unshift(value);
+    save();
+
+    navigate("results",value);
+  }
+
+  function makeRow(value,allowDelete=false) {
+    const row = document.createElement("div");
+    row.className = "si-history-item";
+
+    const open = document.createElement("button");
+    open.className = "si-history-open";
+    open.type = "button";
+
+    const symbol = document.createElement("div");
+    symbol.className = "si-history-icon";
+    symbol.innerHTML = ico("clock",19);
+
+    const info = document.createElement("div");
+
+    const name = document.createElement("div");
+    name.className = "si-history-name";
+    name.textContent = value;
+
+    const sub = document.createElement("div");
+    sub.className = "si-history-sub";
+    sub.textContent = "การค้นหาบนเว็บ";
+
+    info.append(name,sub);
+    open.append(symbol,info);
+    open.onclick = () => search(value);
+    row.appendChild(open);
+
+    if (allowDelete) {
+      const remove = document.createElement("button");
+      remove.className = "si-delete";
+      remove.type = "button";
+      remove.innerHTML = ico("close",18);
+      remove.setAttribute("aria-label","ลบรายการ");
+
+      remove.onclick = () => {
+        history = history.filter(item => item !== value);
+        save();
+        render();
+      };
+      row.appendChild(remove);
+    }
+
+    return row;
+  }
+
+  function renderHome() {
+    title.textContent = "Samsung Internet";
+    body.replaceChildren();
+
+    const logo = document.createElement("div");
+    logo.className = "si-logo";
+    logo.innerHTML = `
+      <svg viewBox="0 0 90 90" width="90" height="90">
+        <circle cx="45" cy="45" r="23"
+                fill="none" stroke="#7564d7" stroke-width="5"/>
+        <ellipse cx="45" cy="45" rx="39" ry="12"
+                 transform="rotate(-27 45 45)"
+                 fill="none" stroke="#7564d7" stroke-width="5"/>
+      </svg>`;
+    body.appendChild(logo);
+
+    const box = searchBox();
+    body.appendChild(box.form);
+
+    const heading = document.createElement("div");
+    heading.className = "si-heading";
+    heading.textContent = "การค้นหาล่าสุด";
+    body.appendChild(heading);
+
+    history.slice(0,5).forEach(value => {
+      body.appendChild(makeRow(value));
+    });
+
+    if (!history.length) {
+      const empty = document.createElement("div");
+      empty.className = "si-empty";
+      empty.textContent = "ยังไม่มีประวัติการค้นหา";
+      body.appendChild(empty);
+    }
+
+    const all = document.createElement("button");
+    all.className = "si-link";
+    all.textContent = "ดูประวัติทั้งหมด";
+    all.onclick = () => navigate("history");
+    body.appendChild(all);
+  }
+
+  function renderHistory() {
+    title.textContent = "ประวัติ";
+    body.replaceChildren();
+
+    const heading = document.createElement("div");
+    heading.className = "si-heading";
+    heading.textContent = "ประวัติการค้นหา";
+    body.appendChild(heading);
+
+    history.forEach(value => {
+      body.appendChild(makeRow(value,true));
+    });
+
+    if (!history.length) {
+      const empty = document.createElement("div");
+      empty.className = "si-empty";
+      empty.textContent = "ไม่มีประวัติการค้นหา";
+      body.appendChild(empty);
+    } else {
+      const clear = document.createElement("button");
+      clear.className = "si-link";
+      clear.style.color = "#bb5555";
+      clear.textContent = "ล้างประวัติทั้งหมด";
+
+      clear.onclick = () => {
+        if (!confirm("ต้องการล้างประวัติทั้งหมดหรือไม่?")) return;
+        history = [];
+        save();
+        render();
+      };
+      body.appendChild(clear);
+    }
+  }
+
+  function renderResults() {
+    title.textContent = "ผลการค้นหา";
+    body.replaceChildren();
+
+    const box = searchBox(query);
+    body.appendChild(box.form);
+
+    const heading = document.createElement("div");
+    heading.className = "si-result-title";
+    heading.textContent = query;
+    body.appendChild(heading);
+
+    const meta = document.createElement("div");
+    meta.className = "si-result-meta";
+    meta.textContent = "ผลการค้นหาจำลอง";
+    body.appendChild(meta);
+
+    const items = RESULTS[query] || [
+      ["ผลการค้นหา: " + query,
+       "ยังไม่มีเนื้อหาจำลองสำหรับคำค้นหานี้"]
+    ];
+
+    items.forEach((item,index) => {
+      const card = document.createElement("div");
+      card.className = "si-result-card";
+
+      const site = document.createElement("div");
+      site.className = "si-result-site";
+      site.textContent = "ผลการค้นหา " + (index+1);
+
+      const heading = document.createElement("div");
+      heading.className = "si-result-link";
+      heading.textContent = item[0];
+
+      const desc = document.createElement("div");
+      desc.className = "si-result-desc";
+      desc.textContent = item[1];
+
+      card.append(site,heading,desc);
+      body.appendChild(card);
+    });
+  }
+
+  function render() {
+    if (page === "home") renderHome();
+    if (page === "history") renderHistory();
+    if (page === "results") renderResults();
+    body.scrollTop = 0;
+  }
+
+  function goBack() {
+    if (!backStack.length) {
+      exit();
+      return;
+    }
+    forwardStack.push({page,query});
+    const previous = backStack.pop();
+    page = previous.page;
+    query = previous.query;
+    render();
+  }
+
+  function goForward() {
+    if (!forwardStack.length) return;
+    backStack.push({page,query});
+    const next = forwardStack.pop();
+    page = next.page;
+    query = next.query;
+    render();
+  }
+
+  window.openSamsungInternet = function () {
+    document.querySelectorAll(".screen").forEach(el => {
+      el.style.display = "none";
+    });
+    screen.style.display = "flex";
+    render();
+  };
+
+  function exit() {
+    screen.style.display = "none";
+    if (typeof window.showPhoneScreen === "function") {
+      window.showPhoneScreen("homeScreen");
+    } else {
+      const home = document.getElementById("homeScreen");
+      if (home) home.style.display = "flex";
+    }
+  }
+
+  document.getElementById("siBack").onclick = goBack;
+  document.getElementById("siNext").onclick = goForward;
+  document.getElementById("siHome").onclick = () => navigate("home");
+  document.getElementById("siHistory").onclick =
+    () => navigate("history");
+  document.getElementById("siMenu").onclick =
+    () => navigate("history");
+  document.getElementById("siExit").onclick = exit;
+
+  document.getElementById("siSearchBtn").onclick = () => {
+    if (page !== "home") navigate("home");
+    const input = body.querySelector("input");
+    if (input) input.focus();
+  };
+
+  const oldSwitcher = window.showPhoneScreen;
+  if (typeof oldSwitcher === "function") {
+    window.showPhoneScreen = function (id) {
+      if (id !== "samsungInternetScreen") {
+        screen.style.display = "none";
+      }
+      return oldSwitcher.apply(this,arguments);
+    };
+  }
+
+  render();
+})();
+
 </script>
 </body>
 </html>
