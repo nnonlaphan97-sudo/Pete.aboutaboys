@@ -4167,6 +4167,280 @@ img.line-profile-avatar {
     padding: 1px 2px;
   }
 }
+ 
+/* Samsung Notes - One UI */
+
+#peteNotesScreen {
+  display: none;
+  flex-direction: column;
+  background: #fafafa;
+  color: #202124;
+  z-index: 8;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+#peteNotesScreen button,
+#peteNotesScreen input,
+#peteNotesScreen textarea {
+  font-family: inherit;
+}
+
+.sn-header {
+  height: 100px;
+  padding: 40px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  background: #fafafa;
+}
+
+.sn-header strong {
+  font-size: 17px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.sn-icon-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
+  color: #292929;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.sn-icon-button svg,
+.sn-search-wrap svg,
+.sn-editor-toolbar svg,
+.sn-add svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sn-page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 20px 85px;
+  scrollbar-width: none;
+}
+
+.sn-page::-webkit-scrollbar {
+  display: none;
+}
+
+#snListPage h1 {
+  font-size: 31px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  margin: 10px 0 23px;
+}
+
+.sn-search-wrap {
+  height: 45px;
+  background: #f0f0f0;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 15px;
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.sn-search-wrap svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.sn-search-wrap input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #222;
+  width: 100%;
+  min-width: 0;
+}
+
+.sn-count {
+  color: #777;
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+
+.sn-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sn-card {
+  min-height: 170px;
+  max-height: 205px;
+  background: #fff;
+  border: 1px solid #ededed;
+  border-radius: 17px;
+  padding: 17px 13px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  color: #222;
+  cursor: pointer;
+  box-shadow: 0 2px 7px rgba(0,0,0,.025);
+}
+
+.sn-card-title {
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.4;
+  margin-bottom: 9px;
+  overflow-wrap: anywhere;
+}
+
+.sn-card-preview {
+  font-size: 12px;
+  color: #656565;
+  line-height: 1.65;
+  white-space: pre-line;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow-wrap: anywhere;
+}
+
+.sn-card-date {
+  font-size: 10px;
+  color: #a0a0a0;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.sn-add {
+  position: absolute;
+  right: 22px;
+  bottom: 46px;
+  width: 54px;
+  height: 54px;
+  border: none;
+  border-radius: 18px;
+  background: #ffe4b0;
+  color: #493215;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 14px #00000015;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.sn-add svg {
+  width: 27px;
+  height: 27px;
+}
+
+#snEditorPage {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding-top: 24px;
+}
+
+.sn-title-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 26px;
+  font-weight: 650;
+  color: #222;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.sn-edited {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.sn-body-input {
+  flex: 1;
+  width: 100%;
+  min-height: 200px;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #292929;
+  font-size: 15px;
+  line-height: 1.85;
+  padding: 0;
+  white-space: pre-wrap;
+}
+
+.sn-editor-toolbar {
+  position: absolute;
+  bottom: 33px;
+  left: 0;
+  right: 0;
+  height: 55px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-top: 1px solid #f1f1f1;
+}
+
+.sn-editor-toolbar button {
+  border: none;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  padding: 9px;
+}
+
+.sn-editor-toolbar span {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.sn-editor-toolbar .sn-save-button {
+  color: #b87510;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sn-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  background: inherit;
+  cursor: pointer;
+}
+
+.sn-gesture {
+  width: 105px;
+  height: 4px;
+  background: #444;
+  border-radius: 10px;
+}
+
 </style>
 </head>
 
@@ -4543,6 +4817,18 @@ img.line-profile-avatar {
   <span>ปฏิทิน</span>
 </div>
 
+<div class="home-app" onclick="openPeteNotes()">
+  <div class="home-app-icon" style="background:transparent;padding:0;overflow:hidden">
+    <svg viewBox="0 0 64 64" width="54" height="54" xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" rx="15" fill="#F8A629"/>
+      <path d="M15 11h34a4 4 0 0 1 4 4v26L39 53H15a4 4 0 0 1-4-4V15a4 4 0 0 1 4-4Z" fill="#FFF8E8"/>
+      <path d="M39 53V43a2 2 0 0 1 2-2h12Z" fill="#E8D7B6"/>
+      <path d="M20 24h24M20 32h20M20 40h12" stroke="#E8A748" stroke-width="2.8" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <span>Notes</span>
+</div>
+
   <div class="home-dock">
     <span>Phone</span>
     <span>Safari</span>
@@ -4553,6 +4839,55 @@ img.line-profile-avatar {
     <div class="gesture-bar"></div>
   </div>
 </section>
+
+<!-- SAMSUNG NOTES -->
+<section class="screen" id="peteNotesScreen">
+  <div class="sn-header">
+    <button class="sn-icon-button" onclick="snBack()" aria-label="ย้อนกลับ">
+      <svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>
+    </button>
+    <strong id="snHeaderTitle">โน้ตทั้งหมด</strong>
+    <button class="sn-icon-button" onclick="snSearchToggle()" aria-label="ค้นหา">
+      <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg>
+    </button>
+    <button class="sn-icon-button" onclick="snSort()" aria-label="เรียงลำดับ">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
+    </button>
+  </div>
+
+  <div id="snListPage" class="sn-page">
+    <h1>โน้ตทั้งหมด</h1>
+    <div class="sn-search-wrap" id="snSearchWrap">
+      <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg>
+      <input id="snSearch" placeholder="ค้นหาโน้ต" oninput="snRender()">
+    </div>
+    <div id="snCount" class="sn-count"></div>
+    <div id="snList" class="sn-list"></div>
+  </div>
+
+  <div id="snEditorPage" class="sn-page" style="display:none">
+    <input id="snTitleInput" class="sn-title-input" placeholder="ชื่อเรื่อง" maxlength="120">
+    <div id="snEdited" class="sn-edited"></div>
+    <textarea id="snBodyInput" class="sn-body-input" placeholder="เริ่มเขียนโน้ต..." spellcheck="false"></textarea>
+    <div class="sn-editor-toolbar">
+      <button onclick="snDelete()" id="snDeleteButton" aria-label="ลบโน้ต">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>
+      </button>
+      <span>Samsung Notes</span>
+      <button onclick="snSave()" class="sn-save-button">บันทึก</button>
+    </div>
+  </div>
+
+  <button id="snAddButton" class="sn-add" onclick="snNew()" aria-label="สร้างโน้ต">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <div class="sn-bottom" onclick="snBack()">
+    <div class="sn-gesture"></div>
+  </div>
+</section>
+
+   
 <!-- SAMSUNG CALENDAR -->
 <section class="screen" id="peteCalendarScreen">
 
@@ -6043,23 +6378,27 @@ let pinBusy = false;
 let openKaoAfterUnlock = false;
 
 function showPhoneScreen(screenId) {
- [
-  "lockScreen",
-  "pinScreen",
-  "homeScreen",
-  "lineScreen",
-  "facebookScreen",
-   "instagramScreen",
-  "galleryScreen",
-  "spotifyScreen",
-  "peteCalendarScreen"
-].forEach(id => {
+  [
+    "lockScreen",
+    "pinScreen",
+    "homeScreen",
+    "lineScreen",
+    "facebookScreen",
+    "instagramScreen",
+    "galleryScreen",
+    "spotifyScreen",
+    "peteCalendarScreen",
+    "peteNotesScreen"
+  ].forEach(id => {
     const screen = document.getElementById(id);
 
     if (screen) {
       screen.style.display = id === screenId ? "flex" : "none";
     }
   });
+
+  // เก็บโค้ดส่วนที่เหลือของฟังก์ชันเดิมไว้ทั้งหมด
+}
 
   // ซ่อนแถบเวลา Wi-Fi และแบตเตอรี่เมื่ออยู่ใน Instagram
   const statusBar = document.querySelector(".status-bar");
@@ -11862,6 +12201,447 @@ function pcRemove() {
     pcRender();
   }
 }
+ 
+/* Samsung Notes */
+
+const SN_KEY = "pete_samsung_notes_v1";
+
+const SN_SEED = [
+  {
+    id: "sn-1",
+    title: "สรุปวิชาเรียน ปี 3",
+    body: `Electrical Engineering
+
+การวิเคราะห์วงจรไฟฟ้า
+ทบทวน KCL, KVL, Node Voltage และ Mesh Current
+ฝึกโจทย์ Thevenin / Norton
+ทบทวนวงจร RLC และ Phasor
+
+อิเล็กทรอนิกส์กำลัง
+Diode Rectifier
+Buck / Boost Converter
+PWM และ Switching Loss
+
+ระบบควบคุมอัตโนมัติ
+Transfer Function
+Block Diagram
+Routh-Hurwitz
+Root Locus
+Bode Plot
+
+เครื่องจักรกลไฟฟ้า
+Transformer
+Induction Motor
+Synchronous Machine
+
+ระบบไฟฟ้ากำลัง
+Per Unit System
+Load Flow
+Three-Phase Fault
+
+ต้องอ่านให้ครบก่อนสอบ
+2–6 พฤศจิกายน 2026`,
+    updated: "2026-11-01T21:30:00"
+  },
+  {
+    id: "sn-2",
+    title: "สูตรไฟฟ้าที่ต้องจำ",
+    body: `Electrical Formula Sheet
+
+Ohm's Law
+V = IR
+
+Power
+P = VI
+P = I²R
+P = V²/R
+
+Kirchhoff's Laws
+ΣI = 0
+ΣV = 0
+
+Capacitor
+Q = CV
+i = C(dv/dt)
+Xc = 1/(2πfC)
+
+Inductor
+v = L(di/dt)
+XL = 2πfL
+
+Impedance
+Z = R + jX
+ZL = jωL
+ZC = 1/(jωC)
+
+AC Power
+S = VI*
+P = VI cosφ
+Q = VI sinφ
+PF = cosφ
+
+Three-Phase Balanced System
+P = √3 VL IL cosφ
+Q = √3 VL IL sinφ
+
+Transformer
+Vp/Vs = Np/Ns
+
+Resonant Frequency
+f0 = 1/(2π√LC)
+
+จำหน่วยให้แม่น
+V, A, Ω, W, VA, var, Hz`,
+    updated: "2026-11-03T23:10:00"
+  },
+  {
+    id: "sn-3",
+    title: "งานที่ต้องส่ง",
+    body: `งานมหาวิทยาลัย
+
+Power Electronics
+รายงาน Buck Converter
+ทำกราฟ Vout เทียบ Duty Cycle
+ตรวจ Simulation ก่อนส่ง
+
+Control Systems
+MATLAB Assignment
+วิเคราะห์ Step Response
+หา Overshoot และ Settling Time
+
+Electrical Machines
+รายงานการทดลอง Induction Motor
+สรุปผลการวัด Torque และ Speed
+
+Power Systems
+ทำโจทย์ Per Unit และ Load Flow
+
+Young Gear
+ตรวจลำดับพิธีการ
+เตรียมสคริปต์พิธีกร
+เช็กไฟล์นำเสนอ
+
+อย่าลืมสำรองไฟล์ไว้ด้วย`,
+    updated: "2026-11-06T19:20:00"
+  },
+  {
+    id: "sn-4",
+    title: "ร้านพาเก้าไปเดท",
+    body: `Date Plan with Kao
+
+อยากหาร้านที่นั่งคุยกันได้นาน ๆ
+ไม่เสียงดังเกินไป
+มีของหวานที่เก้าชอบ
+
+ตัวเลือก
+ร้านอาหารอิตาเลียน บรรยากาศดี
+คาเฟ่ริมแม่น้ำช่วงเย็น
+ร้านอาหารญี่ปุ่นที่มีโต๊ะส่วนตัว
+ร้านขนมแล้วไปเดินเล่นต่อ
+
+สิ่งที่ต้องเช็ก
+ที่จอดรถ
+เวลาเปิดปิด
+ราคาอาหาร
+ต้องจองโต๊ะล่วงหน้าหรือเปล่า
+
+ถามเก้าว่าว่างวันไหน
+แต่ไม่บอกว่าจะพาไปไหน
+
+อย่าลืมซื้อดอกไม้`,
+    updated: "2026-11-08T22:45:00"
+  },
+  {
+    id: "sn-5",
+    title: "สคริปต์เปิดงาน Young Gear",
+    body: `YOUNG GEAR
+Opening Ceremony
+
+สวัสดีครับ คณาจารย์ รุ่นพี่ รุ่นน้อง และเพื่อน ๆ ทุกคน
+
+ยินดีต้อนรับเข้าสู่งาน Young Gear ในวันนี้ครับ
+
+ก่อนอื่นผมขอขอบคุณทุกคนที่สละเวลามาร่วมงาน รวมถึงทีมงานทุกฝ่ายที่ช่วยกันเตรียมงานจนเกิดขึ้นได้
+
+สำหรับผม Young Gear ไม่ได้เป็นแค่งานที่พวกเรามาเจอกัน แต่เป็นโอกาสที่รุ่นพี่และรุ่นน้องจะได้พูดคุย แลกเปลี่ยนประสบการณ์ และทำความรู้จักกันมากขึ้น
+
+การเรียนวิศวกรรมอาจมีทั้งวันที่สนุกและวันที่เหนื่อย แต่ผมเชื่อว่าการมีเพื่อนและรุ่นพี่ที่คอยช่วยเหลือกัน จะทำให้เราเดินผ่านช่วงเวลาเหล่านั้นไปได้
+
+ผมหวังว่าทุกคนจะได้ทั้งความรู้ มิตรภาพ และความทรงจำดี ๆ กลับไปจากงานในครั้งนี้
+
+สุดท้ายนี้ ขอให้ทุกคนสนุกกับกิจกรรมที่พวกเราเตรียมไว้ และขอเปิดงาน Young Gear อย่างเป็นทางการครับ
+
+ขอบคุณครับ
+
+หมายเหตุ
+ซ้อมจังหวะหยุดพูด
+เช็กไมค์ก่อนขึ้นเวที
+อย่าพูดเร็ว
+มองคนฟัง ไม่ก้มอ่านตลอด`,
+    updated: "2026-11-09T00:15:00"
+  },
+  {
+    id: "sn-6",
+    title: "หาที่ฝึกงาน",
+    body: `Internship 2027
+
+สายงานที่สนใจ
+Electrical Engineering
+Power Systems
+Automation & Control
+Renewable Energy
+Electrical Maintenance
+
+บริษัทที่อยากลองสมัคร
+การไฟฟ้าฝ่ายผลิตแห่งประเทศไทย (EGAT)
+การไฟฟ้านครหลวง (MEA)
+การไฟฟ้าส่วนภูมิภาค (PEA)
+บริษัทด้านระบบอัตโนมัติ
+บริษัทด้านพลังงานและโรงงานอุตสาหกรรม
+
+สิ่งที่ต้องเตรียม
+Resume ภาษาไทยและอังกฤษ
+Transcript
+Portfolio งานโปรเจกต์
+หนังสือขอความอนุเคราะห์ฝึกงาน
+ตรวจช่วงเวลารับสมัคร
+
+ทักษะที่ควรเพิ่ม
+AutoCAD Electrical
+MATLAB / Simulink
+PLC Basics
+Python
+Excel
+
+เช็กประกาศรับนักศึกษาฝึกงานจากเว็บไซต์ทางการอีกครั้ง
+
+ถามรุ่นพี่ว่าที่ไหนได้ลงมือทำงานจริง`,
+    updated: "2026-11-07T20:00:00"
+  }
+];
+
+let snData = [];
+let snCurrentId = null;
+let snDescending = true;
+
+function snLoad() {
+  try {
+    const stored = localStorage.getItem(SN_KEY);
+    if (stored !== null) {
+      const parsed = JSON.parse(stored);
+      snData = Array.isArray(parsed) ? parsed : [...SN_SEED];
+    } else {
+      snData = SN_SEED.map(n => ({ ...n }));
+      localStorage.setItem(SN_KEY, JSON.stringify(snData));
+    }
+  } catch (error) {
+    snData = SN_SEED.map(n => ({ ...n }));
+  }
+}
+
+function snPersist() {
+  try {
+    localStorage.setItem(SN_KEY, JSON.stringify(snData));
+    return true;
+  } catch (error) {
+    alert("ไม่สามารถบันทึกโน้ตได้");
+    return false;
+  }
+}
+
+function snDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function openPeteNotes() {
+  snLoad();
+  snCurrentId = null;
+  showPhoneScreen("peteNotesScreen");
+  snShowList();
+}
+
+function snShowList() {
+  document.getElementById("snListPage").style.display = "block";
+  document.getElementById("snEditorPage").style.display = "none";
+  document.getElementById("snAddButton").style.display = "grid";
+  document.getElementById("snHeaderTitle").textContent = "โน้ตทั้งหมด";
+  snRender();
+}
+
+function snRender() {
+  const list = document.getElementById("snList");
+  const search = document.getElementById("snSearch").value
+    .trim().toLocaleLowerCase();
+
+  const notes = snData
+    .filter(n =>
+      (n.title + " " + n.body).toLocaleLowerCase().includes(search)
+    )
+    .sort((a, b) =>
+      snDescending
+        ? b.updated.localeCompare(a.updated)
+        : a.updated.localeCompare(b.updated)
+    );
+
+  document.getElementById("snCount").textContent =
+    notes.length + " โน้ต";
+
+  list.replaceChildren();
+
+  notes.forEach(note => {
+    const card = document.createElement("button");
+    card.className = "sn-card";
+    card.type = "button";
+
+    const title = document.createElement("div");
+    title.className = "sn-card-title";
+    title.textContent = note.title || "ไม่มีชื่อ";
+
+    const preview = document.createElement("div");
+    preview.className = "sn-card-preview";
+    preview.textContent = note.body || "";
+
+    const date = document.createElement("div");
+    date.className = "sn-card-date";
+    date.textContent = snDate(note.updated);
+
+    card.append(title, preview, date);
+    card.onclick = () => snOpen(note.id);
+
+    list.append(card);
+  });
+}
+
+function snOpen(id) {
+  const note = snData.find(n => n.id === id);
+  if (!note) return;
+
+  snCurrentId = id;
+  snShowEditor(note);
+}
+
+function snNew() {
+  snCurrentId = null;
+  snShowEditor({
+    title: "",
+    body: "",
+    updated: new Date().toISOString()
+  });
+}
+
+function snShowEditor(note) {
+  document.getElementById("snListPage").style.display = "none";
+  document.getElementById("snEditorPage").style.display = "flex";
+  document.getElementById("snAddButton").style.display = "none";
+  document.getElementById("snHeaderTitle").textContent = "แก้ไขโน้ต";
+
+  document.getElementById("snTitleInput").value = note.title;
+  document.getElementById("snBodyInput").value = note.body;
+  document.getElementById("snEdited").textContent =
+    "แก้ไขล่าสุด " + snDate(note.updated);
+
+  document.getElementById("snDeleteButton").style.visibility =
+    snCurrentId ? "visible" : "hidden";
+}
+
+function snSave() {
+  const title = document.getElementById("snTitleInput").value.trim();
+  const body = document.getElementById("snBodyInput").value;
+  const updated = new Date().toISOString();
+
+  if (!title && !body.trim()) {
+    snShowList();
+    return;
+  }
+
+  const next = snData.map(n => ({ ...n }));
+
+  if (snCurrentId) {
+    const index = next.findIndex(n => n.id === snCurrentId);
+    if (index !== -1) {
+      next[index] = {
+        ...next[index],
+        title: title || "ไม่มีชื่อ",
+        body,
+        updated
+      };
+    }
+  } else {
+    next.unshift({
+      id: "sn-" + Date.now() + "-" +
+        Math.random().toString(36).slice(2, 8),
+      title: title || "ไม่มีชื่อ",
+      body,
+      updated
+    });
+  }
+
+  const previous = snData;
+  snData = next;
+
+  if (!snPersist()) {
+    snData = previous;
+    return;
+  }
+
+  snCurrentId = null;
+  snShowList();
+}
+
+function snDelete() {
+  if (!snCurrentId) return;
+  if (!confirm("ต้องการลบโน้ตนี้หรือไม่")) return;
+
+  const previous = snData;
+  snData = snData.filter(n => n.id !== snCurrentId);
+
+  if (!snPersist()) {
+    snData = previous;
+    return;
+  }
+
+  snCurrentId = null;
+  snShowList();
+}
+
+function snBack() {
+  const editor = document.getElementById("snEditorPage");
+
+  if (editor.style.display !== "none") {
+    snSave();
+  } else {
+    showPhoneScreen("homeScreen");
+  }
+}
+
+function snSearchToggle() {
+  const editor = document.getElementById("snEditorPage");
+
+  if (editor.style.display !== "none") {
+    snSave();
+  }
+
+  const input = document.getElementById("snSearch");
+  input.focus();
+}
+
+function snSort() {
+  snDescending = !snDescending;
+
+  const editor = document.getElementById("snEditorPage");
+  if (editor.style.display !== "none") {
+    snSave();
+  } else {
+    snRender();
+  }
+}
+
 </script>
 </body>
 </html>
