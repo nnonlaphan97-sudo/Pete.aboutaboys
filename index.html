@@ -4061,7 +4061,112 @@ img.line-profile-avatar {
   font-size: 14px;
   margin-top: 20px;
 }
- 
+ /* Samsung Calendar Month View */
+
+#peteCalendarScreen {
+  background: #ffffff;
+  color: #202127;
+}
+
+#peteCalendarScreen .pc-top {
+  height: 52px;
+  padding: 0 18px;
+}
+
+#peteCalendarScreen .pc-top strong {
+  font-size: 19px;
+  font-weight: 650;
+}
+
+#peteCalendarScreen .pc-month {
+  padding: 19px 19px 20px;
+}
+
+#peteCalendarScreen .pc-month strong {
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+#peteCalendarScreen .pc-week {
+  padding: 0 7px 8px;
+  font-size: 12px;
+}
+
+#peteCalendarScreen .pc-grid {
+  padding: 0 5px 10px;
+  gap: 1px;
+}
+
+#peteCalendarScreen .pc-day {
+  height: 76px;
+  min-height: 76px;
+  padding: 3px 1px;
+  overflow: hidden;
+  align-items: stretch;
+  gap: 4px;
+}
+
+#peteCalendarScreen .pc-day .pc-num {
+  align-self: center;
+  width: 29px;
+  height: 29px;
+  font-size: 13px;
+}
+
+#peteCalendarScreen .pc-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  width: 100%;
+}
+
+#peteCalendarScreen .pc-event-chip {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  border-radius: 3px;
+  padding: 2px 3px;
+  color: white;
+  font-size: 8px;
+  line-height: 12px;
+  text-align: left;
+}
+
+#peteCalendarScreen .pc-more {
+  font-size: 9px;
+  color: #888;
+}
+
+#peteCalendarScreen .pc-agenda {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 17px;
+}
+
+#peteCalendarScreen .pc-item {
+  background: #f7f8fb;
+}
+
+#peteCalendarScreen .pc-add {
+  background: #eaf1ff;
+  color: #2768d8;
+  font-weight: 400;
+  box-shadow: 0 3px 14px #0002;
+}
+
+@media (max-height: 720px) {
+  #peteCalendarScreen .pc-day {
+    height: 58px;
+    min-height: 58px;
+  }
+
+  #peteCalendarScreen .pc-event-chip {
+    font-size: 7px;
+    padding: 1px 2px;
+  }
+}
 </style>
 </head>
 
@@ -11335,23 +11440,98 @@ function kaoStopAnswerAudio() {
 /* SAMSUNG CALENDAR DATA */
 
 const PC_KEY = "pete_calendar_events_v1";
-
 const PC_SEED = [
-  ["2026-10-17","2026-10-17","meeting familly","","#6489e9",""],
-  ["2026-10-25","2026-10-25","พาไอ้เก้าไปเที่ยว","","#ef8c62",""],
-  ["2026-10-30","2026-10-30","about a boy","","#a57ce2",""],
-
-  ["2026-11-01","2026-11-01","สอบวิศวกรรมไฟฟ้า: คณิตศาสตร์วิศวกรรม","09:00","#4b80ed","ตารางสอบสมมติ"],
-  ["2026-11-02","2026-11-02","สอบวิศวกรรมไฟฟ้า: วิเคราะห์วงจรไฟฟ้า","09:00","#4b80ed","ตารางสอบสมมติ"],
-  ["2026-11-03","2026-11-03","สอบวิศวกรรมไฟฟ้า: อิเล็กทรอนิกส์","09:00","#4b80ed","ตารางสอบสมมติ"],
-  ["2026-11-04","2026-11-04","สอบวิศวกรรมไฟฟ้า: เครื่องจักรกลไฟฟ้า","09:00","#4b80ed","ตารางสอบสมมติ"],
-  ["2026-11-05","2026-11-05","สอบวิศวกรรมไฟฟ้า: ระบบควบคุม","09:00","#4b80ed","ตารางสอบสมมติ"],
-  ["2026-11-06","2026-11-06","สอบวิศวกรรมไฟฟ้า: ระบบไฟฟ้ากำลัง","09:00","#4b80ed","ตารางสอบสมมติ"],
-  ["2026-11-07","2026-11-07","สอบวิศวกรรมไฟฟ้า: การวัดและเครื่องมือวัดไฟฟ้า","09:00","#4b80ed","ตารางสอบสมมติ"],
-
-  ["2026-11-18","2026-11-18","เจอพี่โจ้","","#63b88e",""],
-  ["2026-11-21","2026-11-23","งาน young gear","","#ec8a5b",""]
-].map((a,i) => ({
+  {
+    id: "seed-0",
+    start: "2026-10-17",
+    end: "2026-10-17",
+    title: "meeting familly",
+    time: "",
+    color: "#6489e9",
+    note: ""
+  },
+  {
+    id: "seed-1",
+    start: "2026-10-25",
+    end: "2026-10-25",
+    title: "พาไอ้เก้าไปเที่ยว",
+    time: "",
+    color: "#ef8c62",
+    note: ""
+  },
+  {
+    id: "seed-2",
+    start: "2026-10-30",
+    end: "2026-10-30",
+    title: "about a boy",
+    time: "",
+    color: "#a57ce2",
+    note: ""
+  },
+  {
+    id: "seed-3",
+    start: "2026-11-02",
+    end: "2026-11-02",
+    title: "สอบการวิเคราะห์วงจรไฟฟ้า",
+    time: "09:00",
+    color: "#5179dc",
+    note: "วิศวกรรมไฟฟ้า ปี 3 — ตารางสมมติ"
+  },
+  {
+    id: "seed-4",
+    start: "2026-11-03",
+    end: "2026-11-03",
+    title: "สอบอิเล็กทรอนิกส์กำลัง",
+    time: "09:00",
+    color: "#5179dc",
+    note: ""
+  },
+  {
+    id: "seed-5",
+    start: "2026-11-04",
+    end: "2026-11-04",
+    title: "สอบระบบควบคุมอัตโนมัติ",
+    time: "09:00",
+    color: "#5179dc",
+    note: ""
+  },
+  {
+    id: "seed-6",
+    start: "2026-11-05",
+    end: "2026-11-05",
+    title: "สอบเครื่องจักรกลไฟฟ้า",
+    time: "09:00",
+    color: "#5179dc",
+    note: ""
+  },
+  {
+    id: "seed-7",
+    start: "2026-11-06",
+    end: "2026-11-06",
+    title: "สอบระบบไฟฟ้ากำลัง",
+    time: "09:00",
+    color: "#5179dc",
+    note: ""
+  },
+  {
+    id: "seed-8",
+    start: "2026-11-18",
+    end: "2026-11-18",
+    title: "เจอพี่โจ้",
+    time: "",
+    color: "#63b88e",
+    note: ""
+  },
+  {
+    id: "seed-9",
+    start: "2026-11-21",
+    end: "2026-11-23",
+    title: "งาน young gear",
+    time: "",
+    color: "#ec8a5b",
+    note: ""
+  }
+];.map((a,i) => ({
   id: "seed-" + i,
   start: a[0],
   end: a[1],
@@ -11425,110 +11605,169 @@ function pcEventsOn(day) {
 function pcRender() {
   const y = pcView.getFullYear();
   const m = pcView.getMonth();
-  const grid = document.getElementById("pcGrid");
 
-  document.getElementById("pcMonthTitle").textContent =
-    pcMonthNames[m] + " " + (y+543);
+  const grid = document.getElementById("pcGrid");
+  const monthTitle = document.getElementById("pcMonthTitle");
+  const dayTitle = document.getElementById("pcDayTitle");
+  const eventList = document.getElementById("pcEvents");
+
+  if (!grid || !monthTitle || !dayTitle || !eventList) {
+    return;
+  }
+
+  monthTitle.textContent =
+    pcMonthNames[m] + " " + (y + 543);
 
   grid.replaceChildren();
 
-  const first = new Date(y,m,1).getDay();
-  const days = new Date(y,m+1,0).getDate();
-  const cells = Math.ceil((first+days)/7)*7;
+  const firstWeekday = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
 
-  for (let i=0; i<cells; i++) {
-    const d = new Date(y,m,i-first+1);
-    const key = pcKey(d);
-    const ev = pcEventsOn(key);
+  const cellCount =
+    Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "pc-day";
+  const today = pcKey(new Date());
 
-    if (d.getMonth() !== m) btn.classList.add("other");
-    if (d.getDay() === 0) btn.classList.add("sun");
-    if (d.getDay() === 6) btn.classList.add("sat");
-    if (key === pcKey(new Date())) btn.classList.add("today");
-    if (key === pcSelected) btn.classList.add("selected");
+  for (let i = 0; i < cellCount; i++) {
+    const date = new Date(y, m, i - firstWeekday + 1);
+    const dateKey = pcKey(date);
+    const events = pcEventsOn(dateKey);
 
-    const num = document.createElement("span");
-    num.className = "pc-num";
-    num.textContent = d.getDate();
-    btn.append(num);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "pc-day";
 
-    const dots = document.createElement("span");
-    dots.className = "pc-dots";
+    if (date.getMonth() !== m) {
+      button.classList.add("other");
+    }
 
-    ev.slice(0,3).forEach(e => {
-      const dot = document.createElement("i");
-      dot.style.background = e.color || "#4b80ed";
-      dots.append(dot);
+    if (date.getDay() === 0) {
+      button.classList.add("sun");
+    }
+
+    if (date.getDay() === 6) {
+      button.classList.add("sat");
+    }
+
+    if (dateKey === today) {
+      button.classList.add("today");
+    }
+
+    if (dateKey === pcSelected) {
+      button.classList.add("selected");
+    }
+
+    const number = document.createElement("span");
+    number.className = "pc-num";
+    number.textContent = date.getDate();
+
+    button.append(number);
+
+    const eventContainer = document.createElement("span");
+    eventContainer.className = "pc-day-events";
+
+    events.slice(0, 2).forEach(event => {
+      const chip = document.createElement("span");
+
+      chip.className = "pc-event-chip";
+      chip.style.backgroundColor =
+        event.color || "#4b80ed";
+
+      chip.textContent = event.title;
+
+      eventContainer.append(chip);
     });
 
-    btn.append(dots);
+    if (events.length > 2) {
+      const more = document.createElement("span");
+      more.className = "pc-more";
+      more.textContent = "+" + (events.length - 2);
+      eventContainer.append(more);
+    }
 
-    btn.onclick = () => {
-      pcSelected = key;
-      pcView = new Date(d.getFullYear(),d.getMonth(),1);
+    button.append(eventContainer);
+
+    button.onclick = () => {
+      pcSelected = dateKey;
+
+      pcView = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        1
+      );
+
       pcRender();
     };
 
-    grid.append(btn);
+    grid.append(button);
   }
 
-  document.getElementById("pcDayTitle").textContent =
-    pcParse(pcSelected).toLocaleDateString("th-TH",{
-      weekday:"long",
-      day:"numeric",
-      month:"long",
-      year:"numeric"
+  const selectedDate = pcParse(pcSelected);
+
+  dayTitle.textContent =
+    selectedDate.toLocaleDateString("th-TH", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
     });
 
-  const list = document.getElementById("pcEvents");
-  list.replaceChildren();
+  eventList.replaceChildren();
 
-  const events = pcEventsOn(pcSelected)
-    .sort((a,b) => (a.time||"").localeCompare(b.time||""));
+  const selectedEvents = pcEventsOn(pcSelected)
+    .sort((a, b) =>
+      (a.time || "").localeCompare(b.time || "")
+    );
 
-  if (!events.length) {
+  if (selectedEvents.length === 0) {
     const empty = document.createElement("p");
     empty.className = "pc-empty";
     empty.textContent = "ไม่มีกิจกรรม";
-    list.append(empty);
+    eventList.append(empty);
   }
 
-  events.forEach(e => {
-    const row = document.createElement("div");
-    row.className = "pc-item";
+  selectedEvents.forEach(event => {
+    const item = document.createElement("div");
+    item.className = "pc-item";
 
     const stripe = document.createElement("div");
     stripe.className = "pc-stripe";
-    stripe.style.background = e.color || "#4b80ed";
+    stripe.style.backgroundColor =
+      event.color || "#4b80ed";
 
-    const body = document.createElement("div");
+    const content = document.createElement("div");
+
     const title = document.createElement("strong");
-    title.textContent = e.title;
+    title.textContent = event.title;
 
-    const meta = document.createElement("small");
-    meta.textContent =
-      (e.time ? e.time+" น." : "ตลอดวัน") +
-      (e.start !== e.end ? " · "+e.start+" – "+e.end : "");
+    const time = document.createElement("small");
 
-    body.append(title,meta);
+    time.textContent = event.time
+      ? event.time + " น."
+      : "ตลอดวัน";
 
-    if (e.note) {
+    content.append(title, time);
+
+    if (event.note) {
       const note = document.createElement("small");
-      note.textContent = e.note;
-      body.append(note);
+      note.textContent = event.note;
+      content.append(note);
     }
 
-    row.append(stripe,body);
-    row.onclick = () => pcEdit(e.id);
-    list.append(row);
+    item.append(stripe, content);
+
+    item.onclick = () => {
+      pcEdit(event.id);
+    };
+
+    eventList.append(item);
   });
 
-  const icon = document.getElementById("pcIconDay");
-  if (icon) icon.textContent = new Date().getDate();
+  const iconDay = document.getElementById("pcIconDay");
+
+  if (iconDay) {
+    iconDay.textContent = new Date().getDate();
+  }
 }
 
 function pcEdit(id=null) {
