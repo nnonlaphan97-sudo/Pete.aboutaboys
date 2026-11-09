@@ -11664,45 +11664,34 @@ function spotifyTab(tab) {
 
 function spotifyInitLockScreen() {
   const lockMusic = document.querySelector(".lock-music");
-
   if (!lockMusic) return;
 
-  // แตะรูปปกหรือชื่อเพลงเพื่อเปิด Spotify
   const art = lockMusic.querySelector(".music-art");
   const content = lockMusic.querySelector(".music-song");
 
   [art, content].forEach(element => {
-  if (!element) return;
+    if (!element) return;
+    element.style.cursor = "pointer";
+    element.addEventListener("click", event => {
+      event.stopPropagation();
+      spotifyOpenedFromLock = true;
+      spotifyOpenPlayer();
+    });
+  });
 
-  element.style.cursor = "pointer";
-
-element.addEventListener("click", event => {
-  event.stopPropagation();
-  spotifyOpenedFromLock = true;
-  spotifyOpenPlayer();
-});
-
-  const buttons = lockMusic.querySelectorAll(
-    ".music-controls button"
-  );
-
-  // ก่อนหน้า
+  const buttons = lockMusic.querySelectorAll(".music-controls button");
   if (buttons[0]) {
     buttons[0].onclick = event => {
       event.stopPropagation();
       spotifyPrevious();
     };
   }
-
-  // เล่น / หยุด
   if (buttons[1]) {
     buttons[1].onclick = event => {
       event.stopPropagation();
       spotifyToggle();
     };
   }
-
-  // ถัดไป
   if (buttons[2]) {
     buttons[2].onclick = event => {
       event.stopPropagation();
