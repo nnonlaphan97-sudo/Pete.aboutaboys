@@ -579,15 +579,20 @@ html, body {
 }
 
 
+
 .home-bottom {
   position: absolute;
-  bottom: 16px;
+  bottom: 1px; /* เดิม 16px เลื่อนลง 15px */
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   padding: 12px;
   cursor: pointer;
+}
+
+.home-bottom .gesture-bar {
+  background: rgba(255, 255, 255, 0.48);
 }
 
 .pin-footer {
