@@ -15546,6 +15546,896 @@ if (!state.phoneBlockMigrationV1) {
   document.head.appendChild(style);
 })();
 
+/* ==========================================
+   PETE PHONE - SAMSUNG CAMERA
+   Single-script installation
+   ========================================== */
+(function () {
+  "use strict";
+
+  if (document.getElementById("peteCameraScreen")) return;
+
+  const $ = id => document.getElementById(id);
+
+  const paths = {
+    back:'<path d="m15 5-7 7 7 7"/>',
+    settings:'<path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/>',
+    flip:'<path d="M20 7a9 9 0 0 0-15-2L2 8"/><path d="M2 3v5h5M4 17a9 9 0 0 0 15 2l3-3"/><path d="M22 21v-5h-5"/>',
+    image:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="2"/><path d="m3 17 6-6 4 4 3-3 5 5"/>',
+    flash:'<path d="m13 2-9 12h7l-1 8 10-13h-7z"/>',
+    upload:'<path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/>',
+    close:'<path d="M5 5 19 19M19 5 5 19"/>',
+    play:'<path d="m8 5 12 7-12 7z"/>',
+    pause:'<path d="M8 5v14M16 5v14"/>'
+  };
+
+  function icon(name,size=23) {
+    return `<svg viewBox="0 0 24 24"
+      width="${size}" height="${size}"
+      fill="none" stroke="currentColor"
+      stroke-width="1.8" stroke-linecap="round"
+      stroke-linejoin="round">
+      ${paths[name] || ""}
+    </svg>`;
+  }
+
+  /* --------- CSS --------- */
+  const style = document.createElement("style");
+  style.id = "peteCameraStyles";
+
+  style.textContent = `
+    #peteCameraScreen {
+      display:none;
+      flex-direction:column;
+      position:absolute;
+      inset:0;
+      z-index:50;
+      background:#08090b;
+      color:#fff;
+      font-family:-apple-system,BlinkMacSystemFont,
+        "Segoe UI",sans-serif;
+      overflow:hidden;
+    }
+    #peteCameraScreen * { box-sizing:border-box; }
+    #peteCameraScreen button {
+      border:0;
+      font-family:inherit;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .pcam-top {
+      flex-shrink:0;
+      padding:46px 19px 15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:#08090b;
+    }
+    .pcam-icon {
+      background:transparent;
+      color:white;
+      padding:7px;
+      display:grid;
+      place-items:center;
+    }
+    .pcam-preview {
+      position:relative;
+      width:100%;
+      flex:1;
+      min-height:0;
+      overflow:hidden;
+      background:#181b20;
+    }
+    .pcam-preview video {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .pcam-preview.front video {
+      transform:scaleX(-1);
+    }
+    .pcam-message {
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:15px;
+      text-align:center;
+      padding:24px;
+      background:#1b1d22;
+      font-size:13px;
+      line-height:1.6;
+      color:#ddd;
+    }
+    .pcam-message button {
+      background:#fff;
+      color:#111;
+      border-radius:22px;
+      padding:11px 18px;
+    }
+    .pcam-guide {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      display:none;
+      grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(3,1fr);
+    }
+    .pcam-guide span {
+      border-right:1px solid #ffffff50;
+      border-bottom:1px solid #ffffff50;
+    }
+    .pcam-guide span:nth-child(3n) { border-right:0; }
+    .pcam-guide span:nth-last-child(-n+3) { border-bottom:0; }
+    .pcam-record-time {
+      position:absolute;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#1c1c1cba;
+      border-radius:20px;
+      padding:7px 14px;
+      font-size:13px;
+      display:none;
+      align-items:center;
+      gap:8px;
+    }
+    .pcam-record-dot {
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#f44750;
+    }
+    .pcam-controls {
+      flex-shrink:0;
+      background:#08090b;
+      padding:10px 16px 33px;
+    }
+    .pcam-zoom {
+      display:flex;
+      justify-content:center;
+      gap:11px;
+      margin-bottom:17px;
+    }
+    .pcam-zoom button {
+      background:#2c2d32;
+      color:#fff;
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      font-size:12px;
+    }
+    .pcam-zoom button.active {
+      background:#fff;
+      color:#111;
+      font-weight:700;
+    }
+    .pcam-modes {
+      display:flex;
+      justify-content:center;
+      gap:30px;
+      margin-bottom:20px;
+    }
+    .pcam-modes button {
+      background:none;
+      color:#999;
+      font-size:13px;
+      font-weight:600;
+      padding:8px 0;
+    }
+    .pcam-modes button.active {
+      color:#fff;
+      border-bottom:2px solid #fff;
+    }
+    .pcam-actions {
+      display:flex;
+      align-items:center;
+      justify-content:space-around;
+      padding-bottom:7px;
+    }
+    .pcam-thumb {
+      width:46px;
+      height:46px;
+      border-radius:12px;
+      overflow:hidden;
+      background:#33363c;
+      color:#fff;
+      display:grid;
+      place-items:center;
+      padding:0;
+    }
+    .pcam-thumb img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .pcam-shutter {
+      width:76px;
+      height:76px;
+      border:4px solid white !important;
+      background:transparent;
+      border-radius:50%;
+      padding:5px;
+      display:grid;
+      place-items:center;
+    }
+    .pcam-shutter-inner {
+      width:100%;
+      height:100%;
+      background:#fff;
+      border-radius:50%;
+      transition:.2s;
+    }
+    .pcam-shutter.video .pcam-shutter-inner {
+      background:#f0444b;
+      width:48px;
+      height:48px;
+    }
+    .pcam-shutter.recording .pcam-shutter-inner {
+      background:#f0444b;
+      width:25px;
+      height:25px;
+      border-radius:7px;
+    }
+    .pcam-flip {
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      background:#292b30;
+      color:white;
+      display:grid;
+      place-items:center;
+    }
+    .pcam-viewer {
+      display:none;
+      position:absolute;
+      inset:0;
+      z-index:10;
+      background:#090909;
+      flex-direction:column;
+      padding:50px 14px 32px;
+    }
+    .pcam-viewer-content {
+      flex:1;
+      min-height:0;
+      display:grid;
+      place-items:center;
+    }
+    .pcam-viewer-content img,
+    .pcam-viewer-content video {
+      max-width:100%;
+      max-height:100%;
+      object-fit:contain;
+    }
+    .pcam-viewer-actions {
+      display:flex;
+      justify-content:space-around;
+      padding:15px 0;
+      gap:10px;
+    }
+    .pcam-viewer-actions button {
+      background:#292a2e;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:20px;
+      font-size:12px;
+    }
+    .pcam-toast {
+      position:absolute;
+      bottom:165px;
+      left:50%;
+      transform:translateX(-50%);
+      padding:11px 17px;
+      border-radius:20px;
+      background:#34363ded;
+      color:white;
+      font-size:12px;
+      white-space:nowrap;
+      display:none;
+      z-index:20;
+    }
+    .home-dock .pcam-dock-button {
+      flex:0 0 58px;
+      width:58px;
+      height:58px;
+      background:transparent;
+      border:0;
+      padding:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .home-dock .pcam-dock-button svg {
+      width:54px;
+      height:54px;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  /* --------- HTML --------- */
+  const screen = document.createElement("section");
+  screen.id = "peteCameraScreen";
+  screen.className = "screen";
+
+  screen.innerHTML = `
+    <div class="pcam-top">
+      <button class="pcam-icon" id="pcamExit"
+        aria-label="กลับ">${icon("back")}</button>
+      <button class="pcam-icon" id="pcamGrid"
+        aria-label="เส้นตาราง">${icon("settings")}</button>
+      <span id="pcamRatio" style="font-size:13px">9:16</span>
+      <button class="pcam-icon" id="pcamFlash"
+        aria-label="แฟลช">${icon("flash")}</button>
+    </div>
+
+    <div class="pcam-preview" id="pcamPreview">
+      <video id="pcamLive" autoplay muted playsinline></video>
+
+      <div class="pcam-message" id="pcamMessage">
+        ${icon("image",42)}
+        <span>แตะเปิดกล้องเพื่อเริ่มถ่ายภาพ</span>
+        <button id="pcamEnable">เปิดกล้อง</button>
+      </div>
+
+      <div class="pcam-guide" id="pcamGuide">
+        ${"<span></span>".repeat(9)}
+      </div>
+
+      <div class="pcam-record-time" id="pcamRecordTime">
+        <span class="pcam-record-dot"></span>
+        <span id="pcamTimeText">00:00</span>
+      </div>
+    </div>
+
+    <div class="pcam-controls">
+      <div class="pcam-zoom">
+        <button data-zoom="1" class="active">1×</button>
+        <button data-zoom="2">2×</button>
+        <button data-zoom="3">3×</button>
+      </div>
+
+      <div class="pcam-modes">
+        <button data-mode="photo" class="active">PHOTO</button>
+        <button data-mode="video">VIDEO</button>
+      </div>
+
+      <div class="pcam-actions">
+        <button class="pcam-thumb" id="pcamGallery"
+          aria-label="ภาพล่าสุด">${icon("image",24)}</button>
+
+        <button class="pcam-shutter" id="pcamShutter"
+          aria-label="ถ่ายภาพ">
+          <span class="pcam-shutter-inner"></span>
+        </button>
+
+        <button class="pcam-flip" id="pcamFlip"
+          aria-label="สลับกล้อง">${icon("flip")}</button>
+      </div>
+    </div>
+
+    <div class="pcam-viewer" id="pcamViewer">
+      <button class="pcam-icon" id="pcamViewerBack"
+        style="align-self:flex-start">
+        ${icon("back")}
+      </button>
+      <div class="pcam-viewer-content" id="pcamViewerContent"></div>
+      <div class="pcam-viewer-actions">
+        <button id="pcamPrevious">ก่อนหน้า</button>
+        <button id="pcamDownload">บันทึกไฟล์</button>
+        <button id="pcamNext">ถัดไป</button>
+      </div>
+    </div>
+
+    <div class="pcam-toast" id="pcamToast"></div>
+
+    <input type="file" id="pcamStoryInput"
+      accept="video/*" multiple hidden>
+  `;
+
+  const phone = document.querySelector(".phone");
+  if (!phone) {
+    console.error("Samsung Camera: ไม่พบ .phone");
+    return;
+  }
+  phone.appendChild(screen);
+
+  /* --------- DOCK ICON --------- */
+  let dock = document.querySelector("#homeDock,.home-dock");
+
+  if (!dock) {
+    const home = $("homeScreen");
+    if (home) {
+      dock = document.createElement("div");
+      dock.className = "home-dock";
+      dock.id = "homeDock";
+      const bottom = home.querySelector(".home-bottom");
+      if (bottom) home.insertBefore(dock,bottom);
+      else home.appendChild(dock);
+    }
+  }
+
+  if (dock && !dock.querySelector(".pcam-dock-button")) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "pcam-dock-button";
+    button.setAttribute("aria-label","กล้อง");
+    button.innerHTML = `
+      <svg viewBox="0 0 64 64"
+        xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="16" fill="#f5f5f7"/>
+        <rect x="9" y="19" width="46" height="32" rx="9"
+          fill="#383940"/>
+        <path d="M21 19l4-7h14l4 7"
+          fill="#383940"/>
+        <circle cx="32" cy="35" r="12" fill="#d2d5dc"/>
+        <circle cx="32" cy="35" r="8.5" fill="#5c6070"/>
+        <circle cx="32" cy="35" r="5.5" fill="#252938"/>
+        <circle cx="47" cy="25" r="2.2" fill="#e7e7e9"/>
+      </svg>`;
+    button.onclick = () => window.openPeteCamera();
+    dock.appendChild(button);
+  }
+
+  /* --------- CAMERA STATE --------- */
+  const live = $("pcamLive");
+  const preview = $("pcamPreview");
+
+  let stream = null;
+  let facing = "environment";
+  let mode = "photo";
+  let zoom = 1;
+  let recorder = null;
+  let chunks = [];
+  let recordStarted = 0;
+  let recordInterval = null;
+  let recording = false;
+
+  // รูปและวิดีโอเก็บในหน่วยความจำของแท็บนี้
+  let mediaItems = [];
+  let viewerIndex = 0;
+
+  function toast(message) {
+    const el = $("pcamToast");
+    el.textContent = message;
+    el.style.display = "block";
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => {
+      el.style.display = "none";
+    },2200);
+  }
+
+  function stopStream() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+    live.srcObject = null;
+  }
+
+  async function startCamera() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      $("pcamMessage").style.display = "flex";
+      $("pcamMessage").querySelector("span").textContent =
+        "เบราว์เซอร์นี้ไม่รองรับกล้อง หรือเว็บไซต์ไม่ได้ใช้ HTTPS";
+      return;
+    }
+
+    stopStream();
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio:false,
+        video:{
+          facingMode:{ideal:facing},
+          width:{ideal:1920},
+          height:{ideal:1080}
+        }
+      });
+
+      live.srcObject = stream;
+      await live.play();
+      $("pcamMessage").style.display = "none";
+      preview.classList.toggle("front",facing==="user");
+      applyZoom();
+    } catch (error) {
+      $("pcamMessage").style.display = "flex";
+      $("pcamMessage").querySelector("span").textContent =
+        "เปิดกล้องไม่ได้ กรุณาอนุญาตการใช้กล้องในการตั้งค่าเบราว์เซอร์";
+      console.warn("Camera error:",error);
+    }
+  }
+
+  function applyZoom() {
+    if (!stream) return;
+
+    const track = stream.getVideoTracks()[0];
+    const caps = track.getCapabilities?.();
+
+    if (caps?.zoom) {
+      const desired = Math.min(
+        caps.zoom.max,
+        Math.max(caps.zoom.min,zoom)
+      );
+      track.applyConstraints({
+        advanced:[{zoom:desired}]
+      }).catch(() => {});
+      live.style.transform = "";
+    } else {
+      // ซูมภาพในหน้าพรีวิวเมื่อกล้องไม่รองรับ hardware zoom
+      live.style.transform =
+        (facing==="user" ? "scaleX(-1) " : "") +
+        `scale(${zoom})`;
+      preview.classList.remove("front");
+    }
+  }
+
+  function updateThumb() {
+    const button = $("pcamGallery");
+    const latest = mediaItems[mediaItems.length-1];
+
+    if (!latest) {
+      button.innerHTML = icon("image",24);
+      return;
+    }
+
+    if (latest.type==="photo") {
+      const img = document.createElement("img");
+      img.src = latest.url;
+      button.replaceChildren(img);
+    } else {
+      button.innerHTML = icon("play",24);
+    }
+  }
+
+  function takePhoto() {
+    if (!stream || live.readyState < 2) {
+      toast("กรุณาเปิดกล้องก่อน");
+      return;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = live.videoWidth;
+    canvas.height = live.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+
+    if (facing==="user") {
+      ctx.translate(canvas.width,0);
+      ctx.scale(-1,1);
+    }
+
+    ctx.drawImage(live,0,0,canvas.width,canvas.height);
+
+    canvas.toBlob(blob => {
+      if (!blob) {
+        toast("ถ่ายภาพไม่สำเร็จ");
+        return;
+      }
+
+      const url = URL.createObjectURL(blob);
+
+      mediaItems.push({
+        type:"photo",
+        url,
+        name:"Pete_Photo_" + Date.now() + ".jpg"
+      });
+
+      updateThumb();
+      toast("ถ่ายภาพแล้ว");
+    },"image/jpeg",0.92);
+  }
+
+  async function startRecording() {
+    if (!stream) {
+      toast("กรุณาเปิดกล้องก่อน");
+      return;
+    }
+
+    if (!window.MediaRecorder) {
+      toast("เบราว์เซอร์นี้ไม่รองรับการบันทึกวิดีโอ");
+      return;
+    }
+
+    let recordingStream = stream;
+
+    try {
+      // ขอไมโครโฟนเฉพาะเมื่อเริ่มบันทึก
+      const mic = await navigator.mediaDevices.getUserMedia({
+        audio:true,
+        video:false
+      });
+
+      recordingStream = new MediaStream([
+        ...stream.getVideoTracks(),
+        ...mic.getAudioTracks()
+      ]);
+    } catch {
+      // หากไม่อนุญาตไมโครโฟน ให้บันทึกแบบไม่มีเสียง
+      toast("บันทึกวิดีโอแบบไม่มีเสียง");
+    }
+
+    chunks = [];
+
+    try {
+      const options = {};
+      const formats = [
+        "video/mp4",
+        "video/webm;codecs=vp9,opus",
+        "video/webm;codecs=vp8,opus",
+        "video/webm"
+      ];
+
+      const supported = formats.find(type =>
+        MediaRecorder.isTypeSupported(type)
+      );
+
+      if (supported) options.mimeType = supported;
+
+      recorder = new MediaRecorder(recordingStream,options);
+
+      recorder.ondataavailable = event => {
+        if (event.data.size) chunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const type = recorder.mimeType || "video/webm";
+        const blob = new Blob(chunks,{type});
+        const url = URL.createObjectURL(blob);
+        const extension = type.includes("mp4") ? "mp4" : "webm";
+
+        mediaItems.push({
+          type:"video",
+          url,
+          name:"Pete_Video_" + Date.now() + "." + extension
+        });
+
+        // ปิดเฉพาะไมโครโฟนที่ขอมาเพิ่ม
+        recordingStream.getAudioTracks().forEach(t => t.stop());
+
+        updateThumb();
+        toast("บันทึกวิดีโอแล้ว");
+      };
+
+      recorder.start(250);
+      recording = true;
+      recordStarted = Date.now();
+
+      $("pcamShutter").classList.add("recording");
+      $("pcamRecordTime").style.display = "flex";
+
+      recordInterval = setInterval(() => {
+        const seconds = Math.floor(
+          (Date.now()-recordStarted)/1000
+        );
+
+        $("pcamTimeText").textContent =
+          String(Math.floor(seconds/60)).padStart(2,"0") +
+          ":" +
+          String(seconds%60).padStart(2,"0");
+      },250);
+
+    } catch (error) {
+      toast("เริ่มบันทึกวิดีโอไม่สำเร็จ");
+      recordingStream.getAudioTracks().forEach(t => t.stop());
+      console.warn(error);
+    }
+  }
+
+  function stopRecording() {
+    if (!recording) return;
+
+    recording = false;
+    clearInterval(recordInterval);
+
+    $("pcamRecordTime").style.display = "none";
+    $("pcamShutter").classList.remove("recording");
+
+    if (recorder?.state==="recording") {
+      recorder.stop();
+    }
+  }
+
+  function setMode(next) {
+    if (recording) return;
+
+    mode = next;
+
+    document.querySelectorAll(".pcam-modes button")
+      .forEach(button => {
+        button.classList.toggle(
+          "active",
+          button.dataset.mode===mode
+        );
+      });
+
+    $("pcamShutter").classList.toggle(
+      "video",mode==="video"
+    );
+  }
+
+  function openViewer(index) {
+    if (!mediaItems.length) {
+      // ให้ผู้เล่นเลือกคลิปสตอรี่ของพีทมาเปิดได้
+      $("pcamStoryInput").click();
+      return;
+    }
+
+    viewerIndex = Math.max(
+      0,Math.min(index,mediaItems.length-1)
+    );
+
+    const item = mediaItems[viewerIndex];
+    const content = $("pcamViewerContent");
+    content.replaceChildren();
+
+    if (item.type==="photo") {
+      const img = document.createElement("img");
+      img.src = item.url;
+      content.appendChild(img);
+    } else {
+      const video = document.createElement("video");
+      video.src = item.url;
+      video.controls = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      content.appendChild(video);
+    }
+
+    $("pcamViewer").style.display = "flex";
+  }
+
+  function closeViewer() {
+    const video = $("pcamViewerContent").querySelector("video");
+    if (video) video.pause();
+    $("pcamViewer").style.display = "none";
+  }
+
+  function exitCamera() {
+    stopRecording();
+    closeViewer();
+    stopStream();
+    screen.style.display = "none";
+
+    if (typeof window.showPhoneScreen==="function") {
+      window.showPhoneScreen("homeScreen");
+    } else {
+      const home = $("homeScreen");
+      if (home) home.style.display = "flex";
+    }
+  }
+
+  window.openPeteCamera = function () {
+    document.querySelectorAll(".screen").forEach(el => {
+      el.style.display = "none";
+    });
+
+    screen.style.display = "flex";
+    startCamera();
+  };
+
+  /* --------- EVENTS --------- */
+  $("pcamEnable").onclick = startCamera;
+  $("pcamExit").onclick = exitCamera;
+
+  $("pcamShutter").onclick = () => {
+    if (mode==="photo") {
+      takePhoto();
+    } else if (recording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  $("pcamFlip").onclick = async () => {
+    if (recording) return;
+    facing = facing==="environment" ? "user" : "environment";
+    await startCamera();
+  };
+
+  document.querySelectorAll(".pcam-modes button")
+    .forEach(button => {
+      button.onclick = () => setMode(button.dataset.mode);
+    });
+
+  document.querySelectorAll(".pcam-zoom button")
+    .forEach(button => {
+      button.onclick = () => {
+        zoom = Number(button.dataset.zoom);
+
+        document.querySelectorAll(".pcam-zoom button")
+          .forEach(b => b.classList.toggle(
+            "active",b===button
+          ));
+
+        applyZoom();
+      };
+    });
+
+  $("pcamGrid").onclick = () => {
+    const guide = $("pcamGuide");
+    guide.style.display =
+      guide.style.display==="grid" ? "none" : "grid";
+  };
+
+  $("pcamFlash").onclick = () => {
+    toast("แฟลชยังไม่รองรับในโหมดนี้");
+  };
+
+  $("pcamRatio").onclick = () => {
+    toast("อัตราส่วนภาพขึ้นอยู่กับกล้องของอุปกรณ์");
+  };
+
+  $("pcamGallery").onclick = () => {
+    openViewer(mediaItems.length-1);
+  };
+
+  $("pcamViewerBack").onclick = closeViewer;
+
+  $("pcamPrevious").onclick = () => {
+    openViewer(viewerIndex-1);
+  };
+
+  $("pcamNext").onclick = () => {
+    openViewer(viewerIndex+1);
+  };
+
+  $("pcamDownload").onclick = () => {
+    const item = mediaItems[viewerIndex];
+    if (!item) return;
+
+    const a = document.createElement("a");
+    a.href = item.url;
+    a.download = item.name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  $("pcamStoryInput").onchange = event => {
+    const files = [...event.target.files];
+
+    files.forEach(file => {
+      if (!file.type.startsWith("video/")) return;
+
+      mediaItems.push({
+        type:"video",
+        url:URL.createObjectURL(file),
+        name:file.name
+      });
+    });
+
+    updateThumb();
+
+    if (files.length && mediaItems.length) {
+      openViewer(mediaItems.length-1);
+    }
+
+    event.target.value = "";
+  };
+
+  // ปิดกล้องเมื่อแอปอื่นเรียก screen manager
+  const previousSwitcher = window.showPhoneScreen;
+
+  if (typeof previousSwitcher==="function") {
+    window.showPhoneScreen = function(id) {
+      if (id!=="peteCameraScreen" &&
+          screen.style.display!=="none") {
+        stopRecording();
+        closeViewer();
+        stopStream();
+        screen.style.display = "none";
+      }
+
+      return previousSwitcher.apply(this,arguments);
+    };
+  }
+})();
+
 </script>
 </body>
 </html>
