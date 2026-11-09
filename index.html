@@ -13075,22 +13075,44 @@ function snSort() {
 
   const icon = document.createElement("div");
   icon.className = "home-app";
-  icon.innerHTML = `
-    <div class="home-app-icon" style="padding:0;background:transparent;overflow:hidden">
-      <svg viewBox="0 0 64 64" width="54" height="54"
-           xmlns="http://www.w3.org/2000/svg">
-        <rect width="64" height="64" rx="15" fill="#f7f8fc"/>
-        <circle cx="32" cy="32" r="22" fill="#fff"
-          stroke="#d7dbe4" stroke-width="1"/>
-        <g stroke="#333944" stroke-linecap="round">
-          <path d="M32 12v4M32 48v4M12 32h4M48 32h4"
-            stroke-width="2"/>
-          <path d="M32 32V20M32 32l9 6"
-            stroke-width="3"/>
-        </g>
-        <circle cx="32" cy="32" r="2.6" fill="#5679dd"/>
-      </svg>
-    </div>
+  
+icon.innerHTML = `
+  <div class="home-app-icon"
+       style="padding:0;background:transparent;overflow:hidden">
+    <svg viewBox="0 0 64 64" width="54" height="54"
+         xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" rx="16" fill="#dce1fa"/>
+      <circle cx="32" cy="32" r="24" fill="#f8f9ff"/>
+
+      <g fill="#30354a" font-family="Arial, sans-serif"
+         font-size="6.5" font-weight="600"
+         text-anchor="middle" dominant-baseline="middle">
+        <text x="32" y="13">12</text>
+        <text x="41.5" y="15.5">1</text>
+        <text x="48.5" y="22.5">2</text>
+        <text x="51" y="32">3</text>
+        <text x="48.5" y="41.5">4</text>
+        <text x="41.5" y="48.5">5</text>
+        <text x="32" y="51">6</text>
+        <text x="22.5" y="48.5">7</text>
+        <text x="15.5" y="41.5">8</text>
+        <text x="13" y="32">9</text>
+        <text x="15.5" y="22.5">10</text>
+        <text x="22.5" y="15.5">11</text>
+      </g>
+
+      <path d="M32 32V19"
+            stroke="#30354a" stroke-width="2.8"
+            stroke-linecap="round"/>
+      <path d="M32 32L42 39"
+            stroke="#30354a" stroke-width="2.8"
+            stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="2.5" fill="#7186d8"/>
+    </svg>
+  </div>
+  <span>นาฬิกา</span>
+`;
+
     <span>นาฬิกา</span>`;
   icon.onclick = () => window.openPeteClock();
 
