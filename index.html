@@ -4615,7 +4615,9 @@ img.line-profile-avatar {
 <div class="lock-actions">
 
   <!-- ปุ่มโทรศัพท์ด้านซ้าย -->
-  <button class="lock-action" type="button" aria-label="โทรศัพท์">
+ <button class="lock-action" type="button"
+  aria-label="โทรศัพท์"
+  onclick="window.peteOpenedFromLock = true; openPetePhone();">
     <svg viewBox="0 0 24 24">
       <path d="M22 16.9v3a2 2 0 0 1-2.2 2
       19.8 19.8 0 0 1-8.6-3.1
@@ -4670,7 +4672,9 @@ img.line-profile-avatar {
   </div>
 
   <!-- ปุ่มกล้องด้านขวา -->
-  <button class="lock-action" type="button" aria-label="กล้อง">
+  <button class="lock-action" type="button"
+  aria-label="กล้อง"
+  onclick="window.peteOpenedFromLock = true; openPeteCamera();">
     <svg viewBox="0 0 24 24">
       <path d="M14 4h-4L8 7H4
       a2 2 0 0 0-2 2v9
@@ -14311,24 +14315,27 @@ if (!state.phoneHistoryMigrationV2) {
     return el;
   }
 
-  function goHome() {
-    closeDetail();
-    screen.style.display = "none";
-    if (typeof window.showPhoneScreen === "function") {
-      window.showPhoneScreen("homeScreen");
-    } else {
-      document.getElementById("homeScreen").style.display = "flex";
+
+function goHome() {
+  closeDetail();
+  screen.style.display = "none";
+
+  const target = window.peteOpenedFromLock
+    ? "lockScreen"
+    : "homeScreen";
+
+  window.peteOpenedFromLock = false;
+
+  if (typeof window.showPhoneScreen === "function") {
+    window.showPhoneScreen(target);
+  } else {
+    const targetScreen = document.getElementById(target);
+    if (targetScreen) {
+      targetScreen.style.display = "flex";
     }
   }
+}
 
-  window.openPetePhone = function () {
-    document.querySelectorAll(".screen").forEach(el => {
-      el.style.display = "none";
-    });
-    screen.style.display = "flex";
-    closeDetail();
-    render();
-  };
 
   function render() {
     document.querySelectorAll("#phTabs button").forEach(button => {
@@ -16307,19 +16314,29 @@ if (!state.phoneHistoryMigrationV2) {
     $("pcamViewer").style.display = "none";
   }
 
-  function exitCamera() {
-    stopRecording();
-    closeViewer();
-    stopStream();
-    screen.style.display = "none";
 
-    if (typeof window.showPhoneScreen==="function") {
-      window.showPhoneScreen("homeScreen");
-    } else {
-      const home = $("homeScreen");
-      if (home) home.style.display = "flex";
+function exitCamera() {
+  stopRecording();
+  closeViewer();
+  stopStream();
+  screen.style.display = "none";
+
+  const target = window.peteOpenedFromLock
+    ? "lockScreen"
+    : "homeScreen";
+
+  window.peteOpenedFromLock = false;
+
+  if (typeof window.showPhoneScreen === "function") {
+    window.showPhoneScreen(target);
+  } else {
+    const targetScreen = document.getElementById(target);
+    if (targetScreen) {
+      targetScreen.style.display = "flex";
     }
   }
+}
+
 
   window.openPeteCamera = function () {
     document.querySelectorAll(".screen").forEach(el => {
