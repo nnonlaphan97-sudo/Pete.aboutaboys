@@ -3791,7 +3791,277 @@ img.line-profile-avatar {
 .kao-voice-bubble audio {
   display: none !important;
 }
+/* SAMSUNG CALENDAR */
 
+.pete-cal-icon {
+  background: #fff !important;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.pete-cal-icon svg {
+  width: 54px;
+  height: 54px;
+  display: block;
+}
+
+#peteCalendarScreen {
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  color: #202127;
+  z-index: 8;
+  padding-top: 38px;
+  font-family: Arial, sans-serif;
+}
+
+#peteCalendarScreen * {
+  box-sizing: border-box;
+}
+
+.pc-top {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.pc-top button,
+.pc-month button,
+.pc-editor-head button {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pc-top button {
+  font-size: 25px;
+}
+
+.pc-top strong {
+  flex: 1;
+  font-size: 20px;
+}
+
+.pc-month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 18px;
+  flex-shrink: 0;
+}
+
+.pc-month strong {
+  font-size: 26px;
+}
+
+.pc-month button {
+  font-size: 26px;
+  padding: 0 8px;
+}
+
+.pc-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 10px 8px;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+}
+
+.pc-week span:first-child {
+  color: #e25c61;
+}
+
+.pc-week span:last-child {
+  color: #5481d7;
+}
+
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  padding: 0 8px 12px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.pc-day {
+  min-width: 0;
+  min-height: 55px;
+  padding: 4px 1px;
+  border: 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: #222;
+  cursor: pointer;
+}
+
+.pc-day.other { opacity: .3; }
+.pc-day.sun { color: #e25c61; }
+.pc-day.sat { color: #5481d7; }
+
+.pc-day .pc-num {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 13px;
+}
+
+.pc-day.today .pc-num {
+  border: 1px solid #aaa;
+}
+
+.pc-day.selected .pc-num {
+  background: #4b80ed;
+  color: white;
+  border-color: transparent;
+}
+
+.pc-dots {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  height: 5px;
+}
+
+.pc-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  display: block;
+}
+
+.pc-agenda {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 18px 88px;
+}
+
+.pc-agenda h3 {
+  font-size: 16px;
+  margin: 0 0 17px;
+}
+
+.pc-item {
+  display: flex;
+  gap: 11px;
+  padding: 12px 10px;
+  margin-bottom: 9px;
+  background: #f6f7fa;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.pc-stripe {
+  width: 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.pc-item strong {
+  font-size: 14px;
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.pc-item small {
+  display: block;
+  margin-top: 6px;
+  color: #777;
+  font-size: 12px;
+}
+
+.pc-empty {
+  font-size: 13px;
+  color: #999;
+  text-align: center;
+  margin-top: 35px;
+}
+
+.pc-add {
+  position: absolute;
+  right: 22px;
+  bottom: 37px;
+  border: 0;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  background: #4b80ed;
+  color: #fff;
+  font-size: 33px;
+  box-shadow: 0 4px 12px #0002;
+  cursor: pointer;
+}
+
+.pc-editor {
+  display: none;
+  position: absolute;
+  inset: 38px 0 0;
+  background: white;
+  z-index: 10;
+  overflow-y: auto;
+  color: #222;
+}
+
+.pc-editor-head {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 17px;
+  border-bottom: 1px solid #eee;
+}
+
+.pc-editor-head button {
+  color: #3677e6;
+  font-size: 14px;
+}
+
+.pc-form {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pc-form label {
+  font-size: 13px;
+  color: #777;
+  margin-top: 8px;
+}
+
+.pc-form input,
+.pc-form textarea {
+  width: 100%;
+  border: 0;
+  background: #f5f5f7;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 15px;
+  color: #222;
+  font-family: inherit;
+}
+
+.pc-delete {
+  border: 0;
+  border-radius: 12px;
+  background: #fff0f0;
+  color: #d43e46;
+  padding: 13px;
+  font-size: 14px;
+  margin-top: 20px;
+}
+ 
 </style>
 </head>
 
@@ -4146,6 +4416,21 @@ img.line-profile-avatar {
 </div>
   <span>Spotify</span>
 </div>
+ <div class="home-app" onclick="openPeteCalendar()">
+  <div class="home-app-icon pete-cal-icon">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" rx="15" fill="#ffffff"/>
+      <path d="M12 15H52" stroke="#e6e8ed" stroke-width="2"/>
+      <text x="32" y="17" text-anchor="middle"
+            font-family="Arial" font-size="9"
+            font-weight="bold" fill="#e95460">NOV</text>
+      <text id="pcIconDay" x="32" y="47"
+            text-anchor="middle" font-family="Arial"
+            font-size="32" fill="#2870dc">9</text>
+    </svg>
+  </div>
+  <span>ปฏิทิน</span>
+</div>
 
   <div class="home-dock">
     <span>Phone</span>
@@ -4157,7 +4442,65 @@ img.line-profile-avatar {
     <div class="gesture-bar"></div>
   </div>
 </section>
+<!-- SAMSUNG CALENDAR -->
+<section class="screen" id="peteCalendarScreen">
 
+  <div class="pc-top">
+    <button onclick="showPhoneScreen('homeScreen')">‹</button>
+    <strong>ปฏิทิน</strong>
+    <button onclick="pcToday()">⌖</button>
+  </div>
+
+  <div class="pc-month">
+    <strong id="pcMonthTitle"></strong>
+    <div>
+      <button onclick="pcMove(-1)">‹</button>
+      <button onclick="pcMove(1)">›</button>
+    </div>
+  </div>
+
+  <div class="pc-week">
+    <span>อา.</span><span>จ.</span><span>อ.</span>
+    <span>พ.</span><span>พฤ.</span><span>ศ.</span><span>ส.</span>
+  </div>
+
+  <div id="pcGrid" class="pc-grid"></div>
+
+  <div class="pc-agenda">
+    <h3 id="pcDayTitle"></h3>
+    <div id="pcEvents"></div>
+  </div>
+
+  <button class="pc-add" onclick="pcEdit()">+</button>
+
+  <div id="pcEditor" class="pc-editor">
+    <div class="pc-editor-head">
+      <button onclick="pcCloseEdit()">ยกเลิก</button>
+      <strong id="pcEditorTitle">เพิ่มกิจกรรม</strong>
+      <button onclick="pcSave()">บันทึก</button>
+    </div>
+
+    <div class="pc-form">
+      <input id="pcTitle" placeholder="ชื่อกิจกรรม" maxlength="150">
+
+      <label>วันที่เริ่ม</label>
+      <input type="date" id="pcDate">
+
+      <label>วันที่สิ้นสุด</label>
+      <input type="date" id="pcEndDate">
+
+      <label>เวลา (ไม่จำเป็น)</label>
+      <input type="time" id="pcTime">
+
+      <label>รายละเอียด</label>
+      <textarea id="pcNote" rows="3"></textarea>
+
+      <button id="pcDelete" class="pc-delete"
+              onclick="pcRemove()">ลบกิจกรรม</button>
+    </div>
+  </div>
+
+</section>
 <!-- SPOTIFY SCREEN -->
 <section class="screen spotify-screen" id="spotifyScreen">
 
@@ -5598,6 +5941,7 @@ function showPhoneScreen(screenId) {
    "instagramScreen",
   "galleryScreen",
   "spotifyScreen"
+  "peteCalendarScreen"
 ].forEach(id => {
     const screen = document.getElementById(id);
 
@@ -10988,7 +11332,299 @@ function kaoStopAnswerAudio() {
   kaoAnswerAudio.pause();
   kaoAnswerAudio.currentTime = 0;
 }
+/* SAMSUNG CALENDAR DATA */
 
+const PC_KEY = "pete_calendar_events_v1";
+
+const PC_SEED = [
+  ["2026-10-17","2026-10-17","meeting familly","","#6489e9",""],
+  ["2026-10-25","2026-10-25","พาไอ้เก้าไปเที่ยว","","#ef8c62",""],
+  ["2026-10-30","2026-10-30","about a boy","","#a57ce2",""],
+
+  ["2026-11-01","2026-11-01","สอบวิศวกรรมไฟฟ้า: คณิตศาสตร์วิศวกรรม","09:00","#4b80ed","ตารางสอบสมมติ"],
+  ["2026-11-02","2026-11-02","สอบวิศวกรรมไฟฟ้า: วิเคราะห์วงจรไฟฟ้า","09:00","#4b80ed","ตารางสอบสมมติ"],
+  ["2026-11-03","2026-11-03","สอบวิศวกรรมไฟฟ้า: อิเล็กทรอนิกส์","09:00","#4b80ed","ตารางสอบสมมติ"],
+  ["2026-11-04","2026-11-04","สอบวิศวกรรมไฟฟ้า: เครื่องจักรกลไฟฟ้า","09:00","#4b80ed","ตารางสอบสมมติ"],
+  ["2026-11-05","2026-11-05","สอบวิศวกรรมไฟฟ้า: ระบบควบคุม","09:00","#4b80ed","ตารางสอบสมมติ"],
+  ["2026-11-06","2026-11-06","สอบวิศวกรรมไฟฟ้า: ระบบไฟฟ้ากำลัง","09:00","#4b80ed","ตารางสอบสมมติ"],
+  ["2026-11-07","2026-11-07","สอบวิศวกรรมไฟฟ้า: การวัดและเครื่องมือวัดไฟฟ้า","09:00","#4b80ed","ตารางสอบสมมติ"],
+
+  ["2026-11-18","2026-11-18","เจอพี่โจ้","","#63b88e",""],
+  ["2026-11-21","2026-11-23","งาน young gear","","#ec8a5b",""]
+].map((a,i) => ({
+  id: "seed-" + i,
+  start: a[0],
+  end: a[1],
+  title: a[2],
+  time: a[3],
+  color: a[4],
+  note: a[5]
+}));
+
+let pcData = [];
+
+try {
+  const raw = localStorage.getItem(PC_KEY);
+  pcData = raw === null ? PC_SEED : JSON.parse(raw);
+
+  if (!Array.isArray(pcData)) pcData = PC_SEED;
+
+  if (raw === null) {
+    localStorage.setItem(PC_KEY, JSON.stringify(pcData));
+  }
+} catch (e) {
+  pcData = PC_SEED.slice();
+}
+
+const pcMonthNames = [
+  "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน",
+  "พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม",
+  "กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+];
+
+function pcKey(d) {
+  return d.getFullYear() + "-" +
+    String(d.getMonth()+1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
+}
+
+function pcParse(s) {
+  const a = s.split("-").map(Number);
+  return new Date(a[0],a[1]-1,a[2]);
+}
+
+let pcView = new Date();
+let pcSelected = pcKey(new Date());
+let pcEditing = null;
+
+function openPeteCalendar() {
+  showPhoneScreen("peteCalendarScreen");
+  pcRender();
+}
+
+function pcToday() {
+  pcView = new Date();
+  pcSelected = pcKey(pcView);
+  pcRender();
+}
+
+function pcMove(n) {
+  pcView = new Date(
+    pcView.getFullYear(),
+    pcView.getMonth()+n,
+    1
+  );
+  pcSelected = pcKey(pcView);
+  pcRender();
+}
+
+function pcEventsOn(day) {
+  return pcData.filter(e => e.start <= day && e.end >= day);
+}
+
+function pcRender() {
+  const y = pcView.getFullYear();
+  const m = pcView.getMonth();
+  const grid = document.getElementById("pcGrid");
+
+  document.getElementById("pcMonthTitle").textContent =
+    pcMonthNames[m] + " " + (y+543);
+
+  grid.replaceChildren();
+
+  const first = new Date(y,m,1).getDay();
+  const days = new Date(y,m+1,0).getDate();
+  const cells = Math.ceil((first+days)/7)*7;
+
+  for (let i=0; i<cells; i++) {
+    const d = new Date(y,m,i-first+1);
+    const key = pcKey(d);
+    const ev = pcEventsOn(key);
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pc-day";
+
+    if (d.getMonth() !== m) btn.classList.add("other");
+    if (d.getDay() === 0) btn.classList.add("sun");
+    if (d.getDay() === 6) btn.classList.add("sat");
+    if (key === pcKey(new Date())) btn.classList.add("today");
+    if (key === pcSelected) btn.classList.add("selected");
+
+    const num = document.createElement("span");
+    num.className = "pc-num";
+    num.textContent = d.getDate();
+    btn.append(num);
+
+    const dots = document.createElement("span");
+    dots.className = "pc-dots";
+
+    ev.slice(0,3).forEach(e => {
+      const dot = document.createElement("i");
+      dot.style.background = e.color || "#4b80ed";
+      dots.append(dot);
+    });
+
+    btn.append(dots);
+
+    btn.onclick = () => {
+      pcSelected = key;
+      pcView = new Date(d.getFullYear(),d.getMonth(),1);
+      pcRender();
+    };
+
+    grid.append(btn);
+  }
+
+  document.getElementById("pcDayTitle").textContent =
+    pcParse(pcSelected).toLocaleDateString("th-TH",{
+      weekday:"long",
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    });
+
+  const list = document.getElementById("pcEvents");
+  list.replaceChildren();
+
+  const events = pcEventsOn(pcSelected)
+    .sort((a,b) => (a.time||"").localeCompare(b.time||""));
+
+  if (!events.length) {
+    const empty = document.createElement("p");
+    empty.className = "pc-empty";
+    empty.textContent = "ไม่มีกิจกรรม";
+    list.append(empty);
+  }
+
+  events.forEach(e => {
+    const row = document.createElement("div");
+    row.className = "pc-item";
+
+    const stripe = document.createElement("div");
+    stripe.className = "pc-stripe";
+    stripe.style.background = e.color || "#4b80ed";
+
+    const body = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = e.title;
+
+    const meta = document.createElement("small");
+    meta.textContent =
+      (e.time ? e.time+" น." : "ตลอดวัน") +
+      (e.start !== e.end ? " · "+e.start+" – "+e.end : "");
+
+    body.append(title,meta);
+
+    if (e.note) {
+      const note = document.createElement("small");
+      note.textContent = e.note;
+      body.append(note);
+    }
+
+    row.append(stripe,body);
+    row.onclick = () => pcEdit(e.id);
+    list.append(row);
+  });
+
+  const icon = document.getElementById("pcIconDay");
+  if (icon) icon.textContent = new Date().getDate();
+}
+
+function pcEdit(id=null) {
+  const e = pcData.find(v => v.id === id);
+  pcEditing = e ? e.id : null;
+
+  document.getElementById("pcEditorTitle").textContent =
+    e ? "แก้ไขกิจกรรม" : "เพิ่มกิจกรรม";
+
+  document.getElementById("pcTitle").value =
+    e ? e.title : "";
+
+  document.getElementById("pcDate").value =
+    e ? e.start : pcSelected;
+
+  document.getElementById("pcEndDate").value =
+    e ? e.end : pcSelected;
+
+  document.getElementById("pcTime").value =
+    e ? e.time : "";
+
+  document.getElementById("pcNote").value =
+    e ? e.note : "";
+
+  document.getElementById("pcDelete").style.display =
+    e ? "block" : "none";
+
+  document.getElementById("pcEditor").style.display = "block";
+}
+
+function pcCloseEdit() {
+  document.getElementById("pcEditor").style.display = "none";
+  pcEditing = null;
+}
+
+function pcCommit(next) {
+  try {
+    localStorage.setItem(PC_KEY,JSON.stringify(next));
+    pcData = next;
+    return true;
+  } catch(e) {
+    alert("บันทึกไม่ได้ กรุณาตรวจสอบพื้นที่จัดเก็บข้อมูล");
+    return false;
+  }
+}
+
+function pcSave() {
+  const title = document.getElementById("pcTitle").value.trim();
+  const start = document.getElementById("pcDate").value;
+  const end = document.getElementById("pcEndDate").value;
+  const time = document.getElementById("pcTime").value;
+  const note = document.getElementById("pcNote").value.trim();
+
+  if (!title || !start || !end) {
+    alert("กรุณากรอกชื่อและวันที่");
+    return;
+  }
+
+  if (end < start) {
+    alert("วันสิ้นสุดต้องไม่ก่อนวันเริ่ม");
+    return;
+  }
+
+  const old = pcData.find(e => e.id === pcEditing);
+
+  const event = {
+    id: old ? old.id :
+      "event-"+Date.now()+"-"+Math.random().toString(36).slice(2),
+    start,
+    end,
+    title,
+    time,
+    note,
+    color: old ? old.color : "#4b80ed"
+  };
+
+  const next = old
+    ? pcData.map(e => e.id === old.id ? event : e)
+    : [...pcData,event];
+
+  if (pcCommit(next)) {
+    pcSelected = start;
+    pcView = pcParse(start);
+    pcCloseEdit();
+    pcRender();
+  }
+}
+
+function pcRemove() {
+  if (!pcEditing || !confirm("ลบกิจกรรมนี้ใช่ไหม?")) return;
+
+  if (pcCommit(pcData.filter(e => e.id !== pcEditing))) {
+    pcCloseEdit();
+    pcRender();
+  }
+}
 </script>
 </body>
 </html>
