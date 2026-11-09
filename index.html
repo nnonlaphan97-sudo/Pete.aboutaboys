@@ -17547,6 +17547,237 @@ if (!state.phoneBlockMigrationV1) {
   console.log("Pete Camera Samsung UI installed");
 })();
 
+/* ==========================================
+   PETE PHONE - LINE VOICE WAVEFORM FIX
+   แก้การ์ดเสียงเดิม ไม่สร้างข้อความซ้ำ
+   ========================================== */
+(function () {
+  "use strict";
+
+  if (document.getElementById("peteLineWaveFix")) return;
+
+  const style = document.createElement("style");
+  style.id = "peteLineWaveFix";
+
+  style.textContent = `
+    /* การ์ดข้อความเสียง */
+    #kaoChatMessages .kao-message-row
+    .kao-message-bubble.kao-voice-bubble {
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      flex-wrap: nowrap !important;
+
+      width: 218px !important;
+      min-width: 218px !important;
+      max-width: 218px !important;
+      flex: 0 0 218px !important;
+
+      height: 54px !important;
+      min-height: 54px !important;
+
+      padding: 8px 12px !important;
+      gap: 10px !important;
+      border-radius: 23px !important;
+      background: #60e873 !important;
+      overflow: hidden !important;
+    }
+
+    /* ปุ่มเล่นเสียง */
+    #kaoChatMessages .kao-voice-bubble
+    .kao-voice-play {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 0 0 25px !important;
+      width: 25px !important;
+      height: 34px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      color: #174d29 !important;
+      cursor: pointer !important;
+    }
+
+    /* พื้นที่คลื่นเสียง */
+    #kaoChatMessages .kao-voice-bubble
+    .kao-voice-wave {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      width: auto !important;
+      height: 32px !important;
+      gap: 2px !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+    }
+
+    /* แท่งคลื่นเสียง */
+    #kaoChatMessages .kao-voice-bubble
+    .kao-voice-wave span {
+      display: block !important;
+      flex: 0 0 3px !important;
+      width: 3px !important;
+      min-width: 3px !important;
+      max-width: 3px !important;
+      min-height: 4px !important;
+      max-height: 29px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 5px !important;
+      background: #27864b !important;
+      opacity: .85 !important;
+      transition: background .15s ease !important;
+    }
+
+    /* คลื่นส่วนที่เล่นผ่านแล้ว */
+    #kaoChatMessages .kao-voice-bubble
+    .kao-voice-wave span.played {
+      background: #ffffff !important;
+      opacity: 1 !important;
+    }
+
+    /* เวลาเสียง */
+    #kaoChatMessages .kao-voice-bubble
+    .kao-voice-duration {
+      display: block !important;
+      flex: 0 0 auto !important;
+      color: #174d29 !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      font-variant-numeric: tabular-nums !important;
+      white-space: nowrap !important;
+    }
+
+    /* ซ่อนตัวเล่นเสียงของเบราว์เซอร์ */
+    #kaoChatMessages .kao-voice-bubble audio {
+      display: none !important;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  // รูปร่างคลื่นเสียงแบบข้อความเสียง LINE
+  const heights = [
+    8, 13, 21, 12, 26, 17, 9, 24,
+    29, 15, 11, 23, 16, 27, 12,
+    19, 9, 25, 17, 11, 21, 14
+  ];
+
+  function repairWave(bubble) {
+    const wave = bubble.querySelector(".kao-voice-wave");
+    if (!wave) return;
+
+    // ป้องกันการสร้างคลื่นซ้ำ
+    if (wave.dataset.waveFixed === "true") return;
+
+    const oldBars = [...wave.querySelectorAll("span")];
+    const playedCount = oldBars.filter(
+      bar => bar.classList.contains("played")
+    ).length;
+
+    const oldProgress = oldBars.length
+      ? playedCount / oldBars.length
+      : 0;
+
+    wave.replaceChildren();
+
+    heights.forEach((height, index) => {
+      const bar = document.createElement("span");
+      bar.style.setProperty(
+        "height",
+        height + "px",
+        "important"
+      );
+
+      if ((index + 1) / heights.length <= oldProgress) {
+        bar.classList.add("played");
+      }
+
+      wave.appendChild(bar);
+    });
+
+    wave.dataset.waveFixed = "true";
+
+    const audio = bubble.querySelector("audio");
+
+    if (audio) {
+      const updateProgress = () => {
+        const duration = audio.duration;
+        const progress =
+          Number.isFinite(duration) && duration > 0
+            ? audio.currentTime / duration
+            : 0;
+
+        [...wave.children].forEach((bar, index) => {
+          bar.classList.toggle(
+            "played",
+            (index + 1) / heights.length <= progress
+          );
+        });
+      };
+
+      audio.addEventListener("timeupdate", updateProgress);
+      audio.addEventListener("seeked", updateProgress);
+      audio.addEventListener("ended", updateProgress);
+      updateProgress();
+
+      // แตะคลื่นเสียงเพื่อข้ามไปยังตำแหน่งที่ต้องการ
+      wave.addEventListener("click", event => {
+        if (!Number.isFinite(audio.duration) ||
+            audio.duration <= 0) return;
+
+        const rect = wave.getBoundingClientRect();
+        const position = Math.min(
+          1,
+          Math.max(
+            0,
+            (event.clientX - rect.left) / rect.width
+          )
+        );
+
+        audio.currentTime = position * audio.duration;
+        updateProgress();
+      });
+
+      wave.style.cursor = "pointer";
+    }
+  }
+
+  function repairAllWaves() {
+    document.querySelectorAll(
+      "#kaoChatMessages .kao-voice-bubble"
+    ).forEach(repairWave);
+  }
+
+  // แก้ข้อความเสียงที่แสดงอยู่แล้ว
+  repairAllWaves();
+
+  // แก้ข้อความเสียงใหม่ทุกครั้งที่ LINE โหลดแชต
+  const chat = document.getElementById("kaoChatMessages");
+
+  if (chat) {
+    const observer = new MutationObserver(() => {
+      repairAllWaves();
+    });
+
+    observer.observe(chat, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  console.log("LINE voice waveform fixed");
+})();
+
 </script>
 </body>
 </html>
