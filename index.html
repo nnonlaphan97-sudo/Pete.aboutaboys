@@ -4468,6 +4468,67 @@ img.line-profile-avatar {
   border-radius: 10px;
 }
 
+/* =====================================
+   FIX HOME DOCK - COMPACT SAMSUNG STYLE
+   ===================================== */
+
+.home-dock {
+  position: absolute !important;
+  bottom: 47px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+
+  width: 190px !important;
+  height: 83px !important;
+  padding: 9px 12px !important;
+
+  border-radius: 23px !important;
+  background: rgba(255,255,255,0.18) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 30px !important;
+  z-index: 5 !important;
+}
+
+.home-dock .ph-dock-button,
+.home-dock .si-dock-button {
+  width: 58px !important;
+  min-width: 58px !important;
+  height: 65px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+
+  color: #fff !important;
+  font-size: 10px !important;
+}
+
+.home-dock .ph-dock-button svg,
+.home-dock .si-dock-button svg {
+  width: 46px !important;
+  height: 46px !important;
+  flex-shrink: 0 !important;
+}
+
+.home-dock .ph-dock-button span,
+.home-dock .si-dock-button span {
+  font-size: 10px !important;
+  line-height: 12px !important;
+  white-space: nowrap !important;
+}
+
 </style>
 </head>
 
