@@ -4829,6 +4829,23 @@ img.line-profile-avatar {
   <span>Notes</span>
 </div>
 
+<div class="home-dock" id="homeDock">
+  <button class="ph-dock-button"
+          type="button"
+          onclick="openPetePhone()"
+          aria-label="โทรศัพท์">
+    <svg viewBox="0 0 64 64" width="54" height="54"
+         xmlns="http://www.w3.org/2000/svg">
+      <rect width="64" height="64" rx="16" fill="#35B765"/>
+      <path d="M20 13c-3-1-7 2-7 7 0 15 16 31 31 31
+        5 0 8-4 7-7l-5-8c-1-2-4-2-6-1l-5 4
+        c-5-2-8-5-10-10l4-5c1-2 1-5-1-6z"
+        fill="#fff"/>
+    </svg>
+    <span>โทรศัพท์</span>
+  </button>
+</div>
+
   <div class="home-bottom" onclick="lockPhone()">
     <div class="gesture-bar"></div>
   </div>
@@ -14135,12 +14152,9 @@ icon.innerHTML = `
   phoneContainer.appendChild(screen);
 
   /* Replace the original Phone text in the dock. */
-  const dock = document.querySelector(".home-dock");
+  const dock = document.querySelector("#homeDock");
   if (dock) {
-    const existingPhone = [...dock.children].find(el =>
-      el.textContent.trim().toLowerCase() === "phone"
-    );
-
+ const existingPhone = dock.querySelector(".ph-dock-button");
     const dockButton = document.createElement("button");
     dockButton.className = "ph-dock-button";
     dockButton.type = "button";
