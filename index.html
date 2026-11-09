@@ -16436,6 +16436,211 @@ if (!state.phoneBlockMigrationV1) {
   }
 })();
 
+/* ==========================================
+   PETE CAMERA - USE PETE'S INSTAGRAM STORY
+   ========================================== */
+(function () {
+  "use strict";
+
+  const camera = document.getElementById("peteCameraScreen");
+  if (!camera || camera.dataset.peteStoryLinked) return;
+  camera.dataset.peteStoryLinked = "true";
+
+  // ใช้ไฟล์เดียวกับ Instagram Story ของพีท
+  const peteStory = (
+    typeof igStoriesData !== "undefined"
+      ? igStoriesData.find(story => story.own && story.video)
+      : null
+  );
+
+  const storySource = peteStory?.video || "videos/Videopete.mp4";
+
+  const preview = document.getElementById("pcamPreview");
+  const shutter = document.getElementById("pcamShutter");
+  const thumbnail = document.getElementById("pcamGallery");
+  const recordTime = document.getElementById("pcamRecordTime");
+  const timeText = document.getElementById("pcamTimeText");
+
+  if (!preview || !shutter) return;
+
+  const storyVideo = document.createElement("video");
+  storyVideo.id = "pcamPeteStoryVideo";
+  storyVideo.src = storySource;
+  storyVideo.playsInline = true;
+  storyVideo.preload = "metadata";
+  storyVideo.muted = true;
+  storyVideo.loop = true;
+
+  Object.assign(storyVideo.style, {
+    position: "absolute",
+    inset: "0",
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    background: "#000",
+    display: "none",
+    zIndex: "2"
+  });
+
+  preview.appendChild(storyVideo);
+
+  // ให้ตัวจับเวลาปรากฏเหนือวิดีโอ
+  if (recordTime) recordTime.style.zIndex = "4";
+
+  let currentMode = "photo";
+  let recording = false;
+  let startedAt = 0;
+  let timer = null;
+  let savedStory = false;
+
+  function stopTimer() {
+    clearInterval(timer);
+    timer = null;
+    if (recordTime) recordTime.style.display = "none";
+  }
+
+  function syncMode() {
+    const selected = camera.querySelector(
+      '.pcam-modes button.active'
+    );
+
+    currentMode = selected?.dataset.mode || "photo";
+
+    const videoMode = currentMode === "video";
+    storyVideo.style.display = videoMode ? "block" : "none";
+
+    if (videoMode) {
+      storyVideo.currentTime = 0;
+      storyVideo.play().catch(() => {});
+    } else {
+      storyVideo.pause();
+      recording = false;
+      stopTimer();
+      shutter.classList.remove("recording");
+    }
+  }
+
+  camera.querySelectorAll(".pcam-modes button")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        // ทำงานหลังโค้ดเปลี่ยนโหมดเดิม
+        syncMode();
+      });
+    });
+
+  function openSavedStory() {
+    const viewer = document.getElementById("pcamViewer");
+    const content = document.getElementById("pcamViewerContent");
+
+    if (!viewer || !content) return;
+
+    const video = document.createElement("video");
+    video.src = storySource;
+    video.controls = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.style.maxWidth = "100%";
+    video.style.maxHeight = "100%";
+
+    content.replaceChildren(video);
+    viewer.style.display = "flex";
+  }
+
+  // ดักเฉพาะปุ่มชัตเตอร์ในโหมด VIDEO
+  shutter.addEventListener("click", event => {
+    if (currentMode !== "video") return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (!recording) {
+      recording = true;
+      startedAt = Date.now();
+
+      storyVideo.currentTime = 0;
+      storyVideo.muted = true;
+      storyVideo.play().catch(() => {});
+
+      shutter.classList.add("recording");
+      if (recordTime) recordTime.style.display = "flex";
+
+      timer = setInterval(() => {
+        const elapsed = Math.floor(
+          (Date.now() - startedAt) / 1000
+        );
+
+        if (timeText) {
+          timeText.textContent =
+            String(Math.floor(elapsed / 60)).padStart(2,"0") +
+            ":" +
+            String(elapsed % 60).padStart(2,"0");
+        }
+      }, 250);
+
+    } else {
+      recording = false;
+      stopTimer();
+      shutter.classList.remove("recording");
+
+      // บันทึกการอ้างอิงคลิปสตอรี่เดิม
+      savedStory = true;
+
+      if (thumbnail) {
+        thumbnail.innerHTML = `
+          <svg viewBox="0 0 24 24"
+               width="24" height="24"
+               fill="white">
+            <path d="M7 4v16l13-8z"/>
+          </svg>
+        `;
+      }
+    }
+  }, true);
+
+  // เปิดคลิปที่บันทึกจำลองจากรูปย่อ
+  thumbnail?.addEventListener("click", event => {
+    if (!savedStory) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    openSavedStory();
+  }, true);
+
+  // เมื่อเปิดกล้องใหม่ ให้เริ่มจาก PHOTO
+  const originalOpen = window.openPeteCamera;
+
+  if (typeof originalOpen === "function") {
+    window.openPeteCamera = function (...args) {
+      const result = originalOpen.apply(this,args);
+
+      currentMode = "photo";
+      recording = false;
+      stopTimer();
+
+      camera.querySelectorAll(".pcam-modes button")
+        .forEach(button => {
+          button.classList.toggle(
+            "active",
+            button.dataset.mode === "photo"
+          );
+        });
+
+      shutter.classList.remove("video","recording");
+      storyVideo.pause();
+      storyVideo.style.display = "none";
+
+      return result;
+    };
+  }
+
+  storyVideo.addEventListener("error", () => {
+    console.error(
+      "ไม่พบวิดีโอสตอรี่พีท:",
+      storySource
+    );
+  });
+})();
+
 </script>
 </body>
 </html>
