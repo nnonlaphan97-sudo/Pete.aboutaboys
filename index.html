@@ -14748,6 +14748,23 @@ function goHome() {
 
   document.getElementById("phBack").onclick = goHome;
   document.getElementById("phHome").onclick = goHome;
+  
+  // เปิดแอปโทรศัพท์จากหน้าโฮมหรือหน้าล็อก
+  window.openPetePhone = function () {
+    document.querySelectorAll(".screen").forEach(el => {
+      el.style.display = "none";
+    });
+
+    screen.style.display = "flex";
+
+    const statusBar = document.querySelector(".status-bar");
+    if (statusBar) {
+      statusBar.style.display = "flex";
+    }
+
+    render();
+  };
+
 
   document.getElementById("phSearchButton").onclick = () => {
     currentTab = "contacts";
