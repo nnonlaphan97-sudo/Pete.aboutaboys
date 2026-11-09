@@ -12639,6 +12639,1003 @@ function snSort() {
   }
 }
 
+/* ==================================================
+   PETE PHONE - SAMSUNG CLOCK
+   Alarm / World Clock / Stopwatch / Timer
+   ================================================== */
+
+(function () {
+  "use strict";
+
+  const CLOCK_KEY = "pete_clock_alarms_v1";
+  const DAYS = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
+  const ICONS = {
+    back: '<path d="m15 5-7 7 7 7"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    more: '<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+    alarm: '<circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M5 2 2 5M19 2l3 3"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-6 6-6 12 0 18M12 3c6 6 6 12 0 18"/>',
+    stopwatch: '<circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 2h6M12 2v3M18 5l2-2"/>',
+    timer: '<circle cx="12" cy="13" r="8"/><path d="M12 13V8M9 2h6M12 2v3"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',
+    check: '<path d="m5 12 5 5L20 7"/>'
+  };
+
+  function svg(name, size = 24) {
+    return `<svg viewBox="0 0 24 24" width="${size}" height="${size}"
+      fill="none" stroke="currentColor" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">${ICONS[name]}</svg>`;
+  }
+
+  const defaults = [
+    { id: "alarm-school", time: "07:00",
+      label: "ตื่นไปเรียน", days: [1,2,5], enabled: true },
+    { id: "alarm-kao", time: "15:30",
+      label: "ไปรับไอ้เก้าที่ร้านพี่ซัน",
+      days: [2,4,5], enabled: true },
+    { id: "alarm-laundry", time: "08:00",
+      label: "ซักผ้า", days: [6], enabled: false },
+    { id: "alarm-work", time: "09:30",
+      label: "ทำงานที่ค้างไว้", days: [0], enabled: false }
+  ];
+
+  let alarms;
+  try {
+    const saved = localStorage.getItem(CLOCK_KEY);
+    const parsed = saved === null ? null : JSON.parse(saved);
+    alarms = Array.isArray(parsed) ? parsed : defaults;
+  } catch (e) {
+    alarms = defaults;
+  }
+
+  let tab = "alarm";
+  let editingId = null;
+  let alarmDialogOpen = false;
+  let stopwatchRunning = false;
+  let stopwatchElapsed = 0;
+  let stopwatchStarted = 0;
+  let stopwatchLaps = [];
+  let timerRunning = false;
+  let timerRemaining = 300000;
+  let timerEnd = 0;
+  let timerConfigured = 300000;
+  let lastAlarmMinute = "";
+
+  function saveAlarms() {
+    try {
+      localStorage.setItem(CLOCK_KEY, JSON.stringify(alarms));
+    } catch (e) {
+      alert("ไม่สามารถบันทึกข้อมูลนาฬิกาได้");
+    }
+  }
+
+  const css = document.createElement("style");
+  css.textContent = `
+    #peteClockScreen {
+      display:none;
+      flex-direction:column;
+      background:#f9f9fb;
+      color:#202127;
+      z-index:9;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    #peteClockScreen * { box-sizing:border-box; }
+    #peteClockScreen button,
+    #peteClockScreen input {
+      font-family:inherit;
+    }
+    .sc-top {
+      height:94px;
+      flex-shrink:0;
+      display:flex;
+      align-items:flex-end;
+      gap:12px;
+      padding:42px 19px 13px;
+    }
+    .sc-top button {
+      background:none;
+      border:0;
+      color:#262626;
+      display:grid;
+      place-items:center;
+      padding:5px;
+      cursor:pointer;
+    }
+    .sc-top-title {
+      flex:1;
+      font-size:19px;
+      font-weight:650;
+    }
+    .sc-body {
+      flex:1;
+      min-height:0;
+      overflow-y:auto;
+      padding:12px 20px 100px;
+      scrollbar-width:none;
+    }
+    .sc-body::-webkit-scrollbar { display:none; }
+    .sc-heading {
+      font-size:31px;
+      font-weight:700;
+      letter-spacing:-.7px;
+      margin:7px 0 25px;
+    }
+    .sc-alarm-card {
+      background:#fff;
+      border:1px solid #efeff1;
+      border-radius:23px;
+      padding:19px 17px;
+      margin-bottom:13px;
+      box-shadow:0 2px 5px #00000004;
+    }
+    .sc-alarm-main {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .sc-alarm-time {
+      font-size:42px;
+      font-weight:350;
+      letter-spacing:-1.8px;
+      line-height:1.25;
+      cursor:pointer;
+    }
+    .sc-alarm-card.off .sc-alarm-time {
+      color:#a4a4a7;
+    }
+    .sc-switch {
+      width:47px;
+      height:27px;
+      border:0;
+      border-radius:20px;
+      background:#d4d5d9;
+      padding:3px;
+      flex-shrink:0;
+      cursor:pointer;
+      transition:background .2s;
+    }
+    .sc-switch::after {
+      content:"";
+      display:block;
+      width:21px;
+      height:21px;
+      background:white;
+      border-radius:50%;
+      box-shadow:0 1px 3px #0002;
+      transition:transform .2s;
+    }
+    .sc-switch.on { background:#728be6; }
+    .sc-switch.on::after { transform:translateX(20px); }
+    .sc-alarm-label {
+      font-size:13px;
+      color:#4b4b50;
+      margin-top:7px;
+      cursor:pointer;
+    }
+    .sc-alarm-days {
+      font-size:12px;
+      color:#96969b;
+      margin-top:7px;
+    }
+    .sc-add {
+      position:absolute;
+      bottom:88px;
+      right:22px;
+      width:55px;
+      height:55px;
+      border:0;
+      border-radius:18px;
+      background:#e1e8ff;
+      color:#4269ce;
+      display:grid;
+      place-items:center;
+      box-shadow:0 4px 12px #00000012;
+      cursor:pointer;
+    }
+    .sc-nav {
+      height:76px;
+      position:absolute;
+      bottom:18px;
+      left:0;
+      right:0;
+      background:#f9f9fb;
+      border-top:1px solid #ededf0;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      z-index:2;
+    }
+    .sc-nav button {
+      background:none;
+      border:0;
+      color:#96969d;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:5px;
+      font-size:10px;
+      cursor:pointer;
+    }
+    .sc-nav button.active { color:#486ed6; }
+    .sc-nav button.active svg {
+      background:#e2e9ff;
+      border-radius:15px;
+      box-sizing:content-box;
+      padding:5px 14px;
+      margin:-5px -14px;
+    }
+    .sc-bottom-gesture {
+      position:absolute;
+      bottom:0;
+      height:20px;
+      left:0;
+      right:0;
+      display:grid;
+      place-items:center;
+      background:#f9f9fb;
+      z-index:3;
+      cursor:pointer;
+    }
+    .sc-bottom-gesture::after {
+      content:"";
+      width:105px;
+      height:4px;
+      border-radius:10px;
+      background:#454545;
+    }
+    .sc-dialog {
+      position:absolute;
+      inset:0;
+      background:#f9f9fb;
+      z-index:5;
+      display:none;
+      flex-direction:column;
+      padding:46px 22px 34px;
+    }
+    .sc-dialog-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      margin-bottom:36px;
+    }
+    .sc-dialog-header button {
+      border:0;
+      background:none;
+      color:#333;
+      font-size:15px;
+      cursor:pointer;
+    }
+    .sc-dialog-header strong {
+      font-size:18px;
+    }
+    .sc-time-fields {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      margin:20px 0 36px;
+    }
+    .sc-time-fields input {
+      width:98px;
+      height:100px;
+      background:#fff;
+      border:1px solid #e5e5e9;
+      border-radius:18px;
+      font-size:53px;
+      text-align:center;
+      color:#26262b;
+      outline:none;
+    }
+    .sc-time-fields span {
+      font-size:38px;
+      font-weight:300;
+    }
+    .sc-field-label {
+      font-size:14px;
+      font-weight:600;
+      margin:14px 0;
+    }
+    .sc-day-picker {
+      display:flex;
+      justify-content:space-between;
+      gap:4px;
+      margin-bottom:23px;
+    }
+    .sc-day-picker button {
+      width:37px;
+      height:37px;
+      border-radius:50%;
+      border:0;
+      background:#ededf0;
+      color:#62626a;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .sc-day-picker button.selected {
+      background:#667fe0;
+      color:#fff;
+    }
+    .sc-label-input {
+      width:100%;
+      padding:15px;
+      border:0;
+      border-radius:14px;
+      background:#fff;
+      color:#222;
+      font-size:15px;
+      outline:none;
+    }
+    .sc-dialog-actions {
+      margin-top:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .sc-dialog-actions button {
+      border:0;
+      padding:13px 20px;
+      border-radius:24px;
+      cursor:pointer;
+    }
+    .sc-delete { background:#eeeef1; color:#555; }
+    .sc-save { background:#dfe7ff; color:#365cc6; font-weight:650; }
+    .sc-world-card {
+      background:#fff;
+      border-radius:22px;
+      padding:22px 18px;
+      margin-bottom:12px;
+    }
+    .sc-world-city { font-size:17px; font-weight:600; }
+    .sc-world-meta { font-size:12px; color:#999; margin-top:5px; }
+    .sc-world-time {
+      font-size:31px;
+      font-weight:350;
+      margin-top:15px;
+    }
+    .sc-digital {
+      font-size:49px;
+      font-weight:300;
+      letter-spacing:-2px;
+      font-variant-numeric:tabular-nums;
+      text-align:center;
+      margin:85px 0 35px;
+    }
+    .sc-circle-actions {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:22px;
+      margin:24px 0;
+    }
+    .sc-circle-actions button {
+      min-width:88px;
+      height:54px;
+      padding:0 16px;
+      border:0;
+      border-radius:28px;
+      background:#ececf0;
+      color:#333;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .sc-circle-actions .primary {
+      background:#dfe7ff;
+      color:#3d62d2;
+      font-weight:600;
+    }
+    .sc-laps {
+      margin-top:30px;
+      max-height:210px;
+      overflow-y:auto;
+    }
+    .sc-lap {
+      display:flex;
+      justify-content:space-between;
+      padding:13px 6px;
+      border-bottom:1px solid #e9e9ed;
+      font-size:13px;
+    }
+    .sc-timer-inputs {
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin:25px 0 0;
+    }
+    .sc-timer-inputs label {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:9px;
+      font-size:12px;
+      color:#888;
+    }
+    .sc-timer-inputs input {
+      width:78px;
+      height:73px;
+      border:0;
+      border-radius:15px;
+      background:#fff;
+      text-align:center;
+      font-size:32px;
+      color:#222;
+      outline:none;
+    }
+    .sc-empty {
+      text-align:center;
+      color:#999;
+      font-size:13px;
+      margin-top:65px;
+    }
+  `;
+  document.head.appendChild(css);
+
+  const icon = document.createElement("div");
+  icon.className = "home-app";
+  icon.innerHTML = `
+    <div class="home-app-icon" style="padding:0;background:transparent;overflow:hidden">
+      <svg viewBox="0 0 64 64" width="54" height="54"
+           xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="15" fill="#f7f8fc"/>
+        <circle cx="32" cy="32" r="22" fill="#fff"
+          stroke="#d7dbe4" stroke-width="1"/>
+        <g stroke="#333944" stroke-linecap="round">
+          <path d="M32 12v4M32 48v4M12 32h4M48 32h4"
+            stroke-width="2"/>
+          <path d="M32 32V20M32 32l9 6"
+            stroke-width="3"/>
+        </g>
+        <circle cx="32" cy="32" r="2.6" fill="#5679dd"/>
+      </svg>
+    </div>
+    <span>นาฬิกา</span>`;
+  icon.onclick = () => window.openPeteClock();
+
+  const homeApps = document.querySelector(".home-apps");
+  if (homeApps && !document.getElementById("peteClockHomeIcon")) {
+    icon.id = "peteClockHomeIcon";
+    homeApps.appendChild(icon);
+  }
+
+  const screen = document.createElement("section");
+  screen.id = "peteClockScreen";
+  screen.className = "screen";
+  screen.innerHTML = `
+    <div class="sc-top">
+      <button id="scBack" aria-label="ย้อนกลับ">${svg("back")}</button>
+      <div class="sc-top-title">นาฬิกา</div>
+      <button id="scMore" aria-label="ตัวเลือกเพิ่มเติม">${svg("more")}</button>
+    </div>
+    <div class="sc-body" id="scBody"></div>
+    <button class="sc-add" id="scAdd" aria-label="เพิ่มการปลุก">
+      ${svg("plus",27)}
+    </button>
+    <nav class="sc-nav" id="scNav">
+      <button data-tab="alarm" class="active">${svg("alarm")}<span>ปลุก</span></button>
+      <button data-tab="world">${svg("globe")}<span>เวลาโลก</span></button>
+      <button data-tab="stopwatch">${svg("stopwatch")}<span>จับเวลา</span></button>
+      <button data-tab="timer">${svg("timer")}<span>นับถอยหลัง</span></button>
+    </nav>
+    <div class="sc-bottom-gesture" id="scHome"></div>
+    <div class="sc-dialog" id="scDialog">
+      <div class="sc-dialog-header">
+        <button id="scCancel">ยกเลิก</button>
+        <strong id="scDialogTitle">เพิ่มการปลุก</strong>
+        <button id="scDialogDone">บันทึก</button>
+      </div>
+      <div class="sc-time-fields">
+        <input id="scHour" type="number" min="0" max="23"
+          value="07" aria-label="ชั่วโมง">
+        <span>:</span>
+        <input id="scMinute" type="number" min="0" max="59"
+          value="00" aria-label="นาที">
+      </div>
+      <div class="sc-field-label">ทำซ้ำ</div>
+      <div class="sc-day-picker" id="scDayPicker"></div>
+      <div class="sc-field-label">ชื่อการปลุก</div>
+      <input class="sc-label-input" id="scAlarmLabel"
+        placeholder="การปลุก">
+      <div class="sc-dialog-actions">
+        <button class="sc-delete" id="scDelete">ลบ</button>
+        <button class="sc-save" id="scSave">บันทึก</button>
+      </div>
+    </div>`;
+
+  document.querySelector(".phone").appendChild(screen);
+
+  // Preserve the existing screen switcher and PIN logic.
+  const originalShowPhoneScreen = window.showPhoneScreen;
+
+  window.showPhoneScreen = function (screenId) {
+    if (screenId === "peteClockScreen") {
+      if (typeof originalShowPhoneScreen === "function") {
+        originalShowPhoneScreen("homeScreen");
+      }
+      const home = document.getElementById("homeScreen");
+      if (home) home.style.display = "none";
+      screen.style.display = "flex";
+    } else {
+      screen.style.display = "none";
+      if (typeof originalShowPhoneScreen === "function") {
+        originalShowPhoneScreen(screenId);
+      }
+    }
+  };
+
+  window.openPeteClock = function () {
+    alarmDialogOpen = false;
+    document.getElementById("scDialog").style.display = "none";
+    window.showPhoneScreen("peteClockScreen");
+    render();
+  };
+
+  function daysText(days) {
+    if (!days.length) return "ครั้งเดียว";
+    if (days.length === 7) return "ทุกวัน";
+    return [1,2,3,4,5,6,0]
+      .filter(d => days.includes(d))
+      .map(d => DAYS[d])
+      .join(" ");
+  }
+
+  function render() {
+    const body = document.getElementById("scBody");
+    const add = document.getElementById("scAdd");
+    const nav = document.getElementById("scNav");
+
+    nav.querySelectorAll("button").forEach(button => {
+      button.classList.toggle("active", button.dataset.tab === tab);
+    });
+
+    add.style.display = tab === "alarm" ? "grid" : "none";
+
+    if (tab === "alarm") {
+      body.innerHTML = `<h1 class="sc-heading">ปลุก</h1>
+        <div id="scAlarmList"></div>`;
+
+      const list = document.getElementById("scAlarmList");
+
+      alarms.slice().sort((a,b) =>
+        a.time.localeCompare(b.time)
+      ).forEach(alarm => {
+        const card = document.createElement("div");
+        card.className = "sc-alarm-card" +
+          (alarm.enabled ? "" : " off");
+
+        const main = document.createElement("div");
+        main.className = "sc-alarm-main";
+
+        const time = document.createElement("div");
+        time.className = "sc-alarm-time";
+        time.textContent = alarm.time;
+        time.onclick = () => openAlarmEditor(alarm.id);
+
+        const toggle = document.createElement("button");
+        toggle.className = "sc-switch" +
+          (alarm.enabled ? " on" : "");
+        toggle.setAttribute("role", "switch");
+        toggle.setAttribute("aria-checked", String(alarm.enabled));
+        toggle.setAttribute("aria-label", "เปิดหรือปิดการปลุก");
+        toggle.onclick = () => {
+          alarm.enabled = !alarm.enabled;
+          saveAlarms();
+          render();
+        };
+
+        main.append(time, toggle);
+
+        const label = document.createElement("div");
+        label.className = "sc-alarm-label";
+        label.textContent = alarm.label || "การปลุก";
+        label.onclick = () => openAlarmEditor(alarm.id);
+
+        const days = document.createElement("div");
+        days.className = "sc-alarm-days";
+        days.textContent = daysText(alarm.days);
+
+        card.append(main, label, days);
+        list.appendChild(card);
+      });
+
+      if (!alarms.length) {
+        list.innerHTML = '<div class="sc-empty">ยังไม่มีการปลุก</div>';
+      }
+    }
+
+    if (tab === "world") renderWorld();
+    if (tab === "stopwatch") renderStopwatch();
+    if (tab === "timer") renderTimer();
+  }
+
+  function openAlarmEditor(id = null) {
+    editingId = id;
+    alarmDialogOpen = true;
+
+    const alarm = alarms.find(a => a.id === id) || {
+      time: "07:00",
+      label: "",
+      days: []
+    };
+
+    const [hour, minute] = alarm.time.split(":");
+
+    document.getElementById("scHour").value = hour;
+    document.getElementById("scMinute").value = minute;
+    document.getElementById("scAlarmLabel").value = alarm.label;
+    document.getElementById("scDialogTitle").textContent =
+      id ? "แก้ไขการปลุก" : "เพิ่มการปลุก";
+
+    document.getElementById("scDelete").style.visibility =
+      id ? "visible" : "hidden";
+
+    const picker = document.getElementById("scDayPicker");
+    picker.replaceChildren();
+
+    [0,1,2,3,4,5,6].forEach(day => {
+      const button = document.createElement("button");
+      button.textContent = DAYS[day];
+      button.dataset.day = day;
+      button.classList.toggle("selected", alarm.days.includes(day));
+      button.onclick = () => button.classList.toggle("selected");
+      picker.appendChild(button);
+    });
+
+    document.getElementById("scDialog").style.display = "flex";
+  }
+
+  function closeAlarmEditor() {
+    alarmDialogOpen = false;
+    document.getElementById("scDialog").style.display = "none";
+  }
+
+  function saveAlarm() {
+    const hour = Number(document.getElementById("scHour").value);
+    const minute = Number(document.getElementById("scMinute").value);
+
+    if (!Number.isInteger(hour) || hour < 0 || hour > 23 ||
+        !Number.isInteger(minute) || minute < 0 || minute > 59) {
+      alert("กรุณาระบุเวลาให้ถูกต้อง");
+      return;
+    }
+
+    const time =
+      String(hour).padStart(2, "0") + ":" +
+      String(minute).padStart(2, "0");
+
+    const days = [...document.querySelectorAll(
+      "#scDayPicker button.selected"
+    )].map(button => Number(button.dataset.day));
+
+    const label =
+      document.getElementById("scAlarmLabel").value.trim() ||
+      "การปลุก";
+
+    if (editingId) {
+      const alarm = alarms.find(a => a.id === editingId);
+      if (alarm) Object.assign(alarm, { time, label, days });
+    } else {
+      alarms.push({
+        id: "alarm-" + Date.now(),
+        time, label, days, enabled: true
+      });
+    }
+
+    saveAlarms();
+    closeAlarmEditor();
+    render();
+  }
+
+  function deleteAlarm() {
+    if (!editingId) return;
+    if (!confirm("ต้องการลบการปลุกนี้หรือไม่")) return;
+    alarms = alarms.filter(a => a.id !== editingId);
+    saveAlarms();
+    closeAlarmEditor();
+    render();
+  }
+
+  const cities = [
+    { name:"กรุงเทพมหานคร", zone:"Asia/Bangkok" },
+    { name:"โตเกียว", zone:"Asia/Tokyo" },
+    { name:"โซล", zone:"Asia/Seoul" },
+    { name:"ลอนดอน", zone:"Europe/London" },
+    { name:"นิวยอร์ก", zone:"America/New_York" }
+  ];
+
+  function renderWorld() {
+    const body = document.getElementById("scBody");
+    body.innerHTML = '<h1 class="sc-heading">เวลาโลก</h1>' +
+      '<div id="scWorldList"></div>';
+    updateWorld();
+  }
+
+  function updateWorld() {
+    if (tab !== "world") return;
+    const list = document.getElementById("scWorldList");
+    if (!list) return;
+
+    list.replaceChildren();
+
+    cities.forEach(city => {
+      const card = document.createElement("div");
+      card.className = "sc-world-card";
+
+      const title = document.createElement("div");
+      title.className = "sc-world-city";
+      title.textContent = city.name;
+
+      const meta = document.createElement("div");
+      meta.className = "sc-world-meta";
+      meta.textContent = new Intl.DateTimeFormat("th-TH", {
+        timeZone:city.zone,
+        weekday:"long",
+        day:"numeric",
+        month:"short"
+      }).format(new Date());
+
+      const time = document.createElement("div");
+      time.className = "sc-world-time";
+      time.textContent = new Intl.DateTimeFormat("en-GB", {
+        timeZone:city.zone,
+        hour:"2-digit",
+        minute:"2-digit",
+        hourCycle:"h23"
+      }).format(new Date());
+
+      card.append(title, meta, time);
+      list.appendChild(card);
+    });
+  }
+
+  function formatDuration(ms, centiseconds = false) {
+    const total = Math.max(0, Math.floor(ms / 1000));
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const seconds = total % 60;
+    const pad = n => String(n).padStart(2,"0");
+
+    let result =
+      pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
+
+    if (centiseconds) {
+      result += "." + pad(Math.floor((ms % 1000) / 10));
+    }
+    return result;
+  }
+
+  function stopwatchNow() {
+    return stopwatchElapsed +
+      (stopwatchRunning
+        ? performance.now() - stopwatchStarted
+        : 0);
+  }
+
+  function renderStopwatch() {
+    const body = document.getElementById("scBody");
+
+    body.innerHTML = `
+      <h1 class="sc-heading">จับเวลา</h1>
+      <div class="sc-digital" id="scStopwatchDisplay">00:00:00.00</div>
+      <div class="sc-circle-actions">
+        <button id="scStopwatchSecondary">รีเซ็ต</button>
+        <button class="primary" id="scStopwatchPrimary">เริ่ม</button>
+      </div>
+      <div class="sc-laps" id="scLaps"></div>`;
+
+    document.getElementById("scStopwatchPrimary").onclick = () => {
+      if (stopwatchRunning) {
+        stopwatchElapsed = stopwatchNow();
+        stopwatchRunning = false;
+      } else {
+        stopwatchStarted = performance.now();
+        stopwatchRunning = true;
+      }
+      renderStopwatch();
+    };
+
+    document.getElementById("scStopwatchSecondary").onclick = () => {
+      if (stopwatchRunning) {
+        stopwatchLaps.push(stopwatchNow());
+      } else {
+        stopwatchElapsed = 0;
+        stopwatchLaps = [];
+      }
+      renderStopwatch();
+    };
+
+    document.getElementById("scStopwatchPrimary").textContent =
+      stopwatchRunning ? "หยุด" : "เริ่ม";
+
+    document.getElementById("scStopwatchSecondary").textContent =
+      stopwatchRunning ? "รอบ" : "รีเซ็ต";
+
+    document.getElementById("scLaps").innerHTML =
+      stopwatchLaps.map((lap,i) =>
+        `<div class="sc-lap"><span>รอบ ${i+1}</span>` +
+        `<span>${formatDuration(lap,true)}</span></div>`
+      ).reverse().join("");
+
+    updateStopwatch();
+  }
+
+  function updateStopwatch() {
+    const display = document.getElementById("scStopwatchDisplay");
+    if (tab === "stopwatch" && display) {
+      display.textContent = formatDuration(stopwatchNow(),true);
+    }
+  }
+
+  function timerNow() {
+    return timerRunning
+      ? Math.max(0, timerEnd - Date.now())
+      : timerRemaining;
+  }
+
+  function renderTimer() {
+    const body = document.getElementById("scBody");
+    const total = Math.ceil(timerConfigured / 1000);
+
+    body.innerHTML = `
+      <h1 class="sc-heading">นับถอยหลัง</h1>
+      <div class="sc-timer-inputs" id="scTimerInputs">
+        <label>ชั่วโมง<input id="scTimerHour" type="number" min="0" max="99"
+          value="${Math.floor(total/3600)}"></label>
+        <label>นาที<input id="scTimerMinute" type="number" min="0" max="59"
+          value="${Math.floor((total%3600)/60)}"></label>
+        <label>วินาที<input id="scTimerSecond" type="number" min="0" max="59"
+          value="${total%60}"></label>
+      </div>
+      <div class="sc-digital" id="scTimerDisplay">00:05:00</div>
+      <div class="sc-circle-actions">
+        <button id="scTimerReset">รีเซ็ต</button>
+        <button class="primary" id="scTimerPrimary">เริ่ม</button>
+      </div>`;
+
+    document.getElementById("scTimerPrimary").onclick = () => {
+      if (timerRunning) {
+        timerRemaining = timerNow();
+        timerRunning = false;
+      } else {
+        if (timerRemaining <= 0) {
+          timerRemaining = timerConfigured;
+        }
+
+        if (timerRemaining === timerConfigured) {
+          const h = Number(document.getElementById("scTimerHour").value);
+          const m = Number(document.getElementById("scTimerMinute").value);
+          const s = Number(document.getElementById("scTimerSecond").value);
+
+          if (![h,m,s].every(Number.isInteger) ||
+              h < 0 || h > 99 || m < 0 || m > 59 ||
+              s < 0 || s > 59 || h+m+s === 0) {
+            alert("กรุณากำหนดเวลานับถอยหลังให้ถูกต้อง");
+            return;
+          }
+
+          timerConfigured = ((h*3600)+(m*60)+s)*1000;
+          timerRemaining = timerConfigured;
+        }
+
+        timerEnd = Date.now() + timerRemaining;
+        timerRunning = true;
+      }
+      renderTimer();
+    };
+
+    document.getElementById("scTimerReset").onclick = () => {
+      timerRunning = false;
+      timerRemaining = timerConfigured;
+      renderTimer();
+    };
+
+    document.getElementById("scTimerPrimary").textContent =
+      timerRunning ? "หยุด" : "เริ่ม";
+
+    document.getElementById("scTimerInputs").style.opacity =
+      timerRunning ? ".4" : "1";
+
+    document.querySelectorAll("#scTimerInputs input").forEach(input => {
+      input.disabled = timerRunning;
+    });
+
+    updateTimer();
+  }
+
+  function updateTimer() {
+    if (tab !== "timer") return;
+    const display = document.getElementById("scTimerDisplay");
+    if (!display) return;
+
+    const remaining = timerNow();
+    display.textContent = formatDuration(remaining);
+
+    if (timerRunning && remaining <= 0) {
+      timerRunning = false;
+      timerRemaining = 0;
+      alert("หมดเวลานับถอยหลัง");
+      renderTimer();
+    }
+  }
+
+  function checkAlarms() {
+    const now = new Date();
+    const day = now.getDay();
+    const time =
+      String(now.getHours()).padStart(2,"0") + ":" +
+      String(now.getMinutes()).padStart(2,"0");
+
+    const minuteKey =
+      now.toDateString() + "-" + time;
+
+    if (lastAlarmMinute === minuteKey) return;
+    lastAlarmMinute = minuteKey;
+
+    alarms.forEach(alarm => {
+      if (!alarm.enabled || alarm.time !== time) return;
+      if (alarm.days.length && !alarm.days.includes(day)) return;
+
+      // For one-time alarms, disable after they fire.
+      if (!alarm.days.length) {
+        alarm.enabled = false;
+        saveAlarms();
+      }
+
+      if (document.visibilityState === "visible") {
+        alert(alarm.label || "การปลุก");
+      }
+    });
+  }
+
+  document.getElementById("scNav").onclick = event => {
+    const button = event.target.closest("button[data-tab]");
+    if (!button) return;
+    tab = button.dataset.tab;
+    render();
+  };
+
+  document.getElementById("scAdd").onclick = () => openAlarmEditor();
+  document.getElementById("scCancel").onclick = closeAlarmEditor;
+  document.getElementById("scSave").onclick = saveAlarm;
+  document.getElementById("scDialogDone").onclick = saveAlarm;
+  document.getElementById("scDelete").onclick = deleteAlarm;
+
+  document.getElementById("scBack").onclick = () => {
+    if (alarmDialogOpen) {
+      closeAlarmEditor();
+    } else {
+      window.showPhoneScreen("homeScreen");
+    }
+  };
+
+  document.getElementById("scHome").onclick = () => {
+    closeAlarmEditor();
+    window.showPhoneScreen("homeScreen");
+  };
+
+  document.getElementById("scMore").onclick = () => {
+    if (tab === "alarm") {
+      alert("แตะเวลาปลุกเพื่อแก้ไข หรือแตะสวิตช์เพื่อเปิดและปิด");
+    } else {
+      alert("เลือกแท็บด้านล่างเพื่อเปลี่ยนโหมดนาฬิกา");
+    }
+  };
+
+  setInterval(() => {
+    checkAlarms();
+
+    if (screen.style.display !== "flex") return;
+
+    if (tab === "world") updateWorld();
+    if (tab === "stopwatch") updateStopwatch();
+    if (tab === "timer") updateTimer();
+  }, 200);
+
+  saveAlarms();
+})();
+
 </script>
 </body>
 </html>
