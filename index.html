@@ -4521,17 +4521,23 @@ img.line-profile-avatar {
 </div>
   <span>Spotify</span>
 </div>
- <div class="home-app" onclick="openPeteCalendar()">
-  <div class="home-app-icon pete-cal-icon">
-    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+
+<div class="home-app" onclick="openPeteCalendar()">
+  <div class="home-app-icon pete-cal-icon"
+       style="background:transparent;overflow:hidden;padding:0;">
+    <svg viewBox="0 0 64 64"
+         width="54" height="54"
+         xmlns="http://www.w3.org/2000/svg">
       <rect width="64" height="64" rx="15" fill="#ffffff"/>
-      <path d="M12 15H52" stroke="#e6e8ed" stroke-width="2"/>
-      <text x="32" y="17" text-anchor="middle"
-            font-family="Arial" font-size="9"
-            font-weight="bold" fill="#e95460">NOV</text>
-      <text id="pcIconDay" x="32" y="47"
-            text-anchor="middle" font-family="Arial"
-            font-size="32" fill="#2870dc">9</text>
+      <path d="M0 15 Q0 0 15 0 H49 Q64 0 64 15 V19 H0Z"
+            fill="#4b91f4"/>
+      <text id="pcIconDay"
+            x="32" y="47"
+            text-anchor="middle"
+            font-family="Arial, sans-serif"
+            font-size="32"
+            font-weight="600"
+            fill="#252a33">9</text>
     </svg>
   </div>
   <span>ปฏิทิน</span>
