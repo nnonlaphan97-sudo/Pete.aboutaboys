@@ -15466,6 +15466,86 @@ if (!state.phoneBlockMigrationV1) {
   render();
 })();
 
+/* ==========================================
+   FIX PETE PHONE DOCK
+   Samsung One UI Style
+   ========================================== */
+(function () {
+  const styleId = "peteDockFinalFix";
+
+  const old = document.getElementById(styleId);
+  if (old) old.remove();
+
+  const style = document.createElement("style");
+  style.id = styleId;
+
+  style.textContent = `
+    #homeScreen .home-dock {
+      position: absolute !important;
+
+      left: 4% !important;
+      right: 4% !important;
+      bottom: 46px !important;
+
+      transform: none !important;
+      width: 92% !important;
+      height: 76px !important;
+
+      padding: 8px 18px !important;
+      margin: 0 !important;
+
+      border-radius: 27px !important;
+      background: rgba(55, 55, 55, 0.46) !important;
+
+      backdrop-filter: blur(22px) !important;
+      -webkit-backdrop-filter: blur(22px) !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      gap: 0 !important;
+
+      box-sizing: border-box !important;
+      z-index: 5 !important;
+    }
+
+    #homeScreen .home-dock .ph-dock-button,
+    #homeScreen .home-dock .si-dock-button {
+      flex: 0 0 58px !important;
+      width: 58px !important;
+      min-width: 58px !important;
+      height: 58px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      padding: 0 !important;
+      margin: 0 !important;
+      gap: 0 !important;
+
+      border: 0 !important;
+      background: transparent !important;
+      cursor: pointer !important;
+    }
+
+    #homeScreen .home-dock .ph-dock-button svg,
+    #homeScreen .home-dock .si-dock-button svg {
+      width: 54px !important;
+      height: 54px !important;
+      display: block !important;
+      flex-shrink: 0 !important;
+    }
+
+    #homeScreen .home-dock .ph-dock-button span,
+    #homeScreen .home-dock .si-dock-button span {
+      display: none !important;
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
+
 </script>
 </body>
 </html>
