@@ -5252,7 +5252,7 @@ img.line-profile-avatar {
   </nav>
 
   <!-- Home Gesture -->
-  <div class="sp-gesture" onclick="showPhoneScreen('homeScreen')">
+  <div class="sp-gesture" onclick="spotifyExit()">
     <div></div>
   </div>
 
@@ -11552,7 +11552,18 @@ spotifyAudio.addEventListener("ended", () => {
    SPOTIFY NAVIGATION
 ========================================= */
 
+let spotifyOpenedFromLock = false;
+
+function spotifyExit() {
+  showPhoneScreen(
+    spotifyOpenedFromLock ? "lockScreen" : "homeScreen"
+  );
+
+  spotifyOpenedFromLock = false;
+}
+
 function openSpotify() {
+  spotifyOpenedFromLock = false;
   showPhoneScreen("spotifyScreen");
 
   document.getElementById("spPlayer").style.display = "none";
@@ -11665,10 +11676,10 @@ function spotifyInitLockScreen() {
 
   element.style.cursor = "pointer";
 
-  element.addEventListener("click", event => {
-    event.stopPropagation();
-    spotifyOpenPlayer();
-  });
+element.addEventListener("click", event => {
+  event.stopPropagation();
+  spotifyOpenedFromLock = true;
+  spotifyOpenPlayer();
 });
 
   const buttons = lockMusic.querySelectorAll(
