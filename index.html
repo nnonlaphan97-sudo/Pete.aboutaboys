@@ -4534,6 +4534,12 @@ img.line-profile-avatar {
   white-space: nowrap !important;
 }
 
+
+/* Hide the system status bar only while Instagram is visible. */
+.phone:has(#instagramScreen[style*="display: flex"]) > .status-bar,
+.phone:has(#instagramScreen[style*="display:flex"]) > .status-bar {
+  display: none !important;
+}
 </style>
 </head>
 
